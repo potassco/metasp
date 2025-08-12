@@ -10,14 +10,14 @@ hide:
 === "Pip"
 
 ```console
-pip install fillname
+pip install metasp
 ```
 
 === "Development mode"
 
 ```console
-git clone https://github.com/potassco/fillname.git/
-cd fillname
+git clone https://github.com/potassco/metasp.git/
+cd metasp
 pip install -e .[all]
 ```
 
@@ -31,5 +31,5 @@ pip install -e .[all]
 Details about the command line usage can be found with:
 
 ```console
-fillname -h
+metasp -h
 ```

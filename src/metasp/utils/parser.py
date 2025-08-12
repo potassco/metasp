@@ -11,7 +11,7 @@ from . import logging
 
 __all__ = ["get_parser"]
 
-VERSION = metadata.version("fillname")
+VERSION = metadata.version("metasp")
 
 
 def get_parser() -> ArgumentParser:
@@ -19,10 +19,10 @@ def get_parser() -> ArgumentParser:
     Return the parser for command line options.
     """
     parser = ArgumentParser(
-        prog="fillname",
+        prog="metasp",
         description=dedent(
             """\
-            fillname
+            metasp
             filldescription
             """
         ),

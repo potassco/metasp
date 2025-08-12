@@ -26,4 +26,4 @@ Your participation keeps our project thriving. Thank you for being part of our
 community!
 
 !!! info
-    *fillname* is part of the [Potassco](https://potassco.org) suite.
+    *metasp* is part of the [Potassco](https://potassco.org) suite.
