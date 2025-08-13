@@ -6,12 +6,27 @@ from argparse import ArgumentParser
 from importlib import metadata
 from textwrap import dedent
 from typing import Any, Optional, cast
+from rich_argparse import ArgumentDefaultsRichHelpFormatter
+from rich.text import Text
 
 from . import logging
 
 __all__ = ["get_parser"]
 
 VERSION = metadata.version("metasp")
+
+ascii_art_metasp = Text(
+    r"""
+                     _
+  _ __ ___     ___  | |_    __ _   ___   _ __
+ | '_ ` _ \   / _ \ | __|  / _` | / __| | '_ \
+ | | | | | | |  __/ | |_  | (_| | \__ \ | |_) |
+ |_| |_| |_|  \___|  \__|  \__,_| |___/ | .__/
+                                        |_|
+    """,
+    no_wrap=True,
+    justify="left",
+)
 
 
 def get_parser() -> ArgumentParser:
@@ -20,34 +35,30 @@ def get_parser() -> ArgumentParser:
     """
     parser = ArgumentParser(
         prog="metasp",
-        description=dedent(
-            """\
-            metasp
-            filldescription
-            """
-        ),
+        description=ascii_art_metasp + "\n🚀 Framework for metaprogramming in ASP.",
+        formatter_class=ArgumentDefaultsRichHelpFormatter,
     )
-    levels = [
-        ("error", logging.ERROR),
-        ("warning", logging.WARNING),
-        ("info", logging.INFO),
-        ("debug", logging.DEBUG),
-    ]
+    # levels = [
+    #     ("error", logging.ERROR),
+    #     ("warning", logging.WARNING),
+    #     ("info", logging.INFO),
+    #     ("debug", logging.DEBUG),
+    # ]
 
-    def get(levels: list[tuple[str, int]], name: str) -> Optional[int]:
-        for key, val in levels:
-            if key == name:
-                return val
-        return None  # nocoverage
+    # def get(levels: list[tuple[str, int]], name: str) -> Optional[int]:
+    #     for key, val in levels:
+    #         if key == name:
+    #             return val
+    #     return None  # nocoverage
 
-    parser.add_argument(
-        "--log",
-        default="warning",
-        choices=[val for _, val in levels],
-        metavar=f"{{{','.join(key for key, _ in levels)}}}",
-        help="set log level [%(default)s]",
-        type=cast(Any, lambda name: get(levels, name)),
-    )
+    # parser.add_argument(
+    #     "--log",
+    #     default="warning",
+    #     choices=[val for _, val in levels],
+    #     metavar=f"{{{','.join(key for key, _ in levels)}}}",
+    #     help="set log level [%(default)s]",
+    #     type=cast(Any, lambda name: get(levels, name)),
+    # )
 
     parser.add_argument("--version", "-v", action="version", version=f"%(prog)s {VERSION}")
     return parser
