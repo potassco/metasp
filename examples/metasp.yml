@@ -1,0 +1,13 @@
+metasp-systems:
+  - name: melingo
+    solver: clingcon
+    syntax-encoding:
+      - "./melingo/syntax.lp"
+    semantics-encoding:
+      - "./melingo/semantics.lp"
+  - name: telingo
+    solver: clingo
+    syntax-encoding:
+      - "./telingo/syntax.lp"
+    semantics-encoding:
+      - "./telingo/semantics.lp"
