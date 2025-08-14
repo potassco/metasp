@@ -1,8 +1,8 @@
 from collections.abc import Sequence
 import sys
-from typing import List
+from typing import Callable, List, Optional
 from clingo import Control
-from metasp.base_solver import BASE_SOLVERS
+from metasp.base_solver import get_base_solver_class
 from metasp.preprocess import preprocess
 from clingo import Control, Symbol, Model, SymbolType
 from clingox.reify import Reifier
@@ -95,29 +95,15 @@ class MetaSystem:
         title = "\n\n%%%%%% Reified Input %%%%%%\n\n"
         return title + reified_input
 
-    #  TODO this should be in a System subclass like TemporalMetaSystem and leave a simple print in this one
     def print_model(self, model: Model) -> None:
         """
-        Prints the model as in telingo separating the states.
+        Print the model.
         Args:
-            model (Model): The clingo model to be printed.
+            model (Model): The model to be printed.
         """
-        table = {}
-        for sym in model.symbols(shown=True):
-            if sym.type == SymbolType.Function and len(sym.arguments) > 0 and sym.name == "":
-                table.setdefault(sym.arguments[-1].number, []).append(sym.arguments[0])
-        for step in range(self.lambda_constant):
-            symbols = table.get(step, [])
-            sys.stdout.write(" State {}:".format(step))
-            sig = None
-            for sym in sorted(symbols):
-                if (sym.name, len(sym.arguments), sym.positive) != sig:
-                    sys.stdout.write("\n ")
-                    sig = (sym.name, len(sym.arguments), sym.positive)
-                sys.stdout.write(" {}".format(sym))
-            sys.stdout.write("\n")
+        return self.base_solver.print_model(model)
 
-    def meta_solve(self, control: Control, reified_input: str) -> None:
+    def meta_solve(self, control: Control, reified_input: str, on_model: Optional[Callable] = None) -> None:
         """
         Solve the reified input with the given control object.
         It will run the system with the given control object.
@@ -125,22 +111,11 @@ class MetaSystem:
             control (Control): The clingo control object with the command line options from the application class.
             reified_input (str): The reified input data to be solved.
         """
-        base_solver = BASE_SOLVERS[self.solver_name](control)
         reify_defined_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "encodings", "reify_defined.lp")
         semantics_with_includes = "\n".join([self._replace_package_includes(f) for f in self.semantics_encoding])
-        base_solver.load(reified_input + semantics_with_includes, self.syntax_encoding + [reify_defined_file])
-        base_solver.ground()
-        base_solver.solve()
-
-    #  TODO this should be in a System subclass like TemporalMetaSystem
-    def assert_lambda_constant(self, constants: Sequence[str]) -> None:
-        """
-        Assert that there is a constant in the form lambda=<num>.
-        """
-        if not any(c.startswith("lambda=") for c in constants):
-            raise ValueError("You must provide a constant in the form lambda=<num> to run the system.")
-        else:
-            self.lambda_constant = int(next(c.split("=", 1)[1] for c in constants if c.startswith("lambda=")))
+        self.base_solver.load(reified_input + semantics_with_includes, self.syntax_encoding + [reify_defined_file])
+        self.base_solver.ground()
+        self.base_solver.solve(on_model=self.base_solver.create_on_model(on_model=on_model))
 
     def main(self, control: Control, constants: Sequence[str], files: Sequence[str]) -> None:
         """
@@ -151,7 +126,7 @@ class MetaSystem:
             constants: The list of constants to be, tho they might have been added to the control already, we need them explicitly to use them in the reification.
             files: The list of files to process.
         """
-        self.assert_lambda_constant(constants)
+        self.base_solver = get_base_solver_class(self.solver_name)(control, constants)
         processed_input = self.preprocess(files)
         reified_input = self.reify(processed_input, constants)
         self.meta_solve(control, reified_input)

@@ -59,8 +59,8 @@ def main() -> None:
     Run the main function.
     """
     config = get_configuration()
-    systems = {system["name"]: system for system in config.get("metasp-systems", [])}
     if config is not None:
+        systems = {system["name"]: system for system in config.get("metasp-systems", [])}
         if len(sys.argv) > 1 and sys.argv[1] in list(systems.keys()):
             system = sys.argv[1]
             constants = parse_constants(sys.argv[2:])

@@ -38,27 +38,6 @@ def get_parser() -> ArgumentParser:
         description=ascii_art_metasp + "\n🚀 Framework for metaprogramming in ASP.",
         formatter_class=ArgumentDefaultsRichHelpFormatter,
     )
-    # levels = [
-    #     ("error", logging.ERROR),
-    #     ("warning", logging.WARNING),
-    #     ("info", logging.INFO),
-    #     ("debug", logging.DEBUG),
-    # ]
-
-    # def get(levels: list[tuple[str, int]], name: str) -> Optional[int]:
-    #     for key, val in levels:
-    #         if key == name:
-    #             return val
-    #     return None  # nocoverage
-
-    # parser.add_argument(
-    #     "--log",
-    #     default="warning",
-    #     choices=[val for _, val in levels],
-    #     metavar=f"{{{','.join(key for key, _ in levels)}}}",
-    #     help="set log level [%(default)s]",
-    #     type=cast(Any, lambda name: get(levels, name)),
-    # )
 
     parser.add_argument("--version", "-v", action="version", version=f"%(prog)s {VERSION}")
     return parser

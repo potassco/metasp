@@ -6,7 +6,7 @@ metasp-systems:
     semantics-encoding:
       - "./melingo/semantics.lp"
   - name: telingo
-    solver: clingo
+    solver: tclingo
     syntax-encoding:
       - "./telingo/syntax.lp"
     semantics-encoding:

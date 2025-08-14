@@ -12,7 +12,13 @@ requires-python = ">=3.10"
 license = { file = "LICENSE" }
 dynamic = ["version"]
 readme = "README.md"
-dependencies = ["clingo>=5.6.0", "setuptools>=42", "pyyaml", "clingox"]
+dependencies = [
+    "clingo>=5.6.0",
+    "setuptools>=42",
+    "pyyaml",
+    "clingox",
+    "clingcon",
+]
 
 [project.urls]
 Homepage = "https://github.com/krr-up/metasp.git/"

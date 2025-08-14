@@ -1,6 +1,7 @@
 #include "metasp.meta-time.lp".
 #include "metasp.formulas.lp".
 #include "metasp.show.lp".
+#include "metasp.derived.lp".
 
 %================================================
 % Bounded translation

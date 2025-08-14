@@ -23,13 +23,13 @@ def arity(O):
 
 
 possible_formula(F,@name(F),@args(F),@arity(F)):-output(F,B).
-arg_formula(F,1,F1) :- possible_formula(F, N, (F1,), 1).
-arg_formula(F,1,F1) :- possible_formula(F, N, (F1,F2), 2).
-arg_formula(F,2,F2) :- possible_formula(F, N, (F1,F2), 2).
-arg_formula(F,1,F1) :- possible_formula(F, N, (F1,F2,F3), 3).
-arg_formula(F,2,F2) :- possible_formula(F, N, (F1,F2,F3), 3).
-arg_formula(F,3,F3) :- possible_formula(F, N, (F1,F2,F3), 3).
-% TODO find a better way to do this
+arg_formula(F,1,F1) :- possible_formula(F, N, (F1,), 1),formula(M, F),modality(M, N, _, (T1,)), T1!=num.
+arg_formula(F,1,F1) :- possible_formula(F, N, (F1,F2), 2),formula(M, F),modality(M, N, _, (T1,T2)), T1!=num.
+arg_formula(F,2,F2) :- possible_formula(F, N, (F1,F2), 2),formula(M, F),modality(M, N, _, (T1,T2)), T2!=num.
+arg_formula(F,1,F1) :- possible_formula(F, N, (F1,F2,F3), 3),formula(M, F),modality(M, N, _, (T1,T2,T3)), T1!=num.
+arg_formula(F,2,F2) :- possible_formula(F, N, (F1,F2,F3), 3),formula(M, F),modality(M, N, _, (T1,T2,T3)), T2!=num.
+arg_formula(F,3,F3) :- possible_formula(F, N, (F1,F2,F3), 3),formula(M, F),modality(M, N, _, (T1,T2,T3)), T3!=num.
+% TODO find a better way to do this. I had to add the check that it is not num to avoid trying to dicompose a number
 
 
 formula(M, F):- possible_formula(F, N, ARGS, ARITY), modality(M, N, ARITY, ARGS_TYPES).
