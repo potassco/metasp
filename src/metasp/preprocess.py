@@ -1,12 +1,13 @@
 from collections.abc import Sequence
 
 
-def preprocess(input_files: Sequence[str], syntax_encoding: Sequence[str]) -> str:
+def preprocess(input_files: Sequence[str], constants: Sequence[str], syntax_encoding: Sequence[str]) -> str:
     """
     Preprocess the input files.
     Args:
         input_files (Sequence[str]): The input files to be preprocessed.
         syntax_encoding (Sequence[str]): The syntax encoding defining modalities and safety.
+        constants (Sequence[str]): The constants to be used during preprocessing <id>=<term>.
     Returns:
         str: The preprocessed input as a string. With externals and transformed show statements.
     Raises:

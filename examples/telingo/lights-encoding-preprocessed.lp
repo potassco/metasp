@@ -9,5 +9,5 @@ eventually(always(green)):- push.
 #external always(green).
 #external green.
 
-% _show(push):-push.
-% _show(push):-push.
+_show.
+_show(push):-push.

@@ -1,33 +1,13 @@
-from typing import Any, Callable, Optional, Sequence
 import logging
-from clingo import Control, Model, Function, Number
+import sys
+from typing import Any, Callable, Optional, Sequence
+from clingo import Control, Model, Function, Number, Symbol, SymbolType
 from clingo.script import enable_python
 from clingo.theory import Theory
 from clingo.ast import ProgramBuilder, parse_files, parse_string
 from clingcon import ClingconTheory
-from collections.abc import Sequence
-import sys
-from typing import Callable, List, Optional
-from clingo import Control
-from metasp.preprocess import preprocess
-from clingo import Control, Symbol, Model, SymbolType
 from clingox.reify import Reifier
-
-import logging
-import os
-import re
-
-from collections.abc import Sequence
-import sys
-from typing import Callable, List, Optional
-from clingo import Control
 from metasp.preprocess import preprocess
-from clingo import Control, Symbol, Model, SymbolType
-from clingox.reify import Reifier
-
-import logging
-import os
-import re
 
 log = logging.getLogger(__name__)
 
@@ -217,7 +197,7 @@ class ClingconBaseSolver(TheoryBaseSolver):
 
         def on_model_function(mdl: Model) -> None:
             for key, val in self.theory.assignment(mdl.thread_id):
-                f = Function("t", [key.arguments[0], Number(int(str(val)))])
+                f = Function("assignment", [key.arguments[0], Number(int(str(val)))])
                 mdl.extend([f])
             super_f(mdl)
 

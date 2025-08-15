@@ -66,12 +66,12 @@ class MetaSystem:
         title = "\n\n%%%%%% File: {} %%%%%%\n\n".format(file)
         return title + file_content
 
-    def preprocess(self, files: Sequence[str]) -> str:
+    def preprocess(self, files: Sequence[str], constants: Sequence[str]) -> str:
         """
         Preprocess the system.
         It will do the preprocessing of the input files
         """
-        preprocessed_input = preprocess(files, self.syntax_encoding)
+        preprocessed_input = preprocess(files, constants, self.syntax_encoding)
         return preprocessed_input
 
     def reify(self, processed_input: str, constants: Sequence[str]) -> str:
@@ -127,6 +127,6 @@ class MetaSystem:
             files: The list of files to process.
         """
         self.base_solver = get_base_solver_class(self.solver_name)(control, constants)
-        processed_input = self.preprocess(files)
+        processed_input = self.preprocess(files, constants)
         reified_input = self.reify(processed_input, constants)
         self.meta_solve(control, reified_input)

@@ -7,4 +7,4 @@
 #show (S,K) : output(_show(S),B), conjunction(B,K).
 
 % Show all true formulas that have no condition
-#show (S,K) : time(K), output(_show(S),B), literal_tuple(B,L), not atom_tuple (_,L).
+#show (S,K) : time(K), output(_show(S),B), literal_tuple(B,L), not atom_tuple(_,L).
