@@ -1,4 +1,3 @@
-#const lambda=3.
 
 time(0..lambda-1).
 

@@ -3,6 +3,9 @@
 #include "metasp.show.lp".
 #include "metasp.derived.lp".
 
+#const lambda= horizon+1.
+
+
 %================================================
 % Bounded translation
 %================================================

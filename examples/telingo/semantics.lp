@@ -3,6 +3,7 @@
 #include "metasp.formulas.lp".
 #include "metasp.show.lp".
 
+#const lambda= horizon+1.
 
 % true/0
 true(true,K) :- formula(tel,true), time(K).

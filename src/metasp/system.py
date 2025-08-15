@@ -1,5 +1,6 @@
 from collections.abc import Sequence
 import sys
+import importlib.util
 from typing import Callable, List, Optional
 from clingo import Control
 from metasp.base_solver import get_base_solver_class
@@ -10,13 +11,23 @@ from clingox.reify import Reifier
 import logging
 import os
 import re
+from metasp.printing import __dict__ as metasp_printing_dict
 
 log = logging.getLogger(__name__)
 
 
 class MetaSystem:
 
-    def __init__(self, name: str, solver: str, syntax_encoding: Sequence[str], semantics_encoding: Sequence[str]):
+    def __init__(
+        self,
+        name: str,
+        solver: str,
+        syntax_encoding: Sequence[str],
+        semantics_encoding: Sequence[str],
+        print_model: str = "default_print_model",
+        constants: Optional[Sequence[str]] = None,
+        python_scripts: Optional[Sequence[str]] = None,
+    ):
         """
         Initialize the System with its name, solver, and encodings.
         Args:
@@ -29,6 +40,9 @@ class MetaSystem:
         self.solver_name = solver
         self.syntax_encoding = syntax_encoding
         self.semantics_encoding = semantics_encoding
+        self.print_model_name = print_model
+        self.constants = constants or []
+        self.python_scripts = python_scripts or []
 
     @classmethod
     def from_dict(cls, config: dict) -> "MetaSystem":
@@ -44,6 +58,9 @@ class MetaSystem:
             solver=config["solver"],
             syntax_encoding=config["syntax-encoding"],
             semantics_encoding=config["semantics-encoding"],
+            print_model=config.get("print-model", "default_print_model"),
+            constants=config.get("constants", []),
+            python_scripts=config.get("python-scripts", []),
         )
 
     def _replace_package_includes(self, file: str) -> str:
@@ -101,7 +118,42 @@ class MetaSystem:
         Args:
             model (Model): The model to be printed.
         """
-        return self.base_solver.print_model(model)
+        log.debug("Printing model using '%s' function", self.print_model_name)
+        script_functions = {}
+        for script_path in self.python_scripts:
+            log.debug(f"Loading python script: {script_path}")
+            module_name = os.path.splitext(os.path.basename(script_path))[0]
+            spec = importlib.util.spec_from_file_location(module_name, script_path)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            for attr in dir(module):
+                obj = getattr(module, attr)
+                if callable(obj):
+                    script_functions[attr] = obj
+        log.debug(f"Available print functions: {list(script_functions.keys()) + list(metasp_printing_dict.keys())}")
+        if self.print_model_name in script_functions:
+            script_functions[self.print_model_name](model, self)
+            return
+        printing_func = metasp_printing_dict.get(self.print_model_name)
+        if printing_func is not None:
+            printing_func(model, self)
+        else:
+            log.error(f"Print model function '{self.print_model_name}' not found")
+            raise ValueError(f"Print model function '{self.print_model_name}' not found")
+
+    def parse_constants(self, constants: Sequence[str]) -> None:
+        """
+        Parse the constants and add them to the system.
+        Args:
+            constants (Sequence[str]): The constants to be added to the system.
+        """
+        input_consts = {c.split("=")[0]: c.split("=")[1] for c in constants}
+        for const in self.constants:
+            if const not in input_consts:
+                log.error(f"You must provide the constant {const} to run the system.")
+                raise ValueError(f"You must provide the constant {const} to run the system.")
+            # Create a new attribute in the class with this constant
+            setattr(self, const, input_consts[const])
 
     def meta_solve(self, control: Control, reified_input: str, on_model: Optional[Callable] = None) -> None:
         """
@@ -126,6 +178,8 @@ class MetaSystem:
             constants: The list of constants to be, tho they might have been added to the control already, we need them explicitly to use them in the reification.
             files: The list of files to process.
         """
+        self.parse_constants(constants)
+        log.info("Running system with base solver %s", self.solver_name)
         self.base_solver = get_base_solver_class(self.solver_name)(control, constants)
         processed_input = self.preprocess(files, constants)
         reified_input = self.reify(processed_input, constants)

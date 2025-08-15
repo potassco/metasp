@@ -5,9 +5,18 @@ metasp-systems:
       - "./melingo/syntax.lp"
     semantics-encoding:
       - "./melingo/semantics.lp"
+    python-scripts:
+      - "./melingo/print_functions.py"
+    print-model: melingo_print_model
+    constants:
+      - "horizon"
+
   - name: telingo
-    solver: tclingo
+    solver: clingo
     syntax-encoding:
       - "./telingo/syntax.lp"
     semantics-encoding:
       - "./telingo/semantics.lp"
+    print-model: telingo_print_model
+    constants:
+      - "horizon"

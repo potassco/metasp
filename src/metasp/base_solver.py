@@ -53,68 +53,11 @@ class ClingoBaseSolver:
         log.info("Solving...")
         self.ctl.solve(on_model=on_model)  # nocoverage
 
-    def print_model(self, model: Model) -> None:
-        """
-        Print the model.
-        Args:
-            model (Model): The clingo model to be printed.
-        """
-        sys.stdout.write(" ".join([str(sym) for sym in model.symbols(shown=True)]))
-        sys.stdout.write("\n")
-
     def create_on_model(self, on_model: Optional[Callable[..., Any]] = None) -> Callable:
         return on_model
 
 
-class TemporalClingoBaseSolver(ClingoBaseSolver):
-
-    def __init__(self, ctl: Control, constants: Sequence[str]):
-        """
-        Creates a TemporalClingo base solver with a control.
-        Args:
-            ctl (Control): The clingo control.
-            constants (Sequence[str]): The constants to be used in the reification.
-        """
-        super().__init__(ctl, constants)
-        self._assert_lambda_constant()
-
-    def _assert_lambda_constant(self) -> None:
-        """
-        Assert that there is a constant in the form lambda=<num>.
-        """
-        if not any(c.startswith("lambda=") for c in self.constants):
-            log.error(
-                "You must provide a constant in the form lambda=<num> to run the system. Add -c lambda=N to the command line."
-            )
-            raise ValueError("You must provide a constant in the form lambda=<num> to run the system.")
-        else:
-            self.lambda_constant = int(next(c.split("=", 1)[1] for c in self.constants if c.startswith("lambda=")))
-
-    def print_model(self, model: Model) -> None:
-        """
-        Prints the model as in telingo separating the states.
-        Args:
-            model (Model): The clingo model to be printed.
-        """
-        l = int(str(self.ctl.get_const("lambda")))
-        table = {}
-        for sym in model.symbols(shown=True):
-            if sym.type == SymbolType.Function and len(sym.arguments) > 0 and sym.name == "":
-                table.setdefault(sym.arguments[-1].number, []).append(sym.arguments[0])
-        for step in range(l):
-            symbols = table.get(step, [])
-            sys.stdout.write(" State {}:".format(step))
-            sig = None
-            for sym in sorted(symbols):
-                if (sym.name, len(sym.arguments), sym.positive) != sig:
-                    sys.stdout.write("\n ")
-                    sig = (sym.name, len(sym.arguments), sym.positive)
-                sys.stdout.write(" {}".format(sym))
-            sys.stdout.write("\n")
-        sys.stdout.write("\n")
-
-
-class TheoryBaseSolver(TemporalClingoBaseSolver):
+class TheoryBaseSolver(ClingoBaseSolver):
 
     def __init__(self, ctl: Control, constants: Sequence[str], theory_class: Theory):
         """
@@ -145,8 +88,6 @@ class TheoryBaseSolver(TemporalClingoBaseSolver):
                 prg,
                 lambda ast: self.theory.rewrite_ast(ast, pb.add),
             )
-        # super().load(prg, [])
-        # super().load("a.", [])
 
     def create_on_model(self, on_model: Optional[Callable] = None) -> Callable:
         """
@@ -197,7 +138,7 @@ class ClingconBaseSolver(TheoryBaseSolver):
 
         def on_model_function(mdl: Model) -> None:
             for key, val in self.theory.assignment(mdl.thread_id):
-                f = Function("assignment", [key.arguments[0], Number(int(str(val)))])
+                f = Function("_assignment", [key, Number(int(str(val)))])
                 mdl.extend([f])
             super_f(mdl)
 
@@ -212,7 +153,6 @@ class ClingconBaseSolver(TheoryBaseSolver):
 
 BASE_SOLVERS = {
     "clingo": ClingoBaseSolver,
-    "tclingo": TemporalClingoBaseSolver,
     "clingcon": ClingconBaseSolver,
 }
 
