@@ -20,3 +20,15 @@ metasp-systems:
     print-model: telingo_print_model
     constants:
       - "horizon"
+
+  - name: delingo
+    solver: clingo
+    syntax-encoding:
+      - "./telingo/syntax.lp"
+      - "./delingo/syntax.lp"
+    semantics-encoding:
+      - "./telingo/semantics.lp"
+      - "./delingo/semantics.lp"
+    print-model: telingo_print_model
+    constants:
+      - "horizon"

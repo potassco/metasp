@@ -40,9 +40,9 @@ class MetaSystem:
         self.solver_name = solver
         self.syntax_encoding = syntax_encoding
         self.semantics_encoding = semantics_encoding
-        self.print_model_name = print_model
         self.constants = constants or []
         self.python_scripts = python_scripts or []
+        self._set_printing_function(print_model)
 
     @classmethod
     def from_dict(cls, config: dict) -> "MetaSystem":
@@ -83,6 +83,36 @@ class MetaSystem:
         title = "\n\n%%%%%% File: {} %%%%%%\n\n".format(file)
         return title + file_content
 
+    def _set_printing_function(self, print_model_name: str) -> None:
+        """Set the printing function for the system.
+
+        Raises:
+            ValueError: If the printing function is not found.
+        """
+        script_functions = {}
+        for script_path in self.python_scripts:
+            log.debug(f"Loading python script: {script_path}")
+            module_name = os.path.splitext(os.path.basename(script_path))[0]
+            spec = importlib.util.spec_from_file_location(module_name, script_path)
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            for attr in dir(module):
+                obj = getattr(module, attr)
+                if callable(obj):
+                    script_functions[attr] = obj
+        if print_model_name in script_functions:
+            self.print_model = lambda model: script_functions[print_model_name](model, self)
+            return
+
+        printing_func = metasp_printing_dict.get(print_model_name)
+        if printing_func is None:
+            log.error(
+                f"Print model function '{print_model_name}' not found. Available print functions: {list(script_functions.keys()) + list(metasp_printing_dict.keys())}"
+            )
+            raise ValueError(f"Print model function '{print_model_name}' not found")
+
+        self.print_model = lambda model: printing_func(model, self)
+
     def preprocess(self, files: Sequence[str], constants: Sequence[str]) -> str:
         """
         Preprocess the system.
@@ -112,40 +142,13 @@ class MetaSystem:
         title = "\n\n%%%%%% Reified Input %%%%%%\n\n"
         return title + reified_input
 
-    def print_model(self, model: Model) -> None:
-        """
-        Print the model.
-        Args:
-            model (Model): The model to be printed.
-        """
-        log.debug("Printing model using '%s' function", self.print_model_name)
-        script_functions = {}
-        for script_path in self.python_scripts:
-            log.debug(f"Loading python script: {script_path}")
-            module_name = os.path.splitext(os.path.basename(script_path))[0]
-            spec = importlib.util.spec_from_file_location(module_name, script_path)
-            module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(module)
-            for attr in dir(module):
-                obj = getattr(module, attr)
-                if callable(obj):
-                    script_functions[attr] = obj
-        log.debug(f"Available print functions: {list(script_functions.keys()) + list(metasp_printing_dict.keys())}")
-        if self.print_model_name in script_functions:
-            script_functions[self.print_model_name](model, self)
-            return
-        printing_func = metasp_printing_dict.get(self.print_model_name)
-        if printing_func is not None:
-            printing_func(model, self)
-        else:
-            log.error(f"Print model function '{self.print_model_name}' not found")
-            raise ValueError(f"Print model function '{self.print_model_name}' not found")
-
-    def parse_constants(self, constants: Sequence[str]) -> None:
+    def _set_constants(self, constants: Sequence[str]) -> None:
         """
         Parse the constants and add them to the system.
         Args:
             constants (Sequence[str]): The constants to be added to the system.
+        Raises:
+            ValueError: If a required constant is not provided.
         """
         input_consts = {c.split("=")[0]: c.split("=")[1] for c in constants}
         for const in self.constants:
@@ -157,13 +160,17 @@ class MetaSystem:
 
     def meta_solve(self, control: Control, reified_input: str, on_model: Optional[Callable] = None) -> None:
         """
-        Solve the reified input with the given control object.
-        It will run the system with the given control object.
+        Last step where using the control object from the application class it will solve the reified input with the program semantics.
+        The semantics are transformed to allow the include statements for metasp files.
         Args:
             control (Control): The clingo control object with the command line options from the application class.
             reified_input (str): The reified input data to be solved.
+            on_model (Optional[Callable]): Optional callback function to be called on each model found. Useful for testing and custom API usage.
         """
+
+        # Program to avoid warnings
         reify_defined_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "encodings", "reify_defined.lp")
+
         semantics_with_includes = "\n".join([self._replace_package_includes(f) for f in self.semantics_encoding])
         self.base_solver.load(reified_input + semantics_with_includes, self.syntax_encoding + [reify_defined_file])
         self.base_solver.ground()
@@ -178,7 +185,7 @@ class MetaSystem:
             constants: The list of constants to be, tho they might have been added to the control already, we need them explicitly to use them in the reification.
             files: The list of files to process.
         """
-        self.parse_constants(constants)
+        self._set_constants(constants)
         log.info("Running system with base solver %s", self.solver_name)
         self.base_solver = get_base_solver_class(self.solver_name)(control, constants)
         processed_input = self.preprocess(files, constants)

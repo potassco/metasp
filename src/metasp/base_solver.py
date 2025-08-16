@@ -144,12 +144,6 @@ class ClingconBaseSolver(TheoryBaseSolver):
 
         return on_model_function
 
-    def print_model(self, model: Model) -> None:
-        super().print_model(model)
-        sys.stdout.write("\nAssignment:\n\n")
-        sys.stdout.write("\n".join([f"{key}={val}" for key, val in self.theory.assignment(model.thread_id)]))
-        sys.stdout.write("\n\n")
-
 
 BASE_SOLVERS = {
     "clingo": ClingoBaseSolver,
