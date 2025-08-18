@@ -16,6 +16,7 @@ dependencies = [
     "clingo>=5.6.0",
     "setuptools>=42",
     "pyyaml",
+    "rich-argparse",
     "clingox",
     "clingcon",
 ]
