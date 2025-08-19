@@ -17,6 +17,7 @@ class ClingoBaseSolver:
     def __init__(self, ctl: Control, constants: Sequence[str]):
         """
         Creates an approach with a control
+
         Args:
             ctl (Control): The clingo control
         """
@@ -27,6 +28,7 @@ class ClingoBaseSolver:
     def load(self, prg: str, files: Optional[Sequence[str]] = None) -> None:
         """
         Loads and adds needed info.
+
         Args:
             prg (str): Input program
             files (Optional[Sequence[str]], optional): Additional files. Defaults to None.
@@ -47,78 +49,23 @@ class ClingoBaseSolver:
     def solve(self, on_model: Optional[Callable] = None):
         """
         Calls the solve method
+
         Args:
             on_model (Optional[Callable], optional): A possible callback. Defaults to None.
         """
         log.info("Solving...")
         self.ctl.solve(on_model=on_model)  # nocoverage
 
-    def print_model(self, model: Model) -> None:
-        """
-        Print the model.
-        Args:
-            model (Model): The clingo model to be printed.
-        """
-        sys.stdout.write(" ".join([str(sym) for sym in model.symbols(shown=True)]))
-        sys.stdout.write("\n")
-
     def create_on_model(self, on_model: Optional[Callable[..., Any]] = None) -> Callable:
         return on_model
 
 
-class TemporalClingoBaseSolver(ClingoBaseSolver):
-
-    def __init__(self, ctl: Control, constants: Sequence[str]):
-        """
-        Creates a TemporalClingo base solver with a control.
-        Args:
-            ctl (Control): The clingo control.
-            constants (Sequence[str]): The constants to be used in the reification.
-        """
-        super().__init__(ctl, constants)
-        self._assert_lambda_constant()
-
-    def _assert_lambda_constant(self) -> None:
-        """
-        Assert that there is a constant in the form lambda=<num>.
-        """
-        if not any(c.startswith("lambda=") for c in self.constants):
-            log.error(
-                "You must provide a constant in the form lambda=<num> to run the system. Add -c lambda=N to the command line."
-            )
-            raise ValueError("You must provide a constant in the form lambda=<num> to run the system.")
-        else:
-            self.lambda_constant = int(next(c.split("=", 1)[1] for c in self.constants if c.startswith("lambda=")))
-
-    def print_model(self, model: Model) -> None:
-        """
-        Prints the model as in telingo separating the states.
-        Args:
-            model (Model): The clingo model to be printed.
-        """
-        l = int(str(self.ctl.get_const("lambda")))
-        table = {}
-        for sym in model.symbols(shown=True):
-            if sym.type == SymbolType.Function and len(sym.arguments) > 0 and sym.name == "":
-                table.setdefault(sym.arguments[-1].number, []).append(sym.arguments[0])
-        for step in range(l):
-            symbols = table.get(step, [])
-            sys.stdout.write(" State {}:".format(step))
-            sig = None
-            for sym in sorted(symbols):
-                if (sym.name, len(sym.arguments), sym.positive) != sig:
-                    sys.stdout.write("\n ")
-                    sig = (sym.name, len(sym.arguments), sym.positive)
-                sys.stdout.write(" {}".format(sym))
-            sys.stdout.write("\n")
-        sys.stdout.write("\n")
-
-
-class TheoryBaseSolver(TemporalClingoBaseSolver):
+class TheoryBaseSolver(ClingoBaseSolver):
 
     def __init__(self, ctl: Control, constants: Sequence[str], theory_class: Theory):
         """
         Creates an approach with a control
+
         Args:
             ctl (Control): The clingo control
             theory_class (Theory): The theory class to be used.
@@ -129,6 +76,7 @@ class TheoryBaseSolver(TemporalClingoBaseSolver):
     def load(self, prg: str, files: Optional[Sequence[str]] = None) -> None:
         """
         Loads and adds needed info.
+
         Args:
             prg (str): Input program
             files (Optional[Sequence[str]], optional): Additional files. Defaults to None.
@@ -145,12 +93,11 @@ class TheoryBaseSolver(TemporalClingoBaseSolver):
                 prg,
                 lambda ast: self.theory.rewrite_ast(ast, pb.add),
             )
-        # super().load(prg, [])
-        # super().load("a.", [])
 
     def create_on_model(self, on_model: Optional[Callable] = None) -> Callable:
         """
         Custom on_model that takes care of assignments
+
         Args:
             on_model (Callable[..., Any] | None, optional): A possible callback. Defaults to None.
 
@@ -167,6 +114,7 @@ class TheoryBaseSolver(TemporalClingoBaseSolver):
     def solve(self, on_model: Optional[Callable] = None):
         """
         Calls the solve method
+
         Args:
             on_model (Optional[Callable], optional): A possible callback. Defaults to None.
         """
@@ -179,6 +127,7 @@ class ClingconBaseSolver(TheoryBaseSolver):
     def __init__(self, ctl: Control, constants: Sequence[str]):
         """
         Creates a Clingcon base solver with a control.
+
         Args:
             ctl (Control): The clingo control.
         """
@@ -187,6 +136,7 @@ class ClingconBaseSolver(TheoryBaseSolver):
     def create_on_model(self, on_model: Optional[Callable[..., Any]] = None) -> Callable:
         """
         Custom on_model that takes care of assignments
+
         Args:
             on_model (Callable[..., Any] | None, optional): A possible callback. Defaults to None.
 
@@ -197,22 +147,15 @@ class ClingconBaseSolver(TheoryBaseSolver):
 
         def on_model_function(mdl: Model) -> None:
             for key, val in self.theory.assignment(mdl.thread_id):
-                f = Function("assignment", [key.arguments[0], Number(int(str(val)))])
+                f = Function("_assignment", [key, Number(int(str(val)))])
                 mdl.extend([f])
             super_f(mdl)
 
         return on_model_function
 
-    def print_model(self, model: Model) -> None:
-        super().print_model(model)
-        sys.stdout.write("\nAssignment:\n\n")
-        sys.stdout.write("\n".join([f"{key}={val}" for key, val in self.theory.assignment(model.thread_id)]))
-        sys.stdout.write("\n\n")
-
 
 BASE_SOLVERS = {
     "clingo": ClingoBaseSolver,
-    "tclingo": TemporalClingoBaseSolver,
     "clingcon": ClingconBaseSolver,
 }
 
@@ -220,6 +163,7 @@ BASE_SOLVERS = {
 def get_base_solver_class(solver_name: str) -> Optional[ClingoBaseSolver]:
     """
     Get the base solver for the given name.
+
     Args:
         solver_name (str): The name of the solver.
     Returns:

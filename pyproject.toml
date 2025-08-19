@@ -29,7 +29,7 @@ format = ["black", "isort", "autoflake"]
 lint_pylint = ["pylint"]
 typecheck = ["types-setuptools", "mypy"]
 test = ["coverage[toml]"]
-doc = ["mkdocs", "mkdocs-material", "mkdocstrings[python]", "mkdoclingo"]
+doc = ["mkdocs", "mkdocs-material", "mkdocstrings[python]", "mkdoclingo>=1.1.0"]
 dev = ["metasp[test,typecheck,lint_pylint]"]
 
 [project.scripts]

@@ -40,6 +40,5 @@ possible_formula(F',@name(F'),@args(F'),@arity(F')):- formula(M, F), derive(F,F'
 
 
 modality(M):- modality(M, _, _, _).
-formula(atom, F):- possible_formula(F, N, ARGS, ARITY), N!=_show, not formula(M,F):modality(M).
-
+formula(atom, F):- possible_formula(F, N, ARGS, ARITY), N!=_show, N!=N':modality(M,N',_,_).
 

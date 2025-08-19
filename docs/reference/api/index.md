@@ -8,5 +8,6 @@ icon: "material/book-open-variant"
 ::: metasp
     handler: python
     options:
-      members: true
-      show_submodules: true
+        show_root_heading: true
+        show_source: false
+        show_submodules: true

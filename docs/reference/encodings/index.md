@@ -4,14 +4,8 @@ icon: material/file-code
 
 # Encodings
 
+Available encodings to be imported in the semantics encoding.
+These encodings provide useful functionality for working with modalities and their interactions.
 
-<!-- ::: src/metasp/encodings/test.lp
-    handler: asp
-    options:
-        glossary: true
-        predicate_table: true
-        dependency_graph: true
-        encodings:
-            git_link: true
-            source: true
-        start_level: 1 -->
+!!! tip "Usage"
+    Import them in your semantics encoding using `#import "metasp.<file_name>.lp".`

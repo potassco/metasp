@@ -100,33 +100,46 @@ plugins:
       handlers:
         python:
           paths: [src]
-          import:
+          inventories:
             - https://docs.python.org/3/objects.inv
           options:
             show_symbol_type_heading: true
             show_symbol_type_toc: true
-            # show_root_toc_entry: false
-            # show_inherited_summary: true
-            show_inherited_detail: true
-            show_inherited_detail_toc: true
-            show_inherited_detail_tree: true
             show_signature_annotations: true
-            signature_crossrefs: true
             show_source: false
+            extra:
+              signature_cross_references: true
+              show_inherited_detail: true
+              show_inherited_detail_toc: true
+              show_inherited_detail_tree: true
 
 nav:
   - Home: index.md
   - Getting Started: getting_started.md
-  - Examples: examples/index.md
+  - Examples:
+      - telingo: examples/telingo.md
+      - melingo: examples/melingo.md
+      - delingo: examples/delingo.md
   - Reference:
-    - reference/index.md
-    - Problem: reference/problem/index.md
-    - Encodings: reference/encodings/index.md
-    - API: reference/api/index.md
+      - reference/index.md
+      - Solver: reference/solver.md
+      - Semantics: reference/semantics.md
+      - Syntax: reference/syntax.md
+      - Print: reference/print.md
+      - Encodings:
+          - reference/encodings/index.md
+          - meta.lp: reference/encodings/meta.md
+          - formulas.lp: reference/encodings/formulas.md
+          - derived.lp: reference/encodings/derived.md
+          - reify-defined.lp: reference/encodings/reify_defined.md
+          - show.lp: reference/encodings/show.md
+          - show-time.lp: reference/encodings/show_time.md
+          - meta-time.lp: reference/encodings/meta_time.md
+      - API: reference/api/index.md
   - Community:
-    - community/index.md
-    - Help: community/help.md
-    - Changes: community/CHANGES.md
-    - Contributing: community/CONTRIBUTING.md
-    - Development: community/DEVELOPMENT.md
-    - Deployment: community/DEPLOYMENT.md
+      - community/index.md
+      - Help: community/help.md
+      - Changes: community/CHANGES.md
+      - Contributing: community/CONTRIBUTING.md
+      - Development: community/DEVELOPMENT.md
+      - Deployment: community/DEPLOYMENT.md

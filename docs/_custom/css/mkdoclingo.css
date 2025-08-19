@@ -5,7 +5,7 @@ code.doc-clingo-symbol-encoding::after {
 
 
 code.doc-clingo-symbol-predicate::after {
-    content: "predicate";
+    content: "pred";
     color: #ca91bf
 }
 
@@ -46,4 +46,8 @@ code.doc-clingo-symbol-predicate::after {
     background-color: #ca91bf;
     -webkit-mask-image: var(--md-admonition-icon--asp-doc-ref);
     mask-image: var(--md-admonition-icon--asp-doc-ref);
+}
+
+.md-grid {
+    max-width: 1350px;
 }
