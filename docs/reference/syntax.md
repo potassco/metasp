@@ -1,3 +1,7 @@
+---
+icon: "material/pen-plus"
+---
+
 # Syntax
 
 The syntax encoding specifies the modalities and their safety, enabling checks and the generation of externals.

@@ -8,7 +8,9 @@ Adds a time argument to the meta predicates. It can be used instead of [`meta.lp
     options:
         glossary:
             include_references: false
-        predicate_table: true
+            include_undocumented: false
+        predicate_table:
+            include_undocumented: false
         encodings:
             git_link: true
         start_level: 1

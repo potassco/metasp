@@ -29,6 +29,7 @@ class MetaSystem:
     ):
         """
         Initialize the System with its name, solver, and encodings.
+
         Args:
             name (str): The name of the system.
             solver (str): The solver to be used.
@@ -47,6 +48,7 @@ class MetaSystem:
     def from_dict(cls, config: dict) -> "MetaSystem":
         """
         Create a MetaSystem instance from a configuration dictionary.
+
         Args:
             config (dict): The configuration dictionary containing system details.
         Returns:
@@ -65,6 +67,7 @@ class MetaSystem:
     def _replace_package_includes(self, file: str) -> str:
         """
         Replace #include statements using metasp.file_name with the path of the metasp implementation.
+
         Args:
             file (str): The file name to be processed.
         Returns:
@@ -116,6 +119,7 @@ class MetaSystem:
     def _set_constants(self, constants: Sequence[str]) -> None:
         """
         Parse the constants and add them to the system.
+
         Args:
             constants (Sequence[str]): The constants to be added to the system.
         Raises:
@@ -134,6 +138,7 @@ class MetaSystem:
         Last step where using the control object from the application class
         it will solve the reified input with the program semantics.
         The semantics are transformed to allow the include statements for metasp files.
+
         Args:
             control (Control): The clingo control object with the command line options from the application class.
             reified_input (str): The reified input data to be solved.
@@ -153,6 +158,7 @@ class MetaSystem:
         Run the system. It will create the base solver, preprocess the input files,
         reify the input and call the meta_solve method to solve the reified input
         using the semantics encoding.
+
         Args:
             control: The  clingo control object with the command line options from the application class.
             Will be used in the last step to solve given the reified program.

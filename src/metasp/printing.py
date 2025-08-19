@@ -11,6 +11,7 @@ import sys
 def default_print_model(model: Model, system) -> None:
     """
     Print the model.
+
     Args:
         model (Model): The clingo model to be printed.
         system (MetaSystem): The metasp system.
@@ -22,6 +23,7 @@ def default_print_model(model: Model, system) -> None:
 def telingo_print_model(model: Model, system) -> None:
     """
     Prints the model as in telingo, separating the states.
+
     Args:
         model (Model): The clingo model to be printed.
         system (MetaSystem): The metasp system.

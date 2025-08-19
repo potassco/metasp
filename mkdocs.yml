@@ -116,23 +116,25 @@ plugins:
 nav:
   - Home: index.md
   - Getting Started: getting_started.md
-  - Examples: examples/index.md
+  - Examples:
+      - telingo: examples/telingo.md
+      - melingo: examples/melingo.md
+      - delingo: examples/delingo.md
   - Reference:
       - reference/index.md
-      - Components:
-          - reference/components/index.md
-          - Solver: reference/components/solver.md
-          - Semantics: reference/components/semantics.md
-          - Syntax: reference/components/syntax.md
-          - Print: reference/components/print.md
+      - Solver: reference/solver.md
+      - Semantics: reference/semantics.md
+      - Syntax: reference/syntax.md
+      - Print: reference/print.md
       - Encodings:
           - reference/encodings/index.md
-          - Meta: reference/encodings/meta.md
-          - Formulas: reference/encodings/formulas.md
-          - Derived: reference/encodings/derived.md
-          - Reify Defined: reference/encodings/reify_defined.md
-          - Show: reference/encodings/show.md
-          - Meta Time: reference/encodings/meta_time.md
+          - meta.lp: reference/encodings/meta.md
+          - formulas.lp: reference/encodings/formulas.md
+          - derived.lp: reference/encodings/derived.md
+          - reify-defined.lp: reference/encodings/reify_defined.md
+          - show.lp: reference/encodings/show.md
+          - show-time.lp: reference/encodings/show_time.md
+          - meta-time.lp: reference/encodings/meta_time.md
       - API: reference/api/index.md
   - Community:
       - community/index.md

@@ -9,6 +9,7 @@ def reify(prg: str, constants: Sequence[str]) -> str:
     Reify the input data with the given constants.
     The input predicate is expected to have the required externals
     which can be achieved by calling preprocess first.
+
     Args:
         prg (str): The input data to be reified.
         constants (Sequence[str]): The constants to be used in the reification.
@@ -30,6 +31,7 @@ def reify(prg: str, constants: Sequence[str]) -> str:
 def preprocess(input_files: Sequence[str], constants: Sequence[str], syntax_encoding: Sequence[str]) -> str:
     """
     Preprocess the input files.
+
     Args:
         input_files (Sequence[str]): The input files to be preprocessed.
         syntax_encoding (Sequence[str]): The syntax encoding defining modalities and safety.

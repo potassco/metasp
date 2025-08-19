@@ -53,9 +53,8 @@ true(box(P,box(star(P),F)),K):-  true(box(star(P),F),K).
 true(box(star(P),F),K):-  formula(del, box(star(P),F)), true(F,K), true(box(P,box(star(P),F)),K).
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Derived
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% ------- Derived --------- %%
+
 
 derive(dia(seq(P1,P2),F),dia(P1,dia(P2,F)),del) :- formula(del,dia(seq(P1,P2),F)).
 derive(box(seq(P1,P2),F),box(P1,box(P2,F)),del) :- formula(del,box(seq(P1,P2),F)).

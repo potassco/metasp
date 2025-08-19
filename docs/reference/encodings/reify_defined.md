@@ -9,8 +9,7 @@ Adds defined directives for the reification predicates to avoid warnings when us
         glossary:
             include_references: false
         predicate_table: true
-        encodings:
-            git_link: true
+        encodings: false
         start_level: 1
 
 ## Examples

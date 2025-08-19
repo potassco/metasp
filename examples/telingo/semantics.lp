@@ -1,7 +1,7 @@
 #include "metasp.meta-time.lp".
 #include "metasp.derived.lp".
 #include "metasp.formulas.lp".
-#include "metasp.show.lp".
+#include "metasp.show-time.lp".
 
 #const lambda= horizon+1.
 

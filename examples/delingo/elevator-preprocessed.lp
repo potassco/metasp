@@ -16,6 +16,7 @@ next(at(X))  :- at(X), not up, not down, not final.
 served(X) :- at(X), serve.
 next(called(X)):- called(X), not served(X).
 
+
 ready :- called(X), at(X).
 
 :- called(X), final.

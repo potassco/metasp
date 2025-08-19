@@ -1,3 +1,7 @@
+---
+icon: "material/head-question"
+---
+
 # Semantics
 
 The semantics encoding defines the meaning of the modalities and how they interact with each other.
@@ -5,6 +9,8 @@ The semantics encoding defines the meaning of the modalities and how they intera
 To write the semantics encoding we provide a set of available encodings that can be imported using `#import "metasp.<file_name>.lp".`.
 You can include such encodings to your semantics and write only the semantics relevant to your system.
 
+The available encodings can be found in the [Encodings](../../reference/encodings) section.
+<!--
 ## Provided Encodings
 
 - [`meta.lp`](../encodings/meta.md): Adds ASP semantics for the reification predicates.
@@ -13,4 +19,4 @@ You can include such encodings to your semantics and write only the semantics re
 
 ### Time Support
 
-- [`meta-time.lp`](../encodings/meta_time.md): Adds ASP semantics with a time argument to all predicates (use instead of [`meta.lp`](../encodings/meta.md)).
+- [`meta-time.lp`](../encodings/meta_time.md): Adds ASP semantics with a time argument to all predicates (use instead of [`meta.lp`](../encodings/meta.md)). -->

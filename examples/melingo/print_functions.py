@@ -5,8 +5,10 @@ import sys
 def melingo_print_model(model: Model, system) -> None:
     """
     Prints the model as in melingo separating the states.
+
     Args:
         model (Model): The clingo model to be printed.
+        system (MetaSystem): The metasp system.
     """
     l = int(system.horizon) + 1
     table = {}

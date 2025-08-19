@@ -44,7 +44,7 @@ Args:
 %*
 true(O)
 ............
-The output `O` is true. Unlike `hold/1`, this predicate uses the atom and not the literal number.
+The output `O` is true. It is equivalent to `hold/1`, but this predicate uses the atom and not the literal number.
 Therefor it can be used and derived in the semantics encoding to define truth of formulas that use modalities.
 
 Args:

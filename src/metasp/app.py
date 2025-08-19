@@ -13,6 +13,7 @@ class MetaspApp(Application):
     def __init__(self, config: dict, constants=None):
         """
         Create application
+
         Args:
             config (dict): The configuration dictionary.
             constants (Optional[dict], optional): The constants required by the system that will become attributes. Defaults to None.
@@ -28,6 +29,7 @@ class MetaspApp(Application):
     def parse_log_level(self, log_level):
         """
         Parse log
+
         Args:
             log_level (str): The log level to set.
         Returns:
@@ -42,6 +44,7 @@ class MetaspApp(Application):
     def register_options(self, options: ApplicationOptions) -> None:
         """
         Add custom options
+
         Args:
             options (ApplicationOptions): The application options to register.
         """

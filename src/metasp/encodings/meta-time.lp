@@ -59,7 +59,7 @@ Args:
 %*
 true(O, T)
 ............
-The output `O` is true at time step `T`. Unlike `hold/2`, this predicate uses the atom and not the literal number.
+The output `O` is true at time step `T`. It is equivalent to `hold/2`, but this predicate uses the atom and not the literal number.
 Therefor it can be used and derived in the semantics encoding to define truth of formulas that use modalities.
 
 Args:

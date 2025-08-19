@@ -17,6 +17,7 @@ class ClingoBaseSolver:
     def __init__(self, ctl: Control, constants: Sequence[str]):
         """
         Creates an approach with a control
+
         Args:
             ctl (Control): The clingo control
         """
@@ -27,6 +28,7 @@ class ClingoBaseSolver:
     def load(self, prg: str, files: Optional[Sequence[str]] = None) -> None:
         """
         Loads and adds needed info.
+
         Args:
             prg (str): Input program
             files (Optional[Sequence[str]], optional): Additional files. Defaults to None.
@@ -47,6 +49,7 @@ class ClingoBaseSolver:
     def solve(self, on_model: Optional[Callable] = None):
         """
         Calls the solve method
+
         Args:
             on_model (Optional[Callable], optional): A possible callback. Defaults to None.
         """
@@ -62,6 +65,7 @@ class TheoryBaseSolver(ClingoBaseSolver):
     def __init__(self, ctl: Control, constants: Sequence[str], theory_class: Theory):
         """
         Creates an approach with a control
+
         Args:
             ctl (Control): The clingo control
             theory_class (Theory): The theory class to be used.
@@ -72,6 +76,7 @@ class TheoryBaseSolver(ClingoBaseSolver):
     def load(self, prg: str, files: Optional[Sequence[str]] = None) -> None:
         """
         Loads and adds needed info.
+
         Args:
             prg (str): Input program
             files (Optional[Sequence[str]], optional): Additional files. Defaults to None.
@@ -92,6 +97,7 @@ class TheoryBaseSolver(ClingoBaseSolver):
     def create_on_model(self, on_model: Optional[Callable] = None) -> Callable:
         """
         Custom on_model that takes care of assignments
+
         Args:
             on_model (Callable[..., Any] | None, optional): A possible callback. Defaults to None.
 
@@ -108,6 +114,7 @@ class TheoryBaseSolver(ClingoBaseSolver):
     def solve(self, on_model: Optional[Callable] = None):
         """
         Calls the solve method
+
         Args:
             on_model (Optional[Callable], optional): A possible callback. Defaults to None.
         """
@@ -120,6 +127,7 @@ class ClingconBaseSolver(TheoryBaseSolver):
     def __init__(self, ctl: Control, constants: Sequence[str]):
         """
         Creates a Clingcon base solver with a control.
+
         Args:
             ctl (Control): The clingo control.
         """
@@ -128,6 +136,7 @@ class ClingconBaseSolver(TheoryBaseSolver):
     def create_on_model(self, on_model: Optional[Callable[..., Any]] = None) -> Callable:
         """
         Custom on_model that takes care of assignments
+
         Args:
             on_model (Callable[..., Any] | None, optional): A possible callback. Defaults to None.
 
@@ -154,6 +163,7 @@ BASE_SOLVERS = {
 def get_base_solver_class(solver_name: str) -> Optional[ClingoBaseSolver]:
     """
     Get the base solver for the given name.
+
     Args:
         solver_name (str): The name of the solver.
     Returns:
