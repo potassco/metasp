@@ -1,12 +1,10 @@
+import sys
+import logging
 import textwrap
-from clingo.application import Application, ApplicationOptions, Flag, clingo_main
+from clingo.application import Application, ApplicationOptions
+from clingo import Model
 from .utils.logging import configure_logging
 from .system import MetaSystem
-import logging
-import sys
-from clingo import Model
-import logging
-import clingo
 
 log = logging.getLogger(__name__)
 
@@ -15,6 +13,9 @@ class MetaspApp(Application):
     def __init__(self, config: dict, constants=None):
         """
         Create application
+        Args:
+            config (dict): The configuration dictionary.
+            constants (Optional[dict], optional): The constants required by the system that will become attributes. Defaults to None.
         """
         self.config = config
         self.constants = constants or {}
@@ -27,6 +28,10 @@ class MetaspApp(Application):
     def parse_log_level(self, log_level):
         """
         Parse log
+        Args:
+            log_level (str): The log level to set.
+        Returns:
+            bool: True if the log level is valid, False otherwise.
         """
         if log_level is not None:
             self._log_level = log_level.upper()
@@ -37,6 +42,8 @@ class MetaspApp(Application):
     def register_options(self, options: ApplicationOptions) -> None:
         """
         Add custom options
+        Args:
+            options (ApplicationOptions): The application options to register.
         """
         group = "\033[94mMetasp - " + self.name
         options.add(
@@ -54,13 +61,11 @@ class MetaspApp(Application):
 
     def print_model(self, model: Model, _) -> None:
         """
-        Print the model.
+        Print the model using the system's printing function which is set in the configuration.
 
         Args:
-            control (_type_): _description_
-            model (_type_): _description_
+            model (Model): The model to print.
         """
-        log.debug("------- Full model -----")
         log.debug("\n".join([str(s) for s in model.symbols(atoms=True, shown=True, theory=True)]))
         self.meta_system.print_model(model)
 
@@ -73,9 +78,9 @@ class MetaspApp(Application):
         log = logging.getLogger("metasp")
 
         log.info(f"=== Running meta system: '{self.name}' ===")
-        log.debug(f"Constants: {self.constants}")
         log.debug(f"Config: {self.config}")
-        log.debug(f"Loading files: {files}")
+        log.debug(f"Constants: {self.constants}")
+        log.debug(f"Input files: {files}")
 
         self.meta_system = MetaSystem.from_dict(self.config)
         self.meta_system.main(control, self.constants, files)

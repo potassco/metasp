@@ -3,17 +3,16 @@ The main entry point for the application.
 """
 
 import sys
-
-from .utils.logging import configure_logging, get_logger
-from .app import MetaspApp
-from .utils.parser import get_parser
+from typing import Optional
 import os
 import yaml
 import argparse
 from clingo.application import clingo_main
+from .app import MetaspApp
+from .utils.parser import get_parser
 
 
-def parse_constants(arguments):
+def parse_constants(arguments: list[str]) -> list[str]:
     """
     Parse constants from the command line arguments.
     We need these constrants in both steps and since we can't fork the control object,
@@ -35,11 +34,11 @@ def parse_constants(arguments):
     return args.const if args.const else []
 
 
-def get_configuration() -> dict:
+def get_configuration() -> Optional[dict[str, object]]:
     """
     Load the configuration from the metasp.yml file.
     Returns:
-        dict: The configuration dictionary loaded from the YAML file.
+        dict: The configuration dictionary loaded from the YAML file. If the file does not exist, returns None.
     """
     # Get the configuration file to know the available commands
     config_path = os.path.join(os.getcwd(), "metasp.yml")

@@ -1,4 +1,7 @@
-"""Stores all printing functions that will be available for the print_model"""
+"""
+Module with all printing functions that will be available for the print_model
+Custom printing functions can be provided by adding the script in the configuration
+"""
 
 from typing import Callable, Optional
 from clingo import Model, Symbol, SymbolType, Function, Number
@@ -10,6 +13,7 @@ def default_print_model(model: Model, system) -> None:
     Print the model.
     Args:
         model (Model): The clingo model to be printed.
+        system (MetaSystem): The metasp system.
     """
     sys.stdout.write(" ".join([str(sym) for sym in model.symbols(shown=True)]))
     sys.stdout.write("\n")
@@ -17,10 +21,12 @@ def default_print_model(model: Model, system) -> None:
 
 def telingo_print_model(model: Model, system) -> None:
     """
-    Prints the model as in telingo separating the states.
+    Prints the model as in telingo, separating the states.
     Args:
         model (Model): The clingo model to be printed.
+        system (MetaSystem): The metasp system.
     """
+    assert hasattr(system, "horizon"), "system must have a 'horizon' property to use telingo_print_model"
     l = int(system.horizon) + 1
     table = {}
     for sym in model.symbols(shown=True):

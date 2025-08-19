@@ -1,5 +1,6 @@
 metasp-systems:
   - name: melingo
+    description: "Meta ASP system with for metric equilibrium logic (MEL) using clingcon as backend solver."
     solver: clingcon
     syntax-encoding:
       - "./melingo/syntax.lp"
@@ -12,6 +13,7 @@ metasp-systems:
       - "horizon"
 
   - name: telingo
+    description: "Meta ASP system for temporal equilibrium logic (TEL)."
     solver: clingo
     syntax-encoding:
       - "./telingo/syntax.lp"
@@ -22,6 +24,7 @@ metasp-systems:
       - "horizon"
 
   - name: delingo
+    description: "Meta ASP system joining temporal equilibrium logic (TEL) with dynamic logic (DEL)."
     solver: clingo
     syntax-encoding:
       - "./telingo/syntax.lp"
