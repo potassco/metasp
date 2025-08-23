@@ -10,9 +10,14 @@ import argparse
 from clingo.application import clingo_main
 from .app import MetaspApp
 from .utils.parser import get_parser
+from rich_argparse import ArgumentDefaultsRichHelpFormatter
+from metasp.preprocess import preprocess, reify
+from metasp.system import MetaSystem
+from metasp.utils.logging import configure_logging
+import subprocess
 
 
-def parse_constants(arguments: list[str]) -> list[str]:
+def parse_constants(arguments: list[str]) -> dict[str, str]:
     """
     Parse constants from the command line arguments.
     We need these constrants in both steps and since we can't fork the control object,
@@ -32,7 +37,8 @@ def parse_constants(arguments: list[str]) -> list[str]:
         type=lambda s: s if "=" in s else parser.error("Constants must have form <id>=<term>"),
     )
     args, _ = parser.parse_known_args(arguments)
-    return args.const if args.const else []
+    input_consts = {c.split("=")[0]: c.split("=")[1] for c in args.const} if args.const else {}
+    return input_consts
 
 
 def get_configuration() -> Optional[dict[str, object]]:
@@ -60,30 +66,45 @@ def main() -> None:
     Run the main function.
     """
     config = get_configuration()
+    constants_dict = parse_constants(sys.argv[2:])
     if config is not None:
-        systems = {system["name"]: system for system in config.get("metasp-systems", [])}
-        if len(sys.argv) > 1 and sys.argv[1] in list(systems.keys()):
+        meta_systems_configs = {system["name"]: system for system in config.get("metasp-systems", [])}
+        if len(sys.argv) > 2 and sys.argv[1] in list(meta_systems_configs.keys()) and sys.argv[2] == "solve":
             system = sys.argv[1]
-            constants = parse_constants(sys.argv[2:])
-            exit_status = clingo_main(MetaspApp(config=systems[system], constants=constants), sys.argv[2:])
+            exit_status = clingo_main(
+                MetaspApp(config=meta_systems_configs[system], constants=constants_dict), sys.argv[3:]
+            )
             sys.exit(exit_status)
 
-    parser = get_parser()
-    subparsers = parser.add_subparsers(
-        dest="system",
-        required=True,
-        help="Available systems defined in configuration file metasp.yml. Each system is a separate subcommand using clingo's Application class.",
-    )
     if config is None:
         print(
             "\033[93mConfiguration file 'metasp.yml' not found in current directory. Make sure this file exists and defines at least one system to use metasp.\033[0m"
         )
-    else:
-        for system in config.get("metasp-systems", []):
-            system_parser = subparsers.add_parser(system["name"], help=system.get("description", ""))
-            system_parser.set_defaults(**system.get("defaults", {}))
+        # parser.parse_args({})
+        exit(1)
+    parser = get_parser(config)
 
-    parser.parse_args()
+    args = parser.parse_args()
+    configure_logging(sys.stderr, args.log, sys.stderr.isatty())
+    system_config = meta_systems_configs[args.system]
+    meta_system = MetaSystem.from_dict(system_config)
+    meta_system.set_constants(constants_dict)
+    processed_input = preprocess(args.files, constants_dict, meta_system.syntax_encoding)
+    if args.output == "extend":
+        sys.stdout.write(processed_input + "\n")
+        exit(0)
+    reified_input = reify(processed_input, constants_dict)
+    if args.output == "reify":
+        sys.stdout.write(reified_input + "\n")
+        exit(0)
+    if args.output == "ui":
+        print("Running in user interface mode. Use Ctrl+C to exit.")
+        command = meta_system.clinguin_command(reified_input)
+        print(f"Running command: {' '.join(command)}")
+        result = subprocess.run(command, shell=False)
+        if result.returncode != 0:
+            print(f"Command failed with exit code {result.returncode}")
+        exit(0)
 
 
 if __name__ == "__main__":

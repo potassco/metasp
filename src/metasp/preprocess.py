@@ -4,7 +4,7 @@ from typing import List
 from clingo import Control, Symbol
 
 
-def reify(prg: str, constants: Sequence[str]) -> str:
+def reify(prg: str, constants: dict[str, str]) -> str:
     """
     Reify the input data with the given constants.
     The input predicate is expected to have the required externals
@@ -18,7 +18,7 @@ def reify(prg: str, constants: Sequence[str]) -> str:
     """
     symbols: List[Symbol] = []
 
-    ctl = Control(["--warn=none"] + [f"-c {c}" for c in constants])
+    ctl = Control(["--warn=none"] + [f"-c {k}={v}" for k, v in constants.items()])
     reifier = Reifier(symbols.append, reify_steps=False)
     ctl.register_observer(reifier)
     ctl.add("base", [], prg)
@@ -28,14 +28,14 @@ def reify(prg: str, constants: Sequence[str]) -> str:
     return title + reified_input
 
 
-def preprocess(input_files: Sequence[str], constants: Sequence[str], syntax_encoding: Sequence[str]) -> str:
+def preprocess(input_files: Sequence[str], constants: dict[str, str], syntax_encoding: Sequence[str]) -> str:
     """
     Preprocess the input files.
 
     Args:
         input_files (Sequence[str]): The input files to be preprocessed.
         syntax_encoding (Sequence[str]): The syntax encoding defining modalities and safety.
-        constants (Sequence[str]): The constants to be used during preprocessing <id>=<term>.
+        constants (dict[str,str]): The constants to be used during preprocessing <id>:<term>.
     Returns:
         str: The preprocessed input as a string. With externals and transformed show statements.
     Raises:

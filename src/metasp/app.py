@@ -5,6 +5,7 @@ from clingo.application import Application, ApplicationOptions
 from clingo import Model
 from .utils.logging import configure_logging
 from .system import MetaSystem
+from metasp.preprocess import preprocess, reify
 
 log = logging.getLogger(__name__)
 
@@ -21,6 +22,7 @@ class MetaspApp(Application):
         self.config = config
         self.constants = constants or {}
         self._log_level = "warning"
+        # self._step_type = "solve"
 
     @property
     def name(self):
@@ -41,6 +43,21 @@ class MetaspApp(Application):
 
         return True
 
+    # def parse_step(self, step_type):
+    #     """
+    #     Parse step type
+
+    #     Args:
+    #         step_type (str): The type of step to generate.
+    #     Returns:
+    #         bool: True if the step type is valid, False otherwise.
+    #     """
+    #     if step_type is not None:
+    #         self._step_type = step_type.lower()
+    #         return self._step_type in ["extend", "reify", "solve", "ui"]
+
+    #     return True
+
     def register_options(self, options: ApplicationOptions) -> None:
         """
         Add custom options
@@ -56,11 +73,27 @@ class MetaspApp(Application):
                 """\
                 Provide logging level.
                                             <level> ={debug|info|error|warning}
-                                            (default: warning)\033[0m"""
+                                            (default: warning)"""
             ),
             self.parse_log_level,
             argument="<level>",
         )
+        # options.add(
+        #     group,
+        #     "step",
+        #     textwrap.dedent(
+        #         """\
+        #         Provide the type of step to generate.
+        #             <type>:{extend|reify|solve|ui}(default: solve)
+        #                 extend : Output the extended input and run syntactic checks.
+        #                 reify  : Output the reified input.
+        #                 solve  : Solve the processed and reified input files with the meta encoding for the semantics.
+        #                 ui     : User interface mode.
+
+        #             \033[0m"""
+        #     ),
+        #     self.parse_step,
+        # )
 
     def print_model(self, model: Model, _) -> None:
         """
@@ -86,4 +119,9 @@ class MetaspApp(Application):
         log.debug(f"Input files: {files}")
 
         self.meta_system = MetaSystem.from_dict(self.config)
-        self.meta_system.main(control, self.constants, files)
+
+        self.meta_system.set_constants(self.constants)
+        processed_input = preprocess(files, self.constants, self.meta_system.syntax_encoding)
+        reified_input = reify(processed_input, self.constants)
+        self.meta_system.set_control(control)
+        self.meta_system.meta_compute(reified_input)

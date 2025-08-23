@@ -28,8 +28,8 @@ def telingo_print_model(model: Model, system) -> None:
         model (Model): The clingo model to be printed.
         system (MetaSystem): The metasp system.
     """
-    assert hasattr(system, "horizon"), "system must have a 'horizon' property to use telingo_print_model"
-    l = int(system.horizon) + 1
+    assert "horizon" in system.constants, "system must have a 'horizon' property to use telingo_print_model"
+    l = int(system.constants["horizon"]) + 1
     table = {}
     for sym in model.symbols(shown=True):
         if sym.type == SymbolType.Function and len(sym.arguments) > 0 and sym.name == "":

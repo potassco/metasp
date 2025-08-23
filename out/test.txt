@@ -1,0 +1,23 @@
+clingo version 5.7.1
+Reading from telingo/lights-encoding-preprocessed.lp
+[92mINFO:[90m  - === Running meta system: 'telingo' ===[0m
+UNKNOWN
+
+Models       : 0+
+Calls        : 1
+Time         : 0.001s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
+CPU Time     : 0.000s
+next(push) :- initial.
+:- red, green.
+red :- not green.
+eventually(always(green)):- push.
+
+
+#external initial.
+#external push.
+#external always(green).
+#external green.
+
+_show.
+_show(push):-push.
+

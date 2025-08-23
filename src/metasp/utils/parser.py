@@ -28,8 +28,22 @@ ascii_art_metasp = Text(
     justify="left",
 )
 
+levels = [
+    ("error", logging.ERROR),
+    ("warning", logging.WARNING),
+    ("info", logging.INFO),
+    ("debug", logging.DEBUG),
+]
 
-def get_parser() -> ArgumentParser:
+
+def get(levels: list[tuple[str, int]], name: str) -> Optional[int]:
+    for key, val in levels:
+        if key == name:
+            return val
+    return None  # nocoverage
+
+
+def get_parser(config: dict[str, Any]) -> ArgumentParser:
     """
     Return the parser for command line options.
     """
@@ -38,6 +52,53 @@ def get_parser() -> ArgumentParser:
         description=ascii_art_metasp + "\n🚀 Framework for metaprogramming in ASP.",
         formatter_class=ArgumentDefaultsRichHelpFormatter,
     )
-
     parser.add_argument("--version", "-v", action="version", version=f"%(prog)s {VERSION}")
+    subparsers = parser.add_subparsers(
+        dest="system",
+        required=True,
+        help="Available systems defined in configuration file metasp.yml. Each system is a separate subcommand using clingo's Application class.",
+    )
+    for systems_config in config.get("metasp-systems", []):
+        system_parser = subparsers.add_parser(
+            systems_config["name"],
+            help=systems_config.get("description", ""),
+            formatter_class=ArgumentDefaultsRichHelpFormatter,
+        )
+        system_parser_output = system_parser.add_subparsers(
+            dest="output",
+            required=True,
+            help="Available output options for the meta system.",
+        )
+        output_options = {
+            "solve": "Solve the processed and reified input files with the meta encoding for the semantics.",
+            "extend": "Output the extended input and run syntactic checks.",
+            "reify": "Output the reified input.",
+            "ui": "User interface mode.",
+        }
+        for option, description in output_options.items():
+            output_parser = system_parser_output.add_parser(
+                option,
+                help=description,
+                formatter_class=ArgumentDefaultsRichHelpFormatter,
+            )
+            output_parser.add_argument(
+                "files",
+                nargs="*",
+                help="Input file paths.",
+            )
+            output_parser.add_argument(
+                "-c",
+                "--const",
+                action="append",
+                help="Replace term occurrences of <id> with <term> (must have form <id>=<term>)",
+                type=lambda s: s if "=" in s else parser.error("Constants must have form <id>=<term>"),
+            )
+            output_parser.add_argument(
+                "--log",
+                default="warning",
+                choices=[val for _, val in levels],
+                metavar=f"{{{','.join(key for key, _ in levels)}}}",
+                help="Set log level",
+                type=cast(Any, lambda name: get(levels, name)),
+            )
     return parser

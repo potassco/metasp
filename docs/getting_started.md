@@ -42,7 +42,7 @@ Notice that one file might define multiple systems or versions of a system that 
 metasp-systems:
   - name: <system_name>
     description: "<Brief description of the meta-system>"
-    solver: <solver_name>
+    control-name: <solver_name>
     syntax-encoding:
       - "<path/to/syntax.lp>"
     semantics-encoding:
@@ -58,7 +58,7 @@ metasp-systems:
 
 - `name`: Unique identifier for the meta-system. It will be made available in the command line as  `metasp <system_name>`
 - `description`: Short summary of the system's purpose for rendering help.
-- `solver`: Backend solver to use (e.g., `clingcon`, `clingo`), see [Solvers](reference/solver.md).
+- `controls`: Backend controls to use (e.g., `clingcon`, `clingo`), see [Controls](reference/controls.md).
 - `syntax-encoding`: List of relative paths to ASP files encoding the input language syntax, see [Syntax](reference/syntax.md).
 - `semantics-encoding`: List of relative paths to ASP files encoding the system's semantics, see [Semantics](reference/semantics.md).
 - `python-scripts`: Optional Python scripts for custom processing or printing, see [Printing](reference/print.md).
