@@ -54,7 +54,7 @@ This configuration defines a meta-system named `melingo` that uses the `clingo` 
 
     ```bash
     cd examples
-    metasp delingo delingo/elevator-preprocessed.lp -c horizon=10 1
+    metasp delingo solve delingo/elevator-preprocessed.lp -c horizon=10 1
     ```
 
     *output*

@@ -77,7 +77,18 @@ metasp -h
 
 This will list the available systems based on the configuration, where each system can be selected for execution using their name.
 
-When running a system with `metasp <system_name>` will be an extension of the command line options provided by the underlying solver, such as `clingo` or `clingcon`. The system will automatically handle the reification of the input and semantics encoding, while making available the command line options for the solver.
+Once a system is selected, the next command is the type of output.
+
+**Available output options for meta-systems:**
+
+- `solve`: Solve the processed and reified input files using the meta encoding for semantics.
+- `extend`: Output the extended input and perform syntactic checks.
+- `reify`: Output the reified input.
+- `ui`: Launch the user interface using [clinguin](https://clinguin.readthedocs.io/en/latest/).
+
+Choose one of these options after selecting a system to specify the desired output or interaction mode.
+
+When running a system with `metasp <system_name> solve` the command line will be an extension of the command line options provided by the underlying solver, such as `clingo` or `clingcon`. The system will automatically handle the reification of the input and semantics encoding, while making available the command line options for the solver.
 
 !!! example
 
@@ -96,7 +107,7 @@ When running a system with `metasp <system_name>` will be an extension of the co
     Run a specific system
 
     ```console
-    metasp telingo telingo/lights-encoding-preprocessed.lp -c horizon=4
+    metasp telingo solve telingo/lights-encoding-preprocessed.lp -c horizon=4
     ```
 
     For more examples visit the [Examples](examples/index.md) section.

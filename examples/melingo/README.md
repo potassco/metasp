@@ -49,7 +49,7 @@ This configuration defines a meta-system named `melingo` that uses the `clingo` 
 
     ```bash
     cd examples
-    metasp melingo melingo/lights-encoding-preprocessed.lp -c horizon=2  3
+    metasp melingo solve melingo/lights-encoding-preprocessed.lp -c horizon=2  3
     ```
 
     *output*

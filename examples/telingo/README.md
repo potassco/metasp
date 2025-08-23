@@ -50,7 +50,7 @@ This configuration defines a meta-system named `telingo` that uses the `clingo` 
 
     ```bash
     cd examples
-    metasp telingo telingo/lights-encoding-preprocessed.lp -c horizon=4
+    metasp telingo solve telingo/lights-encoding-preprocessed.lp -c horizon=4
     ```
 
     *output*
