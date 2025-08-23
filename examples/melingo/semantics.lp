@@ -4,6 +4,7 @@
 #include "metasp.derived.lp".
 
 #const lambda= horizon+1.
+world(W):-time(W).
 
 
 %================================================

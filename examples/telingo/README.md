@@ -10,7 +10,7 @@ It provides temporal predicates following the grammar for LTLf without past oper
 metasp-systems:
   - name: telingo
     description: "Meta ASP system for temporal equilibrium logic (TEL)."
-    solver: clingo
+    control-name: clingo
     syntax-encoding:
       - "./telingo/syntax.lp"
     semantics-encoding:

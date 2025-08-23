@@ -9,7 +9,7 @@ This example uses metasp to define a system that works like the work presented i
 metasp-systems:
   - name: melingo
     description: "Meta ASP system with for metric equilibrium logic (MEL) using clingcon as backend solver."
-    solver: clingcon
+    control-name: clingcon
     syntax-encoding:
       - "./melingo/syntax.lp"
     semantics-encoding:

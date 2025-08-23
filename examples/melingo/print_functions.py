@@ -10,7 +10,7 @@ def melingo_print_model(model: Model, system) -> None:
         model (Model): The clingo model to be printed.
         system (MetaSystem): The metasp system.
     """
-    l = int(system.horizon) + 1
+    l = int(system.constants["horizon"]) + 1
     table = {}
     times = {}
     for sym in model.symbols(theory=True):
@@ -27,7 +27,7 @@ def melingo_print_model(model: Model, system) -> None:
             table.setdefault(sym.arguments[-1].number, []).append(sym.arguments[0])
     for step in range(l):
         symbols = table.get(step, [])
-        sys.stdout.write(" State {} @{}:".format(step, times.get(step, "?")))
+        sys.stdout.write("State {} \033[94m @{}:\033[0m".format(step, times.get(step, "?")))
         sig = None
         for sym in sorted(symbols):
             if (sym.name, len(sym.arguments), sym.positive) != sig:

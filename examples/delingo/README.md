@@ -12,7 +12,7 @@ This can be done since we are not doing things incrementally.
 metasp-systems:
   - name: delingo
     description: "Meta ASP system joining temporal equilibrium logic (TEL) with dynamic logic (DEL)."
-    solver: clingo
+    control-name: clingo
     syntax-encoding:
       - "./telingo/syntax.lp"
       - "./delingo/syntax.lp"
