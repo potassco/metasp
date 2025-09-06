@@ -16,7 +16,7 @@ def default_print_model(model: Model, system) -> None:
         model (Model): The clingo model to be printed.
         system (MetaSystem): The metasp system.
     """
-    sys.stdout.write(" ".join([str(sym) for sym in model.symbols(shown=True)]))
+    sys.stdout.write("\n".join([str(sym) for sym in model.symbols(shown=True)]))
     sys.stdout.write("\n")
 
 

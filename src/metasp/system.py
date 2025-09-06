@@ -5,13 +5,32 @@ import importlib.util
 from collections.abc import Sequence
 from typing import Callable, Optional
 from clingo import Control
-from metasp.controls import get_clinguin_backend_control, get_control_wrapper_cls
 from metasp.printing import __dict__ as metasp_printing_dict
 import tempfile
 
 log = logging.getLogger(__name__)
 
 ENCODINGS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "encodings")
+
+
+def get_clinguin_backend_control(control_name: str) -> str:
+    """
+    Get the Clinguin backend control for the given name.
+
+    Args:
+        control_name (str): The name of the control.
+    Returns:
+        str: The clinguin backend name
+    """
+    if control_name == "clingcon":
+        return "ClingconBackend"
+    elif control_name == "clingo":
+        return "ClingoBackend"
+    elif control_name == "fclingo":
+        return "FclingoBackend"
+    else:
+        log.error("Control '%s' is not a valid backend for clinguin.", control_name)
+        raise ValueError(f"Control '{control_name}' is not a valid backend for clinguin.")
 
 
 class MetaSystem:
@@ -25,7 +44,7 @@ class MetaSystem:
         control_name: str,
         syntax_encoding: Sequence[str],
         semantics_encoding: Sequence[str],
-        print_model: str = "default_print_model",
+        print_model: Optional[str] = None,
         constants: Optional[Sequence[str]] = None,
         python_scripts: Optional[Sequence[str]] = None,
     ):
@@ -62,7 +81,7 @@ class MetaSystem:
             control_name=config["control-name"],
             syntax_encoding=config["syntax-encoding"],
             semantics_encoding=config["semantics-encoding"],
-            print_model=config.get("print-model", "default_print_model"),
+            print_model=config.get("print-model", None),
             constants=config.get("constants", []),
             python_scripts=config.get("python-scripts", []),
         )
@@ -94,6 +113,9 @@ class MetaSystem:
         Raises:
             ValueError: If the printing function is not found.
         """
+        if print_model_name is None:
+            self.print_model = None
+            return
         script_functions = {}
         for script_path in self.python_scripts:
             log.debug(f"Loading python script: {script_path}")
@@ -134,37 +156,52 @@ class MetaSystem:
             # Create a new attribute in the class with this constant
             self.constants[const] = constants[const]
 
-    def set_control(self, control: Control) -> None:
-        """
-        Set the control object for the system.
+    # def set_control(self, control: Control) -> None:
+    #     """
+    #     Set the control object for the system.
 
-        Args:
-            control (Control): The clingo control object.
-        """
-        self.ctl = get_control_wrapper_cls(self.control_name)(control)
-        log.info("Control set to %s", self.control_name)
+    #     Args:
+    #         control (Control): The clingo control object.
+    #     """
+    #     self.ctl = get_control_wrapper_cls(self.control_name)(control)
+    #     log.info("Control set to %s", self.control_name)
 
-    def meta_compute(self, reified_input: str, on_model: Optional[Callable] = None) -> None:
-        """
-        Last step where using the control object from the application class
-        it will ground and solve with reified input and the program semantics.
-        The semantics are transformed to allow the include statements for metasp files.
-        The methods set_control and set_constants should be called before this method.
+    # def meta_compute(self, reified_input: str, on_model: Optional[Callable] = None) -> None:
+    #     """
+    #     Last step where using the control object from the application class
+    #     it will ground and solve with reified input and the program semantics.
+    #     The semantics are transformed to allow the include statements for metasp files.
+    #     The methods set_control and set_constants should be called before this method.
 
-        Args:
-            control (Control): The clingo control object with the command line options from the application class.
-            reified_input (str): The reified input data to be solved.
-            on_model (Optional[Callable]): Optional callback function to be called on each model found. Useful for testing and custom API usage.
-        """
-        assert hasattr(self, "ctl"), "Control must be set before calling meta_compute"
-        # Program to avoid warnings
+    #     Args:
+    #         control (Control): The clingo control object with the command line options from the application class.
+    #         reified_input (str): The reified input data to be solved.
+    #         on_model (Optional[Callable]): Optional callback function to be called on each model found. Useful for testing and custom API usage.
+    #     """
+    #     assert hasattr(self, "ctl"), "Control must be set before calling meta_compute"
+    #     # Program to avoid warnings
+    #     semantics_with_includes = "\n".join([self._replace_package_includes(f) for f in self.semantics_encoding])
+    #     self.ctl.add("base", [], reified_input)
+    #     self.ctl.add("base", [], semantics_with_includes)
+    #     for file in self.syntax_encoding:
+    #         self.ctl.load(file)
+    #     self.ctl.ground([("base", [])])
+    #     self.ctl.solve(on_model=on_model)
+
+    def get_files(self, reified_input: str) -> Sequence[str]:
         semantics_with_includes = "\n".join([self._replace_package_includes(f) for f in self.semantics_encoding])
-        self.ctl.add("base", [], reified_input)
-        self.ctl.add("base", [], semantics_with_includes)
-        for file in self.syntax_encoding:
-            self.ctl.load(file)
-        self.ctl.ground([("base", [])])
-        self.ctl.solve(on_model=on_model)
+
+        out_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out")
+        os.makedirs(out_dir, exist_ok=True)
+        tmp_file_path = os.path.join(out_dir, f"{self.name}_combined.lp")
+        with open(tmp_file_path, "w") as tmp_file:
+            tmp_file.write(semantics_with_includes)
+            tmp_file.write("\n")
+            tmp_file.write(reified_input)
+
+        log.info(f"Saved combined input to temporary file: {tmp_file_path}")
+
+        return [tmp_file_path] + list(self.syntax_encoding)
 
     def clinguin_command(self, reified_input: str) -> Sequence[str]:
         """
@@ -175,22 +212,23 @@ class MetaSystem:
         Returns:
             str: The clinguin command to be executed.
         """
-        semantics_with_includes = "\n".join([self._replace_package_includes(f) for f in self.semantics_encoding])
+        # semantics_with_includes = "\n".join([self._replace_package_includes(f) for f in self.semantics_encoding])
+        # semantics_with_includes = "\n".join(
+        #     line for line in semantics_with_includes.splitlines() if not line.rstrip().endswith('show-time.lp".')
+        # )
+        # with tempfile.NamedTemporaryFile(mode="w", suffix=".lp", delete=False) as tmp_file:
+        #     tmp_file.write(semantics_with_includes)
+        #     tmp_file.write("\n")
+        #     tmp_file.write(reified_input)
+        #     tmp_file.write("#external shown_modality(M): modality(M,_,_,_).\n")
+        #     tmp_file.write(f"metasp_system({self.name}).\n")
 
-        log.warning("Show statements removed. Can be fixed when we decide if we want tuples or not")
-        semantics_with_includes = "\n".join(
-            line for line in semantics_with_includes.splitlines() if not line.rstrip().endswith('show-time.lp".')
-        )
+        #     tmp_file_path = tmp_file.name
+        # log.warning("Show statements removed. Can be fixed when we decide if we want tuples or not")
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".lp", delete=False) as tmp_file:
-            tmp_file.write(semantics_with_includes)
-            tmp_file.write("\n")
-            tmp_file.write(reified_input)
-            tmp_file.write("#external shown_modality(M): modality(M,_,_,_).\n")
-            tmp_file.write(f"metasp_system({self.name}).\n")
+        # !!!!!!! Clinguin will break due to the tuples and show statements, should be handled in clinguin
 
-            tmp_file_path = tmp_file.name
-        command = ["clinguin", "client-server", "--domain-files", tmp_file_path] + self.syntax_encoding
+        command = ["clinguin", "client-server", "--domain-files"] + list(self.get_files(reified_input))
         command += ["--ui-files", os.path.join(ENCODINGS_PATH, "ui.lp")]
         command += [f"-c {k}={v}" for k, v in self.constants.items()]
         backend_name = get_clinguin_backend_control(self.control_name)

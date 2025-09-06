@@ -6,5 +6,8 @@ eq(next(3,s), 99):-initial.
 
 eq(b, s).
 
+no_b:-eq(b,10).
+
 % next(fine):- smaller(p,rdpos), smaller_eq(rdpos, next(p)), smaller(rdlimit,next(s)),not final.
 #external initial.
+#external eq(b,0).

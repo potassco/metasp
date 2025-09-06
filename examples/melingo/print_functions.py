@@ -14,7 +14,7 @@ def melingo_print_model(model: Model, system) -> None:
     table = {}
     times = {}
     for sym in model.symbols(theory=True):
-        if sym.type == SymbolType.Function and sym.name == "_assignment" and len(sym.arguments) == 2:
+        if sym.type == SymbolType.Function and sym.name == "__csp" and len(sym.arguments) == 2:
             if (
                 sym.arguments[0].type == SymbolType.Function
                 and len(sym.arguments[0].arguments) > 0

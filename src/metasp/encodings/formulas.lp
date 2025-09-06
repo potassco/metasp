@@ -18,17 +18,38 @@ def arity(O):
         return Number(len(O.arguments))
     else:
         return None
+
+def is_number(O):
+    if O.type == SymbolType.Number:
+        return Number(1)
+    else:
+        return Number(0)
 #end.
 
 
 
 possible_formula(F,@name(F),@args(F),@arity(F)):-output(F,B).
-arg_formula(F,1,F1) :- possible_formula(F, N, (F1,), 1),formula(M, F),modality(M, N, _, (T1,)), T1!=num.
-arg_formula(F,1,F1) :- possible_formula(F, N, (F1,F2), 2),formula(M, F),modality(M, N, _, (T1,T2)), T1!=num.
-arg_formula(F,2,F2) :- possible_formula(F, N, (F1,F2), 2),formula(M, F),modality(M, N, _, (T1,T2)), T2!=num.
-arg_formula(F,1,F1) :- possible_formula(F, N, (F1,F2,F3), 3),formula(M, F),modality(M, N, _, (T1,T2,T3)), T1!=num.
-arg_formula(F,2,F2) :- possible_formula(F, N, (F1,F2,F3), 3),formula(M, F),modality(M, N, _, (T1,T2,T3)), T2!=num.
-arg_formula(F,3,F3) :- possible_formula(F, N, (F1,F2,F3), 3),formula(M, F),modality(M, N, _, (T1,T2,T3)), T3!=num.
+% arg_formula(F,1,F1) :- possible_formula(F, N, (F1,), 1),formula(M, F),modality(M, N, _, (T1,)), T1!=num.
+% arg_formula(F,1,F1) :- possible_formula(F, N, (F1,F2), 2),formula(M, F),modality(M, N, _, (T1,T2)), T1!=num.
+% arg_formula(F,2,F2) :- possible_formula(F, N, (F1,F2), 2),formula(M, F),modality(M, N, _, (T1,T2)), T2!=num.
+% arg_formula(F,1,F1) :- possible_formula(F, N, (F1,F2,F3), 3),formula(M, F),modality(M, N, _, (T1,T2,T3)), T1!=num.
+% arg_formula(F,2,F2) :- possible_formula(F, N, (F1,F2,F3), 3),formula(M, F),modality(M, N, _, (T1,T2,T3)), T2!=num.
+% arg_formula(F,3,F3) :- possible_formula(F, N, (F1,F2,F3), 3),formula(M, F),modality(M, N, _, (T1,T2,T3)), T3!=num.
+
+
+arg_formula(F,1,F1) :- possible_formula(F, N, (F1,), 1),formula(M, F),modality(M, N, _, (T1,)), T1!=num, @is_number(F1)==0.
+arg_formula(F,1,F1) :- possible_formula(F, N, (F1,F2), 2),formula(M, F),modality(M, N, _, (T1,T2)), T1!=num, @is_number(F1)==0.
+arg_formula(F,2,F2) :- possible_formula(F, N, (F1,F2), 2),formula(M, F),modality(M, N, _, (T1,T2)), T2!=num, @is_number(F2)==0.
+arg_formula(F,1,F1) :- possible_formula(F, N, (F1,F2,F3), 3),formula(M, F),modality(M, N, _, (T1,T2,T3)), T1!=num, @is_number(F1)==0.
+arg_formula(F,2,F2) :- possible_formula(F, N, (F1,F2,F3), 3),formula(M, F),modality(M, N, _, (T1,T2,T3)), T2!=num, @is_number(F2)==0.
+arg_formula(F,3,F3) :- possible_formula(F, N, (F1,F2,F3), 3),formula(M, F),modality(M, N, _, (T1,T2,T3)), T3!=num, @is_number(F3)==0.
+
+formula(num,F1) :- possible_formula(F, N, (F1,), 1),formula(M, F),modality(M, N, _, (T1,)), T1!=num, @is_number(F1)==1.
+formula(num,F1):- possible_formula(F, N, (F1,F2), 2),formula(M, F),modality(M, N, _, (T1,T2)), T1!=num, @is_number(F1)==1.
+formula(num,F2):- possible_formula(F, N, (F1,F2), 2),formula(M, F),modality(M, N, _, (T1,T2)), T2!=num, @is_number(F2)==1.
+formula(num,F1):- possible_formula(F, N, (F1,F2,F3), 3),formula(M, F),modality(M, N, _, (T1,T2,T3)), T1!=num, @is_number(F1)==1.
+formula(num,F2):- possible_formula(F, N, (F1,F2,F3), 3),formula(M, F),modality(M, N, _, (T1,T2,T3)), T2!=num, @is_number(F2)==1.
+formula(num,F3):- possible_formula(F, N, (F1,F2,F3), 3),formula(M, F),modality(M, N, _, (T1,T2,T3)), T3!=num, @is_number(F3)==1.
 % TODO find a better way to do this. I had to add the check that it is not num to avoid trying to dicompose a number
 
 

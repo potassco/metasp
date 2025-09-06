@@ -8,12 +8,12 @@ import os
 import yaml
 import argparse
 from clingo.application import clingo_main
-from .app import MetaspApp
 from .utils.parser import get_parser
 from rich_argparse import ArgumentDefaultsRichHelpFormatter
 from metasp.preprocess import preprocess, reify
 from metasp.system import MetaSystem
 from metasp.utils.logging import configure_logging
+from metasp.app import make_app
 import subprocess
 
 
@@ -71,8 +71,9 @@ def main() -> None:
         meta_systems_configs = {system["name"]: system for system in config.get("metasp-systems", [])}
         if len(sys.argv) > 2 and sys.argv[1] in list(meta_systems_configs.keys()) and sys.argv[2] == "solve":
             system = sys.argv[1]
+            app_class = make_app(meta_systems_configs[system].get("control-name", "clingo"))
             exit_status = clingo_main(
-                MetaspApp(config=meta_systems_configs[system], constants=constants_dict), sys.argv[3:]
+                app_class(config=meta_systems_configs[system], constants=constants_dict), sys.argv[3:]
             )
             sys.exit(exit_status)
 
