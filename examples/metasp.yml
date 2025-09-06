@@ -35,3 +35,16 @@ metasp-systems:
     print-model: telingo_print_model
     constants:
       - "horizon"
+
+  - name: thtc
+    description: "Meta ASP system for THTc"
+    control-name: fclingo
+    syntax-encoding:
+      - "./thtc/syntax.lp"
+      - "./telingo/syntax.lp"
+    semantics-encoding:
+      - "./thtc/semantics.lp"
+      - "./telingo/semantics.lp"
+    # print-model: telingo_print_model
+    constants:
+      - "horizon"
