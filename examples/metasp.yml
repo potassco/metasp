@@ -45,6 +45,8 @@ metasp-systems:
     semantics-encoding:
       - "./thtc/semantics.lp"
       - "./telingo/semantics.lp"
-    # print-model: telingo_print_model
+    print-model: thtc_print_model
+    python-scripts:
+      - "./thtc/print_functions.py"
     constants:
       - "horizon"

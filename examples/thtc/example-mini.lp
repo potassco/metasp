@@ -8,11 +8,12 @@
 % ten_b:-eq(b,10).
 
 % assign(next(a),10):- initial.
-assign(next(a),10):- initial.
-% assign(next(2,a),20):- initial.
+% assign(next(a),10):- initial.
+assign(a,10):- initial.
+assign(next(3,a),20):- initial.
 
 % assign(next(a),a):- not neq(next(a),a).
-eq(next(a),a):- not neq(next(a),a).
+assign(next(a),a):- not neq(next(a),a).
 % eq(next(a),a):- not initial.
 % eq(next(a),a).
 
