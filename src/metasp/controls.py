@@ -209,7 +209,7 @@ class FclingoControl(TheoryControl):
         #     and not assignment.arguments[0].name.startswith("_")
         # ]
 
-        print(model.symbols(theory=True))
+        # print(model.symbols(theory=True))
         # ret.append((sorted(m), sorted(a)))
         # print((sorted(m), sorted(a)))
 
