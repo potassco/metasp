@@ -1,18 +1,8 @@
-% ============ My code
 #include "metasp.meta-time.lp".
 #include "metasp.derived.lp".
 #include "metasp.formulas.lp".
 #include "metasp.show-time.lp".
 #include "metasp.reify-defined.lp".
-
-% % ============ What would be nice
-% #program imports.
-
-% import(   "metasp.meta-time.lp").
-% import_as("metasp.derived.lp","_d").
-% import(   "metasp.formulas.lp").
-% import(   "metasp.show-time.lp").
-% import(   "metasp.reify-defined.lp").
 
 
 #const lambda= horizon+1.

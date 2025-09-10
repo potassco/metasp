@@ -4,7 +4,7 @@ import logging
 import importlib.util
 import tempfile
 from collections.abc import Sequence
-from typing import Callable, Optional
+from typing import Optional
 from metasp.printing import __dict__ as metasp_printing_dict
 
 log = logging.getLogger(__name__)
@@ -159,11 +159,35 @@ class MetaSystem:
             # Create a new attribute in the class with this constant
             self.constants[const] = constants[const]
 
+    def get_out_dir(self) -> str:
+        """Get the output directory for the system output files.
+
+        TODO: This generates issues when we want to have include statements in the semantics encoding because we must consider the nesting.
+        Raises:
+            ValueError: If no semantics encoding files are specified.
+
+        Returns:
+            str: The output directory path.
+        """
+        if not self.semantics_encoding:
+            raise ValueError("No semantics encoding files specified.")
+        out_dir = os.path.join(os.path.dirname(os.path.abspath(self.semantics_encoding[0])), "out")
+        os.makedirs(out_dir, exist_ok=True)
+        return out_dir
+
     def get_files(self, reified_input: str) -> Sequence[str]:
+        """
+        Get the list of files to be used for the system.
+
+        Args:
+            reified_input (str): The reified input to be included in the files.
+
+        Returns:
+            Sequence[str]: The list of file paths to be used.
+        """
         semantics_with_includes = "\n".join([self._replace_package_includes(f) for f in self.semantics_encoding])
 
-        out_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "out")
-        os.makedirs(out_dir, exist_ok=True)
+        out_dir = self.get_out_dir()
         tmp_file_path = os.path.join(out_dir, f"{self.name}_combined.lp")
         with open(tmp_file_path, "w") as tmp_file:
             tmp_file.write(semantics_with_includes)
@@ -183,21 +207,10 @@ class MetaSystem:
         Returns:
             str: The clinguin command to be executed.
         """
-        # semantics_with_includes = "\n".join([self._replace_package_includes(f) for f in self.semantics_encoding])
-        # semantics_with_includes = "\n".join(
-        #     line for line in semantics_with_includes.splitlines() if not line.rstrip().endswith('show-time.lp".')
-        # )
         with tempfile.NamedTemporaryFile(mode="w", suffix=".lp", delete=False) as tmp_file:
             tmp_file.write("#external shown_modality(M): modality(M,_,_,_).\n")
             tmp_file.write(f"metasp_system({self.name}).\n")
-            # tmp_file.write(
-            #     f"#show world/1.#show formula(M,X): formula(M,X), not derive(_,X,_). #show modality/2. #show modality/4. #show shown_modality/1. #show true/2.\n"
-            # )
 
-        #     tmp_file_path = tmp_file.name
-        # log.warning("Show statements removed. Can be fixed when we decide if we want tuples or not")
-
-        # !!!!!!! Clinguin will break due to the tuples and show statements, should be handled in clinguin
         files = list(self.get_files(reified_input))
         files.append(tmp_file.name)
         command = ["clinguin", "client-server", "--domain-files"] + files
