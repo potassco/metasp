@@ -25,8 +25,8 @@ def get_clinguin_backend_control(control_name: str) -> str:
         return "ClingconBackend"
     elif control_name == "clingo":
         return "ClingoBackend"
-    # elif control_name == "fclingo":
-    # return "FclingoBackend"
+    elif control_name == "fclingo":
+        return "FclingoBackend"
     else:
         log.error("Control '%s' has no backend for clinguin.", control_name)
         raise ValueError(f"Control '{control_name}' is not a valid backend for clinguin.")
@@ -43,6 +43,7 @@ class MetaSystem:
         control_name: str,
         syntax_encoding: Sequence[str],
         semantics_encoding: Sequence[str],
+        ui_encoding: Optional[Sequence[str]] = None,
         print_model: Optional[str] = None,
         constants: Optional[Sequence[str]] = None,
         python_scripts: Optional[Sequence[str]] = None,
@@ -55,11 +56,13 @@ class MetaSystem:
             control_name (str): The control wrapper to be used.
             syntax_encoding (Sequence[str]): The encoding for the syntax.
             semantics_encoding (Sequence[str]): The encoding for the semantics.
+            ui_encoding (Sequence[str]): The additional encodings for the clinguin UI.
         """
         self.name = name
         self.control_name = control_name
         self.syntax_encoding = syntax_encoding
         self.semantics_encoding = semantics_encoding
+        self.ui_encoding = ui_encoding or []
         self.required_constants = constants or []
         self.constants = {}
         self.python_scripts = python_scripts or []
@@ -80,6 +83,7 @@ class MetaSystem:
             control_name=config["control-name"],
             syntax_encoding=config["syntax-encoding"],
             semantics_encoding=config["semantics-encoding"],
+            ui_encoding=config.get("ui-encoding", []),
             print_model=config.get("print-model", None),
             constants=config.get("constants", []),
             python_scripts=config.get("python-scripts", []),
@@ -186,6 +190,9 @@ class MetaSystem:
         with tempfile.NamedTemporaryFile(mode="w", suffix=".lp", delete=False) as tmp_file:
             tmp_file.write("#external shown_modality(M): modality(M,_,_,_).\n")
             tmp_file.write(f"metasp_system({self.name}).\n")
+            # tmp_file.write(
+            #     f"#show world/1.#show formula(M,X): formula(M,X), not derive(_,X,_). #show modality/2. #show modality/4. #show shown_modality/1. #show true/2.\n"
+            # )
 
         #     tmp_file_path = tmp_file.name
         # log.warning("Show statements removed. Can be fixed when we decide if we want tuples or not")
@@ -195,6 +202,7 @@ class MetaSystem:
         files.append(tmp_file.name)
         command = ["clinguin", "client-server", "--domain-files"] + files
         command += ["--ui-files", os.path.join(ENCODINGS_PATH, "ui.lp")]
+        command += self.ui_encoding
         command += [f"-c {k}={v}" for k, v in self.constants.items()]
         backend_name = get_clinguin_backend_control(self.control_name)
         command += ["--backend", backend_name]

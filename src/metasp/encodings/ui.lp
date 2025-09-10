@@ -17,7 +17,7 @@ attr(title(T), order, 1):-elem(title(T),label,_).
 attr(content(C), class, ("d-flex"; "flex-column";"w-100";"p-1";"border-top";"border-bottom")):-elem(content(C),container,_).
 attr(content(C), order, 2):-elem(content(C),container,_).
 attr(footer(C), class, ("d-flex"; "flex-column";"w-100";"p-1")):-elem(footer(C),container,_).
-attr(footer(C), order, 3):-elem(content(C),container,_).
+attr(footer(C), order, 3):-elem(footer(C),container,_).
 attr(footer_elem(C), class, ("d-flex";"flex-row-reverse")):- elem(footer_elem(C),container,_).
 attr(footer_item(C), class, ("m-1";"btn-primary")):- elem(footer_item(C),button,_).
 attr(footer_item(C), class, ("m-1")):- elem(footer_item(C),textfield,_).
@@ -100,32 +100,32 @@ attr(main(state), order, 1).
                 % attr(const_label(C), class, "w-100"):-_clinguin_const(C,V).
 
 
-    elem(section(assignments), container, main(state)).
+    % elem(section(assignments), container, main(state)).
 
-        elem(title(assignments), label, section(assignments)).
-        attr(title(assignments), label, "Current model assignments").
+    %     elem(title(assignments), label, section(assignments)).
+    %     attr(title(assignments), label, "Current model assignments").
 
-        elem(content(assignments), container, section(assignments)).
+    %     elem(content(assignments), container, section(assignments)).
 
-            elem(elem_container(assign(K)), container, content(assignments)):-_clinguin_assign(K,V).
-            attr(elem_container(assign(K)), order, V):-_clinguin_assign(K,V).
+    %         elem(elem_container(assign(K)), container, content(assignments)):-_clinguin_assign(K,V).
+    %         attr(elem_container(assign(K)), order, V):-_clinguin_assign(K,V).
 
-                elem(elem_title(assign(K)), label, elem_container(assign(K))):-_clinguin_assign(K,V).
-                attr(elem_title(assign(K)), label, K):-_clinguin_assign(K,V).
+    %             elem(elem_title(assign(K)), label, elem_container(assign(K))):-_clinguin_assign(K,V).
+    %             attr(elem_title(assign(K)), label, K):-_clinguin_assign(K,V).
 
-                elem(elem_val(assign(K)), label, elem_container(assign(K))):-_clinguin_assign(K,V).
-                attr(elem_val(assign(K)), label,V):-_clinguin_assign(K,V).
+    %             elem(elem_val(assign(K)), label, elem_container(assign(K))):-_clinguin_assign(K,V).
+    %             attr(elem_val(assign(K)), label,V):-_clinguin_assign(K,V).
 
     % ## UNSAT
     % ------------
 
-    elem(section(unsat), container, main(state)):-_clinguin_unsat.
+    % elem(section(unsat), container, main(state)):-_clinguin_unsat.
 
-        elem(title(unsat), label, section(unsat)):-_clinguin_unsat.
-        attr(title(unsat), label, "UNSAT"):-_clinguin_unsat.
-        attr(title(unsat), class, "text-danger"):-_clinguin_unsat.
+    %     elem(title(unsat), label, section(unsat)):-_clinguin_unsat.
+    %     attr(title(unsat), label, "UNSAT"):-_clinguin_unsat.
+    %     attr(title(unsat), class, "text-danger"):-_clinguin_unsat.
 
-        elem(content(unsat), container, section(unsat)):-_clinguin_unsat.
+    %     elem(content(unsat), container, section(unsat)):-_clinguin_unsat.
 
 
         % #Todo add MUS
@@ -134,14 +134,14 @@ attr(main(state), order, 1).
     % ## SAT
     % ------------
 
-    elem(section(sat), container, main(state)):-not _clinguin_unsat.
-    attr(section(sat), class, ("bg-success")):-not _clinguin_unsat.
+    % elem(section(sat), container, main(state)):-not _clinguin_unsat.
+    % attr(section(sat), class, ("bg-success")):-not _clinguin_unsat.
 
-        elem(title(sat), label, section(sat)):-not _clinguin_unsat.
-        attr(title(sat), label, "SAT"):-not _clinguin_unsat.
-        attr(title(sat), class, "text-success"):-not _clinguin_unsat.
+    %     elem(title(sat), label, section(sat)):-not _clinguin_unsat.
+    %     attr(title(sat), label, "SAT"):-not _clinguin_unsat.
+    %     attr(title(sat), class, "text-success"):-not _clinguin_unsat.
 
-        elem(content(sat), container, section(sat)):-not _clinguin_unsat.
+    %     elem(content(sat), container, section(sat)):-not _clinguin_unsat.
 
 
 

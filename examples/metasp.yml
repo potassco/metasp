@@ -6,6 +6,8 @@ metasp-systems:
       - "./melingo/syntax.lp"
     semantics-encoding:
       - "./melingo/semantics.lp"
+    ui-encoding:
+      - "./melingo/ui.lp"
     python-scripts:
       - "./melingo/print_functions.py"
     print-model: melingo_print_model
@@ -45,6 +47,8 @@ metasp-systems:
     semantics-encoding:
       - "./thtc/semantics.lp"
       - "./telingo/semantics.lp"
+    ui-encoding:
+      - "./thtc/ui.lp"
     print-model: thtc_print_model
     python-scripts:
       - "./thtc/print_functions.py"
