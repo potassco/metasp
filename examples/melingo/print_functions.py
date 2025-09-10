@@ -23,7 +23,7 @@ def melingo_print_model(model: Model, system) -> None:
                 times[sym.arguments[0].arguments[0].number] = sym.arguments[1].number
 
     for sym in model.symbols(shown=True):
-        if sym.type == SymbolType.Function and len(sym.arguments) > 0 and sym.name == "":
+        if sym.type == SymbolType.Function and len(sym.arguments) > 0 and sym.name == "true":
             table.setdefault(sym.arguments[-1].number, []).append(sym.arguments[0])
     for step in range(l):
         symbols = table.get(step, [])

@@ -23,12 +23,8 @@ modality(simple_tel, next, 1, (atom)). %Derived
 modality(simple_tel, atom). %Derived
 
 
-
-
 occurrence(thtc, body;head).
 occurrence(thtc_assign, head).
-
-
 
 
 % -----------------------------

@@ -32,7 +32,7 @@ def telingo_print_model(model: Model, system) -> None:
     l = int(system.constants["horizon"]) + 1
     table = {}
     for sym in model.symbols(shown=True):
-        if sym.type == SymbolType.Function and len(sym.arguments) > 0 and sym.name == "":
+        if sym.type == SymbolType.Function and len(sym.arguments) > 0 and sym.name == "true":
             table.setdefault(sym.arguments[-1].number, []).append(sym.arguments[0])
     for step in range(l):
         symbols = table.get(step, [])
