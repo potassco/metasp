@@ -2,11 +2,10 @@ import os
 import re
 import logging
 import importlib.util
+import tempfile
 from collections.abc import Sequence
 from typing import Callable, Optional
-from clingo import Control
 from metasp.printing import __dict__ as metasp_printing_dict
-import tempfile
 
 log = logging.getLogger(__name__)
 
@@ -26,10 +25,10 @@ def get_clinguin_backend_control(control_name: str) -> str:
         return "ClingconBackend"
     elif control_name == "clingo":
         return "ClingoBackend"
-    elif control_name == "fclingo":
-        return "FclingoBackend"
+    # elif control_name == "fclingo":
+    # return "FclingoBackend"
     else:
-        log.error("Control '%s' is not a valid backend for clinguin.", control_name)
+        log.error("Control '%s' has no backend for clinguin.", control_name)
         raise ValueError(f"Control '{control_name}' is not a valid backend for clinguin.")
 
 
@@ -156,38 +155,6 @@ class MetaSystem:
             # Create a new attribute in the class with this constant
             self.constants[const] = constants[const]
 
-    # def set_control(self, control: Control) -> None:
-    #     """
-    #     Set the control object for the system.
-
-    #     Args:
-    #         control (Control): The clingo control object.
-    #     """
-    #     self.ctl = get_control_wrapper_cls(self.control_name)(control)
-    #     log.info("Control set to %s", self.control_name)
-
-    # def meta_compute(self, reified_input: str, on_model: Optional[Callable] = None) -> None:
-    #     """
-    #     Last step where using the control object from the application class
-    #     it will ground and solve with reified input and the program semantics.
-    #     The semantics are transformed to allow the include statements for metasp files.
-    #     The methods set_control and set_constants should be called before this method.
-
-    #     Args:
-    #         control (Control): The clingo control object with the command line options from the application class.
-    #         reified_input (str): The reified input data to be solved.
-    #         on_model (Optional[Callable]): Optional callback function to be called on each model found. Useful for testing and custom API usage.
-    #     """
-    #     assert hasattr(self, "ctl"), "Control must be set before calling meta_compute"
-    #     # Program to avoid warnings
-    #     semantics_with_includes = "\n".join([self._replace_package_includes(f) for f in self.semantics_encoding])
-    #     self.ctl.add("base", [], reified_input)
-    #     self.ctl.add("base", [], semantics_with_includes)
-    #     for file in self.syntax_encoding:
-    #         self.ctl.load(file)
-    #     self.ctl.ground([("base", [])])
-    #     self.ctl.solve(on_model=on_model)
-
     def get_files(self, reified_input: str) -> Sequence[str]:
         semantics_with_includes = "\n".join([self._replace_package_includes(f) for f in self.semantics_encoding])
 
@@ -216,41 +183,20 @@ class MetaSystem:
         # semantics_with_includes = "\n".join(
         #     line for line in semantics_with_includes.splitlines() if not line.rstrip().endswith('show-time.lp".')
         # )
-        # with tempfile.NamedTemporaryFile(mode="w", suffix=".lp", delete=False) as tmp_file:
-        #     tmp_file.write(semantics_with_includes)
-        #     tmp_file.write("\n")
-        #     tmp_file.write(reified_input)
-        #     tmp_file.write("#external shown_modality(M): modality(M,_,_,_).\n")
-        #     tmp_file.write(f"metasp_system({self.name}).\n")
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".lp", delete=False) as tmp_file:
+            tmp_file.write("#external shown_modality(M): modality(M,_,_,_).\n")
+            tmp_file.write(f"metasp_system({self.name}).\n")
 
         #     tmp_file_path = tmp_file.name
         # log.warning("Show statements removed. Can be fixed when we decide if we want tuples or not")
 
         # !!!!!!! Clinguin will break due to the tuples and show statements, should be handled in clinguin
-
-        command = ["clinguin", "client-server", "--domain-files"] + list(self.get_files(reified_input))
+        files = list(self.get_files(reified_input))
+        files.append(tmp_file.name)
+        command = ["clinguin", "client-server", "--domain-files"] + files
         command += ["--ui-files", os.path.join(ENCODINGS_PATH, "ui.lp")]
         command += [f"-c {k}={v}" for k, v in self.constants.items()]
         backend_name = get_clinguin_backend_control(self.control_name)
-        command += [f"--backend {backend_name}"]
+        command += ["--backend", backend_name]
         # command += ["--server-log-level", "DEBUG"]
         return command
-
-    # def main(self, control: Control, constants: Sequence[str], files: Sequence[str]) -> None:
-    #     """
-    #     Run the system. It will create the control wrapper, preprocess the input files,
-    #     reify the input and call the meta_compute method to solve the reified input
-    #     using the semantics encoding.
-
-    #     Args:
-    #         control: The  clingo control object with the command line options from the application class.
-    #         Will be used in the last step to solve given the reified program.
-    #         constants: The list of constants to be, tho they might have been added to the control already,
-    #         we need them explicitly to use them in the reification.
-    #         files: The list of files to process.
-    #     """
-    #     self.set_constants(constants)
-    #     processed_input = preprocess(files, constants, self.syntax_encoding)
-    #     reified_input = reify(processed_input, constants)
-    #     self.set_control(control)
-    #     self.meta_compute(reified_input)

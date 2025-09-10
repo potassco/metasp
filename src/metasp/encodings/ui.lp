@@ -8,7 +8,8 @@ attr(w, class, ("d-flex"; "flex-column")).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % #General attributes
 attr(main(S), class, ("d-flex"; "flex-row";"bg-opacity-25";"w-100";"p-2";"rounded";"m-2")):-elem(main(S),container,_).
-attr(main(S), class, ("bg-info")):-elem(main(S),container,_),not _clinguin_unsat.
+attr(main(S), class, ("bg-primary";"bg-opacity-59")):-elem(main(S),container,_),_clinguin_browsing.
+attr(main(S), class, ("bg-info")):-elem(main(S),container,_),not _clinguin_unsat, not _clinguin_browsing.
 attr(main(S), class, ("bg-danger")):-elem(main(S),container,_), _clinguin_unsat.
 attr(section(S), class, ("d-flex"; "flex-column"; "align-items-center";"rounded";"p-2";"m-2";"bg-light";"shadow")):-elem(section(S),container,_).
 attr(title(T), class, ("h5";"pb-1")):-elem(title(T),label,_).
@@ -37,17 +38,6 @@ attr(elem_val(C), class, ("pe-3";"pt-1";"pb-1")):-elem(elem_val(C),label,_).
 elem(main(state), container, w).
 attr(main(state), order, 1).
 
-    % % ## Files
-    % % ------------
-
-    % elem(section(files), container, main(state)).
-
-    %     elem(title(files), label, section(files)).
-    %     attr(title(files), label, "Files").
-
-    %     elem(content(files), container, section(files)).
-
-
     % ## Constants
     % ------------
 
@@ -65,7 +55,6 @@ attr(main(state), order, 1).
 
                 elem(elem_val(const(C)), label, elem_container(const(C))):-_clinguin_const(C,V).
                 attr(elem_val(const(C)), label,V):-_clinguin_const(C,V).
-                attr(elem_val(const(C)), tooltip,@format("_clinguin_const({},{})",C,V)):-_clinguin_const(C,V).
                 % attr(const_label(C), class, "w-100"):-_clinguin_const(C,V).
 
         elem(footer(constants), container, section(constants)).
@@ -84,7 +73,6 @@ attr(main(state), order, 1).
 
                 elem(footer_item(const(btn)),button,footer_elem(constants)).
                 attr(footer_item(const(btn)),label,"Set constant").
-                attr(footer_item(const(btn)),tooltip,"▶︎▶︎ set_constant(_,_)").
                 when(footer_item(const(btn)),click,call, set_constant(_context_value(const_name),_context_value(const_value))).
 
 
@@ -109,7 +97,6 @@ attr(main(state), order, 1).
 
                 % elem(elem_val(modality(M)), label, elem_container(modality(M))):-modality(M,_,_,_).
                 % attr(elem_val(modality(M)), label,V):-modality(M,_,V).
-                % attr(elem_val(modality(M)), tooltip,@format("_clinguin_const({},{})",M,V)):-modality(M,_,V).
                 % attr(const_label(C), class, "w-100"):-_clinguin_const(C,V).
 
 
@@ -174,7 +161,6 @@ attr(main(state), order, 1).
         attr(footer_item(select(btn)),label,"Select solution").
         attr(footer_item(select(btn)),icon,"fa-hand-pointer").
         attr(footer_item(select(btn)),class,"btn-success").
-        attr(footer_item(select(btn)),tooltip,"▶︎▶︎ select").
         when(footer_item(select(btn)),click,call, select("#show. #show true(X,W): true(X,W), formula(atom,X).")).
 
 
@@ -183,7 +169,6 @@ attr(main(state), order, 1).
         attr(footer_item(download(btn)),label,"Download solution").
         attr(footer_item(download(btn)),icon,"fa-download").
         attr(footer_item(download(btn)),class,"btn-success").
-        attr(footer_item(download(btn)),tooltip,"▶︎▶︎ download").
         when(footer_item(download(btn)),click,call, download("#show. #show (X,W): true(X,W), formula(atom,X).","metasp-solution.lp")).
 
 
@@ -194,14 +179,12 @@ attr(main(state), order, 1).
         attr(footer_item(next_solution), order, 3).
         attr(footer_item(next_solution), label, "Next").
         attr(footer_item(next_solution), icon, "fa-forward-step").
-        attr(footer_item(next_solution), tooltip, "▶︎▶︎ next_solution()").
         when(footer_item(next_solution), click, call, next_solution).
 
         % elem(footer_item(next_solution_opt), button, footer_elem(browse)).
         % attr(footer_item(next_solution_opt), order, 2).
         % attr(footer_item(next_solution_opt), label, "Next Optimizing").
         % attr(footer_item(next_solution_opt), icon, "fa-forward-fast").
-        % attr(footer_item(next_solution_opt), tooltip, "▶︎▶︎ next_solution(optN)").
         % when(footer_item(next_solution_opt), click, call, next_solution(optN)).
 
         elem(footer_item(stop), button, footer_elem(browse)).
@@ -210,8 +193,6 @@ attr(main(state), order, 1).
         attr(footer_item(stop), class, "btn-danger").
         attr(footer_item(stop), class, "disabled"):-not _clinguin_browsing.
         attr(footer_item(stop), icon, "fa-stop").
-        attr(footer_item(stop), tooltip, "▶︎▶︎ stop_browsing"):-_clinguin_browsing.
-        attr(footer_item(stop), tooltip, "not _clinguin_browsing"):-not _clinguin_browsing.
         when(footer_item(stop), click, call, stop_browsing).
 
 % elem(main(input), container, w).
@@ -227,8 +208,6 @@ attr(main(model), order, 3).
 
     elem(section(model(W)), container, main(model)):-world(W).
     attr(section(model(W)), order, W):-world(W).
-    % attr(section(model), order, 1):-_clinguin_browsing.
-    % attr(section(model), class, "bg-primary"):-_clinguin_browsing.
 
     elem(content(model(W)), container, section(model(W))):-world(W).
     attr(content(model(W)), class, ("d-flex";"flex-row")):-world(W).
@@ -241,8 +220,7 @@ attr(main(model), order, 3).
 
             show_model(true(X,W)):-_any_or_browse(true(X,W)), formula(atom,X),not output(_show,_).
             show_model(true(X,W)):-_any_or_browse(conjunction(B,W)), output(_show(X),B),formula(atom,X).
-            % show_model(true(X,W)):-time(K), output(_show(S),B), literal_tuple(B,L), not atom_tuple(_,L).
-            show_model(true(X,W)):-_any_or_browse(true(X,W)), formula(M,X), shown_modality(M).
+            show_model(true(X,W)):-_any_or_browse(true(X,W)), formula(M,X), shown_modality(M), not derive(_,X,_).
             show_model(true(X,W)):-_clinguin_assume(true(X,W),_).
 
 
@@ -256,7 +234,6 @@ attr(main(model), order, 3).
                     % attr(elem_title(model(A,W)), label, A):-show_model(true(A,W)).
                     attr(elem_title(model(A,W)), label, A):-show_model(true(A,W)).
                     attr(elem_title(model(A,W)), class, "font-monospace"):-show_model(true(A,W)).
-                    % attr(elem_title(model(A,W)), tooltip, M):-show_model(true(A,W)),formula(M,A).
                     attr(elem_title(model(A,W)), class, "opacity-25"):- _all(A), show_model(true(A,W)).
                     attr(elem_title(model(A,W)), class, "text-primary"):-  show_model(true(A,W)), formula(M,A), M!=atom.
                     attr(elem_title(model(A,W)), class, "text-decoration-underline"):-  show_model(true(A,W)),  _clinguin_assume(true(A,W),true).
@@ -283,68 +260,6 @@ attr(main(model), order, 3).
                         attr(elem_cm(model(A,W),clear), label,"Clear selection"):-show_model(true(A,W)).
                         when(elem_cm(model(A,W),clear), click, call, remove_assumption(true(A,W))):-show_model(true(A,W)),_clinguin_assume(true(A,W),_).
                         attr(elem_cm(model(A,W),clear), class, ("disabled";"text-light")):-show_model(true(A,W)),not when(elem_cm(model(A,W),clear),_,_,_).
-
-    % elem(section(brave), container, main(model)).
-    % attr(section(brave), order, 2).
-
-    %     elem(title(brave), label, section(brave)).
-    %         attr(title(brave), label, "In Some Model (Brave)").
-
-    %         elem(content(brave), container, section(brave)).
-
-    %             elem(elem_container(brave(A)), container, content(brave)):-_any(A).
-
-    %                 elem(elem_title(brave(A)), label, elem_container(brave(A))):-_any(A).
-    %                 % attr(elem_title(brave(A)), label, A):-_any(A).
-    %                 attr(elem_title(brave(A)), label, A):-_any(A).
-    %                 attr(elem_title(brave(A)), class, "font-monospace"):-_any(A).
-    %                 attr(elem_title(brave(A)), class, "opacity-25"):-_any(A), _all(A).
-
-    %                 attr(elem_title(brave(A)), tooltip, @format("_any({})",A)):-_any(A).
-    %                 attr(elem_title(brave(A)), class, "text-primary"):-_any_opt(A).
-    %                 attr(elem_title(brave(A)), class, "fw-bold"):-_all_opt(A).
-
-
-    %                 elem(elem_val(brave(A)), dropdown_menu, elem_container(brave(A))):-_any(A).
-    %                 attr(elem_val(brave(A)), icon, "fa-plus"):-_any(A).
-    %                 attr(elem_val(brave(A)), tooltip, @format("▶︎▶︎ add_assumption({},_)",A)):-_any(A).
-
-    %                     elem(elem_val_true(brave(A)), dropdown_menu_item, elem_val(brave(A))):-_any(A).
-    %                     attr(elem_val_true(brave(A)), label, true):-_any(A).
-    %                     attr(elem_val_true(brave(A)), class, "text-success"):-_any(A).
-    %                     when(elem_val_true(brave(A)), click, call, add_assumption(A,true)):-_any(A).
-
-    %                     elem(elem_val_false(brave(A)), dropdown_menu_item, elem_val(brave(A))):-_any(A).
-    %                     attr(elem_val_false(brave(A)), label, false):-_any(A).
-    %                     attr(elem_val_false(brave(A)), class, "text-danger"):-_any(A).
-    %                     when(elem_val_false(brave(A)), click, call, add_assumption(A,false)):-_any(A).
-
-
-    %                 % elem(elem_val(brave(A)), button, elem_container(brave(A))):-_any(A), not _all(A).
-    %                 % attr(elem_val(brave(A)), icon, "fa-plus"):-_any(A), not _all(A).
-    %                 % attr(elem_val(brave(A)), class, ("text-primary")):-_any(A), not _all(A).
-    %                 % attr(elem_val(brave(A)), tooltip, @format("▶︎▶︎ add_assumption({},true)",A)):-_any(A), not _all(A).
-    %                 % when(elem_val(brave(A)), click, call, add_assumption(A,true)):-_any(A), not _all(A).
-
-
-
-
-
-    % elem(section(cautious), container, main(model)).
-    % attr(section(cautious), order, 3).
-
-    %     elem(title(cautious), label, section(cautious)).
-    %         attr(title(cautious), label, "In All Models (Cautious)").
-
-    %         elem(content(cautious), container, section(cautious)).
-
-    %             elem(elem_container(cautious(A)), container, content(cautious)):-_all(A).
-
-    %                 elem(elem_title(cautious(A)), label, elem_container(cautious(A))):-_all(A).
-    %                 % attr(elem_title(cautious(A)), label, A):-_all(A).
-    %                 attr(elem_title(cautious(A)), label, A):-_all(A).
-    %                 attr(elem_title(cautious(A)), class, "font-monospace"):-_all(A).
-    %                 attr(elem_title(cautious(A)), tooltip, @format("_all({})",A)):-_all(A).
 
 
 % # Menu bar
