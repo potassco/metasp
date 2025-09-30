@@ -27,6 +27,30 @@ occurrence(thtc, body;head).
 occurrence(thtc_assign, head).
 
 
+
+type(thtc). type(thtc_assign).type(linear_temp_cons_atom). type(m). type(simple_tel).
+
+type(operator_name).
+constructor(operator_name, (eq;assign;neq;lt;leq), 0, ()).
+
+
+constructor(thtc, op, 3, (operator_name,linear_temp_cons_atom,linear_temp_cons_atom)).
+constructor(thtc, (eq;neq;lt;leq), 2, (linear_temp_cons_atom,linear_temp_cons_atom)).
+constructor(thtc_assign, assign, 2, (linear_temp_cons_atom,linear_temp_cons_atom)).
+
+constructor(linear_temp_cons_atom, sum, 2, (m,m)).
+constructor(mul, mul, 2, (num,simple_tel)).
+constructor(simple_tel, next, 2, (num,atom)).
+constructor(simple_tel, next, 1, (atom,)).
+
+
+allow(thtc, (body;head)).
+allow(thtc_assign, head).
+
+subtype(simple_tel,linear_temp_cons_atom).
+subtype(simple_tel,m).
+subtype(atom,simple_tel).
+
 % -----------------------------
 % Syntactic sugar
 % -----------------------------
@@ -53,7 +77,7 @@ derive(op(O,sum(Y,A),X),op(O,sum(Y,mul(A,_one)),X),thtc):-formula(num, A), formu
 derive(op(O,X,sum(A,Y)),op(O,X,sum(mul(A,_one),Y)),thtc):-formula(num, A), formula(thtc,op(O,X,sum(A,Y))).
 derive(op(O,X,sum(Y,A)),op(O,X,sum(Y,mul(A,_one))),thtc):-formula(num, A), formula(thtc,op(O,X,sum(Y,A))).
 
-% A <-> next(A)
+% A <-> next(0,A): A atom
 derive(op(O,sum(mul(D,A),Y),X), op(O,sum(mul(D,next(0,A)),Y),X),thtc):-formula(atom, A), formula(thtc,op(O,sum(mul(D,A),Y),X)).
 derive(op(O,sum(Y,mul(D,A)),X), op(O,sum(Y,mul(D,next(0,A))),X),thtc):-formula(atom, A), formula(thtc,op(O,sum(Y,mul(D,A)),X)).
 derive(op(O,X,sum(mul(D,A),Y)), op(O,X,sum(mul(D,next(0,A)),Y)),thtc):-formula(atom, A), formula(thtc,op(O,X,sum(mul(D,A),Y))).

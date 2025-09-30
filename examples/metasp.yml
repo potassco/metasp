@@ -49,7 +49,7 @@ metasp-systems:
       - "./telingo/semantics.lp"
     ui-encoding:
       - "./thtc/ui.lp"
-    print-model: thtc_print_model
+    # print-model: thtc_print_model
     python-scripts:
       - "./thtc/print_functions.py"
     constants:

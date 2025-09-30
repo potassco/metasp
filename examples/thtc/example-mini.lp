@@ -25,4 +25,3 @@ assign(next(a),a):- not neq(next(a),a).
 
 
 
-

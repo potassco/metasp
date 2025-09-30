@@ -2,6 +2,12 @@
 assign(next(4,acc), 1135):-initial.
 assign(next(6,acc), -230):-initial.
 
+&assign(&next(6,acc), -230):-initial.
+
+&sum{next(6,acc)}:= -230:-initial.
+
+
+
 % Initial position
 assign(p,0):-initial.
 
@@ -13,7 +19,8 @@ assign(next(p), sum(p,s)).
 
 % Either inertia for the s like this
 % Or adding an acceleration of 0, one is enough
-assign(next(s), s):- not neq(next(s),s).
+assign(next(s), s):- not &neq(next(s),s).
+assign(next(s), s):- not &sum{next(s);next(p)}!={s}.
 % assign(acc, 0):- not neq(acc,0).
 
 % Radar limit and position
