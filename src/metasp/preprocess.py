@@ -34,12 +34,12 @@ def preprocess(input_files: Sequence[str], constants: dict[str, str], syntax_enc
 
     Args:
         input_files (Sequence[str]): The input files to be preprocessed.
-        syntax_encoding (Sequence[str]): The syntax encoding defining modalities and safety.
+        syntax_encoding (Sequence[str]): The syntax encoding defining the grammar and safety.
         constants (dict[str,str]): The constants to be used during preprocessing <id>:<term>.
     Returns:
         str: The preprocessed input as a string. With externals and transformed show statements.
     Raises:
-        ValueError: If modality sanity check fails.
+        ValueError: If grammar sanity check fails.
     """
     # Read the input files
     input_data = ""

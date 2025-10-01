@@ -76,27 +76,26 @@ attr(main(state), order, 1).
                 when(footer_item(const(btn)),click,call, set_constant(_context_value(const_name),_context_value(const_value))).
 
 
-    % ## Modalities
+    % ## Types
     % ------------
 
-    elem(section(modalities), container, main(state)).
+    elem(section(types), container, main(state)).
 
-        elem(title(modalities), label, section(modalities)).
-        attr(title(modalities), label, "Modalities").
+        elem(title(types), label, section(types)).
+        attr(title(types), label, "Types").
 
-        elem(content(modalities), container, section(modalities)).
+        elem(content(types), container, section(types)).
 
-            elem(elem_container(modality(M)), container, content(modalities)):-modality(M,_).
-            elem(elem_container(modality(M)), container, content(modalities)):-modality(M,_,_,_).
+            elem(elem_container(type(T)), container, content(types)):-type(T).
 
-                elem(elem_title(modality(M)), checkbox, elem_container(modality(M))):-modality(M,_,_,_).
-                attr(elem_title(modality(M)), label, M):-modality(M,_,_,_).
-                attr(elem_title(modality(M)), checked, true):-modality(M,_,_,_),shown_modality(M).
-                when(elem_title(modality(M)), click,call, set_external(shown_modality(M),true)):-modality(M,_,_,_),not shown_modality(M).
-                when(elem_title(modality(M)), click,call, set_external(shown_modality(M),false)):-modality(M,_,_,_), shown_modality(M).
+                elem(elem_title(type(T)), checkbox, elem_container(type(T))):-constructor(T,_,_,_).
+                attr(elem_title(type(T)), label, T):-constructor(T,_,_,_).
+                attr(elem_title(type(T)), checked, true):-constructor(T,_,_,_),shown_type(T).
+                when(elem_title(type(T)), click,call, set_external(shown_type(T),true)):-constructor(T,_,_,_),not shown_type(T).
+                when(elem_title(type(T)), click,call, set_external(shown_type(T),false)):-constructor(T,_,_,_), shown_type(T).
 
-                % elem(elem_val(modality(M)), label, elem_container(modality(M))):-modality(M,_,_,_).
-                % attr(elem_val(modality(M)), label,V):-modality(M,_,V).
+                % elem(elem_val(type(M)), label, elem_container(type(M))):-type(M,_,_,_).
+                % attr(elem_val(type(M)), label,V):-type(M,_,V).
                 % attr(const_label(C), class, "w-100"):-_clinguin_const(C,V).
 
 
@@ -220,7 +219,7 @@ attr(main(model), order, 3).
 
             show_model(true(X,W)):-_any_or_browse(true(X,W)), formula(atom,X),not output(_show,_).
             show_model(true(X,W)):-_any_or_browse(conjunction(B,W)), output(_show(X),B),formula(atom,X).
-            show_model(true(X,W)):-_any_or_browse(true(X,W)), formula(M,X), shown_modality(M), not derive(_,X,_).
+            show_model(true(X,W)):-_any_or_browse(true(X,W)), formula(M,X), shown_type(M), not derive(_,X,_).
             show_model(true(X,W)):-_clinguin_assume(true(X,W),_).
 
 
