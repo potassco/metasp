@@ -1,14 +1,20 @@
-modality(mel, atom).
-modality(mel, initial, 0, ()).
-modality(mel, final, 0, ()).
+type(mel).
+subtype(atom, mel).
 
-modality(mel, next, 2, ((num,num),mel)).
-modality(mel, next, 2, ((num,fixed(w)),mel)).
-% modality(mel, next, 2, ((num,atom),mel)).
+type(omega).
+constructor(omega, w, 0, ()).
 
-modality(mel, eventually, 2, ((num,atom),mel)).
-modality(mel, always, 2, ((num,atom),mel)).
 
-occurence(mel, body;head).
+
+constructor(mel, initial, 0, ()).
+constructor(mel, final, 0, ()).
+
+constructor(mel, next, 2, ((num,num),mel)).
+constructor(mel, next, 2, ((num,omega),mel)).
+
+constructor(mel, eventually, 2, ((num,atom),mel)).
+constructor(mel, always, 2, ((num,atom),mel)).
+
+allow(mel, body;head).
 
 arg(mel, (next;eventually;always), 1, unsafe).

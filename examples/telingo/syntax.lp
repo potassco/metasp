@@ -1,16 +1,17 @@
-modality(tel, atom).
-modality(tel, initial, 0, ()).
-modality(tel, final, 0, ()).
-modality(tel, and, 2, (tel, tel)).
-modality(tel, or, 2, (tel, tel)).
-modality(tel, next, 1, (tel,)).
-modality(tel, eventually, 1, (tel,)). %Derived
-modality(tel, always, 1, (tel)). %Derived
-modality(tel, until, 2, (tel,tel)).
-modality(tel, release, 2, (tel,tel)). %Derived
+type(tel).
+subtype(atom, tel).
 
+constructor(tel, initial, 0, ()).
+constructor(tel, final, 0, ()).
+constructor(tel, and, 2, (tel, tel)).
+constructor(tel, or, 2, (tel, tel)).
+constructor(tel, next, 1, (tel,)).
+constructor(tel, eventually, 1, (tel,)). %Derived
+constructor(tel, always, 1, (tel)). %Derived
+constructor(tel, until, 2, (tel,tel)).
+constructor(tel, release, 2, (tel,tel)). %Derived
 
-occurrence(tel, body;head).
+allow(tel, body;head).
 
 arg((weak;weak_next;neg),0,unsafe).
 arg((until;release),0,unsafe).

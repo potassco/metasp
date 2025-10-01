@@ -1,30 +1,27 @@
-modality(thtc, op, 3, (set(eq,assign,neq,lt,leq),linear_temp_cons_atom,linear_temp_cons_atom)).
+
+type(thtc). type(thtc_assign).type(linear_temp_cons_atom). type(m). type(simple_tel).
+
+% Used to limit the constructor below
+type(operator_name).
+constructor(operator_name, (eq;assign;neq;lt;leq), 0, ()).
 
 
-modality(thtc, eq, 2, (linear_temp_cons_atom,linear_temp_cons_atom)).%derived
-modality(thtc, neq, 2, (linear_temp_cons_atom,linear_temp_cons_atom)).
-modality(thtc, lt, 2, (linear_temp_cons_atom,linear_temp_cons_atom)).
-modality(thtc, leq, 2, (linear_temp_cons_atom,linear_temp_cons_atom)).
-modality(thtc_assign, assign, 2, (simple_tel,linear_temp_cons_atom)). %Derived
+constructor(thtc, op, 3, (operator_name,linear_temp_cons_atom,linear_temp_cons_atom)).
+constructor(thtc, (eq;neq;lt;leq), 2, (linear_temp_cons_atom,linear_temp_cons_atom)).
+constructor(thtc_assign, assign, 2, (linear_temp_cons_atom,linear_temp_cons_atom)).
 
-% We would need to limit this to a sum of two things since the poling is not on atoms
-% and we can't recursively go inside the sum without leaving the same rule
-% we would need some chaining for that
-modality(linear_temp_cons_atom, sum, 2, (m,m)).
-modality(linear_temp_cons_atom, simple_tel).%derived
-modality(linear_temp_cons_atom, atom).%derived
-
-modality(m, mul, 2, (num,simple_tel)).
-modality(m, simple_tel). %derived
-modality(m, atom). %derived
-
-modality(simple_tel, next, 2, (num,atom)).
-modality(simple_tel, next, 1, (atom)). %Derived
-modality(simple_tel, atom). %Derived
+constructor(linear_temp_cons_atom, sum, 2, (m,m)).
+constructor(mul, mul, 2, (num,simple_tel)).
+constructor(simple_tel, next, 2, (num,atom)).
+constructor(simple_tel, next, 1, (atom,)).
 
 
-occurrence(thtc, body;head).
-occurrence(thtc_assign, head).
+allow(thtc, (body;head)).
+allow(thtc_assign, head).
+
+subtype(simple_tel,linear_temp_cons_atom).
+subtype(simple_tel,m).
+subtype(atom,simple_tel).
 
 
 % -----------------------------

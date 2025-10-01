@@ -1,18 +1,24 @@
-modality(del, atom).
-modality(del, box, 2, (path,del)).
-modality(del, dia, 2, (path,del)).
-modality(del, top, 0, ()).
-modality(del, bot, 0, ()).
+type(del).
+type(path).
+subtype(atom, del).
 
 
-modality(path, step, 0, ()).
-modality(path, test, 1, (del,)).
-modality(path, choice, 2, (path, path)).
-modality(path, seq, 2, (path, path)).
-modality(path, star, 1, (path,)).
-modality(path, converse, 1, (path,)).
+constructor(del, box, 2, (path,del)).
+constructor(del, dia, 2, (path,del)).
+constructor(del, top, 0, ()).
+constructor(del, bot, 0, ()).
 
-modality(del, final, 0, ()). %Derived
-modality(path, atom, 0, ()). %Derived to avoid the a?;t
 
-occurence(del, body).
+constructor(path, step, 0, ()).
+constructor(path, test, 1, (del,)).
+constructor(path, choice, 2, (path, path)).
+constructor(path, seq, 2, (path, path)).
+constructor(path, star, 1, (path,)).
+constructor(path, converse, 1, (path,)).
+
+
+% Derived
+constructor(del, final, 0, ()).
+subtype(path, atom).
+
+allow(del, body).
