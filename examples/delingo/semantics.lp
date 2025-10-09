@@ -1,10 +1,15 @@
 %% ------- Fischer Ladner closure --------- %%
 formula(del, dia(P,dia(star(P),F))) :- formula(del, dia(star(P),F)).
 formula(del, box(P,box(star(P),F))) :- formula(del, box(star(P),F)).
+
 formula(del, dia(P1,F)) :- formula(del, dia(choice(P1,P2),F)).
 formula(del, dia(P2,F)) :- formula(del, dia(choice(P1,P2),F)).
 formula(del, box(P1,F)) :- formula(del, box(choice(P1,P2),F)).
 formula(del, box(P2,F)) :- formula(del, box(choice(P1,P2),F)).
+
+formula(del, box(P1,box(P2,F))) :- formula(del, box(seq(P1,P2),F)).
+formula(del, dia(P1,dia(P2,F))) :- formula(del, dia(seq(P1,P2),F)).
+
 
 %% ------- Semantics --------- %%
 % top/0
@@ -25,6 +30,10 @@ true(dia(test(F2),F),K) :- true(F,K),true(F2,K), formula(del,dia(test(F2),F)).
 true(dia(P1,F),K);true(dia(P2,F),K) :- true(dia(choice(P1,P2),F),K).
 true(dia(choice(P1,P2),F),K) :- true(dia(P1,F),K), formula(del,dia(choice(P1,P2),F)).
 true(dia(choice(P1,P2),F),K) :- true(dia(P2,F),K), formula(del,dia(choice(P1,P2),F)).
+
+% dia seq
+true(dia(P1,dia(P2,F)),K) :- true(dia(seq(P1,P2),F),K).
+true(dia(seq(P1,P2),F),K):- true(dia(P1,dia(P2,F)),K), formula(del, dia(seq(P1,P2),F)).
 
 % dia star
 true(F,K); true(dia(P,dia(star(P),F)),K):-  true(dia(star(P),F),K).
@@ -47,18 +56,15 @@ true(box(P1,F),K) :- true(box(choice(P1,P2),F),K).
 true(box(P2,F),K) :- true(box(choice(P1,P2),F),K).
 true(box(choice(P1,P2),F),K) :- true(box(P1,F),K), true(box(P2,F),K), formula(del,box(choice(P1,P2),F)).
 
+
+% box seq
+true(box(P1,box(P2,F)),K) :- true(box(seq(P1,P2),F),K).
+true(box(seq(P1,P2),F),K):- true(box(P1,box(P2,F)),K), formula(del, box(seq(P1,P2),F)).
+
 % box star
 true(F,K):-  true(box(star(P),F),K).
 true(box(P,box(star(P),F)),K):-  true(box(star(P),F),K).
 true(box(star(P),F),K):-  formula(del, box(star(P),F)), true(F,K), true(box(P,box(star(P),F)),K).
 
 
-%% ------- Derived --------- %%
-
-
-derive(dia(seq(P1,P2),F),dia(P1,dia(P2,F)),del) :- formula(del,dia(seq(P1,P2),F)).
-derive(box(seq(P1,P2),F),box(P1,box(P2,F)),del) :- formula(del,box(seq(P1,P2),F)).
-
-derive(box(A,F),box(seq(test(A),step),F),del) :- formula(del,box(A,F)),  formula(atom,A).
-derive(dia(A,F),dia(seq(test(A),step),F),del) :- formula(del,dia(A,F)),  formula(atom,A).
 

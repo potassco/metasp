@@ -10,7 +10,7 @@ constructor(thtc, op, 3, (operator_name,linear_temp_cons_atom,linear_temp_cons_a
 constructor(thtc, (eq;neq;lt;leq), 2, (linear_temp_cons_atom,linear_temp_cons_atom)).
 constructor(thtc_assign, assign, 2, (linear_temp_cons_atom,linear_temp_cons_atom)).
 
-constructor(linear_temp_cons_atom, sum, 2, (m,m)).
+constructor(linear_temp_cons_atom, sum, 2, (mul,mul)).
 constructor(mul, mul, 2, (num,simple_tel)).
 constructor(simple_tel, next, 2, (num,atom)).
 constructor(simple_tel, next, 1, (atom,)).
@@ -45,20 +45,22 @@ derive(op(O,sum(Y,A),X),op(O,sum(Y,mul(1,A)),X),thtc):-formula((atom;simple_tel)
 derive(op(O,X,sum(A,Y)),op(O,X,sum(mul(1,A),Y)),thtc):-formula((atom;simple_tel), A), formula(thtc,op(O,X,sum(A,Y))).
 derive(op(O,X,sum(Y,A)),op(O,X,sum(Y,mul(1,A))),thtc):-formula((atom;simple_tel), A), formula(thtc,op(O,X,sum(Y,A))).
 
+% defined_as((linear_temp_cons_atom, sum(_formula(num,a), _formula(any,x))), (linear_temp_cons_atom, sum(_mul(_formula(num,a),_one),_formula(any,x)))).
 derive(op(O,sum(A,Y),X),op(O,sum(mul(A,_one),Y),X),thtc):-formula(num, A), formula(thtc,op(O,sum(A,Y),X)).
 derive(op(O,sum(Y,A),X),op(O,sum(Y,mul(A,_one)),X),thtc):-formula(num, A), formula(thtc,op(O,sum(Y,A),X)).
 derive(op(O,X,sum(A,Y)),op(O,X,sum(mul(A,_one),Y)),thtc):-formula(num, A), formula(thtc,op(O,X,sum(A,Y))).
 derive(op(O,X,sum(Y,A)),op(O,X,sum(Y,mul(A,_one))),thtc):-formula(num, A), formula(thtc,op(O,X,sum(Y,A))).
 
-% A <-> next(A)
+% A <-> next(0,A)
+% defined_as((mul, mul(_formula(num,d), _formula(atom,a))), (mul, mul(_formula(num,d), next(0,_formula(atom,a))))).
 derive(op(O,sum(mul(D,A),Y),X), op(O,sum(mul(D,next(0,A)),Y),X),thtc):-formula(atom, A), formula(thtc,op(O,sum(mul(D,A),Y),X)).
 derive(op(O,sum(Y,mul(D,A)),X), op(O,sum(Y,mul(D,next(0,A))),X),thtc):-formula(atom, A), formula(thtc,op(O,sum(Y,mul(D,A)),X)).
 derive(op(O,X,sum(mul(D,A),Y)), op(O,X,sum(mul(D,next(0,A)),Y)),thtc):-formula(atom, A), formula(thtc,op(O,X,sum(mul(D,A),Y))).
 derive(op(O,X,sum(Y,mul(D,A))), op(O,X,sum(Y,mul(D,next(0,A)))),thtc):-formula(atom, A), formula(thtc,op(O,X,sum(Y,mul(D,A)))).
 
-% next(A) <-> next(0,A)
+% next(A) <-> next(1,A)
+% defined_as((simple_tel,next(_formula(atom,a))), (simple_tel,next(1,_formula(atom,a)))).
 derive(op(O,sum(mul(D,next(A)),Y),X), op(O,sum(mul(D,next(1,A)),Y),X),thtc):-formula(atom, A), formula(thtc,op(O,sum(mul(D,next(A)),Y),X)).
 derive(op(O,sum(Y,mul(D,next(A))),X), op(O,sum(Y,mul(D,next(1,A))),X),thtc):-formula(atom, A), formula(thtc,op(O,sum(Y,mul(D,next(A))),X)).
 derive(op(O,X,sum(mul(D,next(A)),Y)), op(O,X,sum(mul(D,next(1,A)),Y)),thtc):-formula(atom, A), formula(thtc,op(O,X,sum(mul(D,next(A)),Y))).
 derive(op(O,X,sum(Y,mul(D,next(A)))), op(O,X,sum(Y,mul(D,next(1,A)))),thtc):-formula(atom, A), formula(thtc,op(O,X,sum(Y,mul(D,next(A))))).
-
