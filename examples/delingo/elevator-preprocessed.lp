@@ -1,40 +1,40 @@
 #const floors=5.
 floor(1..floors).
 
-at((floors+1)/2):-initial.
-called(floors):-initial.
-called(1):-initial.
+at((floors+1)/2):-__initial.
+called(floors):-__initial.
+called(1):-__initial.
 
 
-{wait; up ; down; serve}=1 :- not final.
+{wait; up ; down; serve}=1 :- not __final.
 :- up,   at(X), not floor(X+1).
 :- down, at(X), not floor(X-1).
 
-next(at(X+1)):- up,   at(X).
-next(at(X-1)):- down, at(X).
-next(at(X))  :- at(X), not up, not down, not final.
+__next(at(X+1)):- up,   at(X).
+__next(at(X-1)):- down, at(X).
+__next(at(X))  :- at(X), not up, not down, not __final.
 served(X) :- at(X), serve.
-next(called(X)):- called(X), not served(X).
+__next(called(X)):- called(X), not served(X).
 
 
 ready :- called(X), at(X).
 
-:- called(X), final.
+:- called(X), __final.
 
-:- not dia(
-	seq(
-		star(
-			seq(
-				choice(star(up), star(down)) ,
-				seq(
-					test(ready),
+:- not __dia(
+	__seq(
+		__star(
+			__seq(
+				__choice(__star(up), __star(down)) ,
+				__seq(
+					__test(ready),
 					serve
 				)
 			)
 		),
-		star(wait)
+		__star(wait)
 	),
-	final
+	__final
 ).
 
 
@@ -48,12 +48,12 @@ _show(at(X)):-at(X).
 _show(final):-final.
 
 
-#external initial.
-#external final.
+#external __initial.
+#external __final.
 #external wait.
 #external top.
 #external up.
 #external down.
 #external serve.
 #external at(X):floor(X).
-#external dia(seq(star(seq(choice(star(up),star(down)),seq(test(ready),serve))),star(wait)),final).
+#external __dia(__seq(__star(__seq(__choice(__star(up),__star(down)),__seq(__test(ready),serve))),__star(wait)),__final).

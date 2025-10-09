@@ -1,21 +1,44 @@
 type(tel).
 subtype(atom, tel).
 
-constructor(tel, initial, 0, ()).
-constructor(tel, final, 0, ()).
-constructor(tel, and, 2, (tel, tel)).
-constructor(tel, or, 2, (tel, tel)).
-constructor(tel, next, 1, (tel,)).
-constructor(tel, eventually, 1, (tel,)). %Derived
-constructor(tel, always, 1, (tel)). %Derived
-constructor(tel, until, 2, (tel,tel)).
-constructor(tel, release, 2, (tel,tel)). %Derived
+constructor(tel, (initial, 0), body).
+constructor(tel, (true, 0), body).
+constructor(tel, (next, 1), any).
+	arg((next, 1), 0, type, tel).
+	arg((next, 1), 0, safety, unsafe).
+constructor(tel, (eventually, 1), any).
+	arg((eventually, 1), 0, type, tel).
+	arg((eventually, 1), 0, safety, unsafe).
+constructor(tel, (always, 1), any).
+	arg((always, 1), 0, type, tel).
+	arg((always, 1), 0, safety, unsafe).
+constructor(tel, (until, 2), any).
+	arg((until, 2), 0, type, tel).
+	arg((until, 2), 0, safety, unsafe).
+	arg((until, 2), 1, type, tel).
+	arg((until, 2), 1, safety, safe).
 
-allow(tel, body;head).
+var(_a, atom).
+defined_as(eventually(_a), until(true, _a)).
 
-arg((weak;weak_next;neg),0,unsafe).
-arg((until;release),0,unsafe).
-arg(or,(0;1),unsafe).
+% type(tel).
+% subtype(atom, tel).
+
+% constructor(tel, initial, 0, ()).
+% constructor(tel, final, 0, ()).
+% constructor(tel, and, 2, (tel, tel)).
+% constructor(tel, or, 2, (tel, tel)).
+% constructor(tel, next, 1, (tel,)).
+% constructor(tel, eventually, 1, (tel,)). %Derived
+% constructor(tel, always, 1, (tel)). %Derived
+% constructor(tel, until, 2, (tel,tel)).
+% constructor(tel, release, 2, (tel,tel)). %Derived
+
+% allow(tel, body;head).
+
+% arg((weak;weak_next;neg),0,unsafe).
+% arg((until;release),0,unsafe).
+% arg(or,(0;1),unsafe).
 
 
 % defined_as((tel,wnext(_formula(tel,_f))), (tel, or(next(_formula(tel,_f)), final))).
