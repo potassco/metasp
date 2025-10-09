@@ -10,7 +10,8 @@ import argparse
 from clingo.application import clingo_main
 from .utils.parser import get_parser
 from rich_argparse import ArgumentDefaultsRichHelpFormatter
-from metasp.preprocess import preprocess, reify
+from metasp.preprocess import preprocess
+from metasp.reifier import reify
 from metasp.system import MetaSystem
 from metasp.utils.logging import configure_logging
 from metasp.app import make_app
@@ -94,7 +95,7 @@ def main() -> None:
     if args.output == "extend":
         sys.stdout.write(processed_input + "\n")
         exit(0)
-    reified_input = reify(processed_input, constants_dict)
+    reified_input = reify(processed_input, constants_dict, syntax_encoding=meta_system.syntax_encoding)
     if args.output == "reify":
         sys.stdout.write(reified_input + "\n")
         exit(0)

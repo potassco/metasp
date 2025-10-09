@@ -3,9 +3,12 @@ Module with all printing functions that will be available for the print_model
 Custom printing functions can be provided by adding the script in the configuration
 """
 
+import logging
 from typing import Callable, Optional
 from clingo import Model, Symbol, SymbolType, Function, Number
 import sys
+
+log = logging.getLogger(__name__)
 
 
 def default_print_model(model: Model, system) -> None:
