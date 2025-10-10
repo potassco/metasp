@@ -2,10 +2,15 @@ type(del).
 type(path).
 subtype(atom, del).
 subtype(atom, path).
+subtype(tel, del).
 
 
 constructor(del, (box, 2), body).
 constructor(del, (dia, 2), body).
+
+    arg((dia, 2), 0, type, path).
+    arg((dia, 2), 1, type, del).
+
 constructor(del, (top, 0), body).
 constructor(del, (bot, 0), body).
 

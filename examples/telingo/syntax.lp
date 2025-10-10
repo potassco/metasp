@@ -2,6 +2,7 @@ type(tel).
 subtype(atom, tel).
 
 constructor(tel, (initial, 0), body).
+constructor(tel, (final, 0), body).
 constructor(tel, (true, 0), body).
 constructor(tel, (next, 1), any).
 	arg((next, 1), 0, type, tel).
@@ -18,8 +19,8 @@ constructor(tel, (until, 2), any).
 	arg((until, 2), 1, type, tel).
 	arg((until, 2), 1, safety, safe).
 
-var(_a, atom).
-defined_as(eventually(_a), until(true, _a)).
+var(_a, tel).
+defined_as(eventually(_a), __until(__true, _a)).
 
 % type(tel).
 % subtype(atom, tel).

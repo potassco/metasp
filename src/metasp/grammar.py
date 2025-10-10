@@ -1,9 +1,11 @@
 from dataclasses import dataclass, field
+from functools import lru_cache
 from typing import List, Dict, Any, Sequence, Tuple, Optional, Union
 import clorm
 import logging
 import pprint
 import metasp.clorm_db as clorm_db
+from clingo import Symbol, SymbolType
 
 log = logging.getLogger(__name__)
 
@@ -17,10 +19,10 @@ class Arg:
 
 @dataclass
 class Constructor:
-    # type_name: str
+    type_name: str
     name: str  # e.g., "until"
     arity: int
-    args: Dict[int, Arg] = field(default_factory=dict)
+    args: Dict[int, List[Arg]] = field(default_factory=dict)
 
 
 @dataclass
@@ -47,7 +49,7 @@ class Grammar:
     def __init__(self) -> None:
         self.types: Dict[str, Type] = {}
         self.syntactic_sugar: List[DefinedAs] = []
-        self.variables: List[Arg] = []
+        self.variables: Dict[str, List[Var]] = {}
         self.add_base_types()
 
     def add_base_types(self) -> None:
@@ -65,7 +67,41 @@ class Grammar:
     def add_var(self, var_name: str, var_type: Type) -> None:
         if var_type.name not in self.types:
             raise ValueError(f"Type '{var_type.name}' is not defined in the grammar.")
-        self.variables.append(Var(name=var_name, type=var_type))
+        if var_name not in self.variables:
+            self.variables[var_name] = []
+        self.variables[var_name].append(Var(name=var_name, type=var_type))  # Allow multiple types for the same variable
+
+    def is_variable(self, s: Symbol) -> bool:
+        if s.type != SymbolType.Function or len(s.arguments) != 0:
+            return False
+        return s.name in self.variables
+
+    @lru_cache(maxsize=None)
+    def get_constructors_keys(self) -> List[Tuple[str, int]]:
+        keys = []
+        for type_def in self.types.values():
+            keys.extend(type_def.constructors.keys())
+        return keys
+
+    @lru_cache(maxsize=None)
+    def get_constructor(self, name: str, arity: int) -> Optional[Constructor]:
+        for type_def in self.types.values():
+            constructor = type_def.constructors.get((name, arity), None)
+            if constructor is not None:
+                return constructor
+        return None
+
+    def check_grammar(self) -> bool:
+        # Check that there are no two constructors with the same name and arity in different types
+        seen = set()
+        for type_def in self.types.values():
+            for constructor in type_def.constructors.values():
+                if (constructor.name, constructor.arity) in seen:
+                    log.error(f"Constructor '{constructor.name}/{constructor.arity}' is defined in multiple types.")
+                    return False
+                seen.add((constructor.name, constructor.arity))
+
+        return True
 
     @classmethod
     def from_asp_files(cls, asp_files: Sequence[str]) -> "Grammar":
@@ -85,11 +121,12 @@ class Grammar:
             type_def = Type(name=t.name)
             for c in fb.query(clorm_db.Constructor).where(clorm_db.Constructor.type == t.name).all():
                 print(f"----------Constructor: {c.type} {c.id} {c.kind}")
-                args = {
-                    a.index: Arg(key=a.key, value=a.value)
-                    for a in fb.query(clorm_db.Arg).where(clorm_db.Arg.cons_id == c.id).all()
-                }
-                constructor = Constructor(name=c.id.name, arity=c.id.arity, args=args)
+                args = {}
+                for a in fb.query(clorm_db.Arg).where(clorm_db.Arg.cons_id == c.id).all():
+                    if a.index not in args:
+                        args[a.index] = []
+                    args[a.index].append(Arg(key=a.key, value=a.value))
+                constructor = Constructor(type_name=t.name, name=c.id.name, arity=c.id.arity, args=args)
 
                 type_def.constructors[(c.id.name, c.id.arity)] = constructor
 
@@ -110,6 +147,8 @@ class Grammar:
         # This is a placeholder for actual parsing logic
         # For example, you might use clingo to parse and extract types and constructors
         print(grammar)
+        if not grammar.check_grammar():
+            raise ValueError("Grammar check failed. Please fix the issues in the grammar definition.")
         return grammar
 
     def __str__(self) -> str:
