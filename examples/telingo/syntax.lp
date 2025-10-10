@@ -20,7 +20,7 @@ constructor(tel, (until, 2), any).
 	arg((until, 2), 1, safety, safe).
 
 var(_a, tel).
-defined_as(eventually(_a), __until(__true, _a)).
+defined_as(any, eventually(_a), __until(__true, _a)).
 
 % type(tel).
 % subtype(atom, tel).

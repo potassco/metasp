@@ -41,6 +41,7 @@ class Var(Predicate):
 
 
 class DefinedAs(Predicate, name="defined_as"):
+    type: ConstantStr
     lhs: Raw
     rhs: Raw
 

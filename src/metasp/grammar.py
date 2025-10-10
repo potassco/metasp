@@ -27,6 +27,7 @@ class Constructor:
 
 @dataclass
 class DefinedAs:
+    type: str
     pattern: str
     expansion: str
 
@@ -55,6 +56,9 @@ class Grammar:
     def add_base_types(self) -> None:
         type_atom = Type(name="atom")
         self.add_type(type_atom)
+
+        type_number = Type(name="number")
+        self.add_type(type_number)
 
     def add_type(self, type_def: Type) -> None:
         if type_def.name in self.types:
@@ -137,10 +141,12 @@ class Grammar:
                 type_def.super_types.append(c.sup)
 
         for var in fb.query(clorm_db.Var).all():
+            if var.type not in grammar.types:
+                raise ValueError(f"Type '{var.type}' for variable '{var.name}' is not defined in the grammar.")
             grammar.add_var(var.name, grammar.types[var.type])
 
         for defined in fb.query(clorm_db.DefinedAs).all():
-            sugar = DefinedAs(pattern=defined.lhs, expansion=defined.rhs)
+            sugar = DefinedAs(type=defined.type, pattern=defined.lhs, expansion=defined.rhs)
             grammar.add_syntactic_sugar(sugar)
 
         # Parse the ASP program to populate the Grammar instance
