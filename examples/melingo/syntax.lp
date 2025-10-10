@@ -3,19 +3,20 @@ subtype(atom, mel).
 
 type(ub).
 subtype(number, ub).
-constructor(ub, (w,0), none).
+subtype(atom, ub).
+% constructor(ub, (w,0), none).
 
-type(interval).
-constructor(interval, (i,2), none).
-    arg( (i,2), 0, type, number).
-    arg( (i,2), 1, type, ub).
+% type(interval).
+% constructor(interval, (i,2), none).
+%     arg( (i,2), 0, type, number).
+%     arg( (i,2), 1, type, ub).
 
 
 constructor(mel, (initial, 0), body).
 constructor(mel, (final, 0), body).
 
 constructor(mel, (next, 2), any).
-    arg( (next, 2), 0, type, interval).
+    arg( (next, 2), 0, type, (number,ub)).
     arg( (next, 2), 1, type, mel).
 
 % constructor(mel, next, 2).
@@ -25,11 +26,11 @@ constructor(mel, (next, 2), any).
 % constructor(mel, next, 2, ((number,omega),mel)).
 
 constructor(mel, (eventually, 2), any).
-    arg( (eventually,2), 0, type, interval).
+    arg( (eventually,2), 0, type, (number,ub)).
     arg( (eventually,2), 1, type, mel).
 
 constructor(mel, (always, 2), any).
-    arg( (always,2), 0, type, interval).
+    arg( (always,2), 0, type, (number,ub)).
     arg( (always,2), 1, type, mel).
 
 
@@ -39,4 +40,4 @@ constructor(mel, (next, 1), any).
 
 
 var(_a, mel).
-defined_as(any, next(_a), __next(__i(0,__w), _a)).
+defined_as(any, next(_a), __next((0,w), _a)).

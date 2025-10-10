@@ -38,6 +38,10 @@ class Type:
     super_types: List[str] = field(default_factory=list)
     constructors: Dict[Tuple[str, int], Constructor] = field(default_factory=dict)
 
+    @property
+    def all_types(self) -> List[str]:
+        return self.super_types + [self.name]
+
 
 @dataclass
 class Var:
@@ -121,10 +125,8 @@ class Grammar:
             fb = clorm.parse_fact_files(asp_files, clorm_db.UNIFIERS)
 
         for t in fb.query(clorm_db.Type).all():
-            print(f"----------Type: {t.name}")
             type_def = Type(name=t.name)
             for c in fb.query(clorm_db.Constructor).where(clorm_db.Constructor.type == t.name).all():
-                print(f"----------Constructor: {c.type} {c.id} {c.kind}")
                 args = {}
                 for a in fb.query(clorm_db.Arg).where(clorm_db.Arg.cons_id == c.id).all():
                     if a.index not in args:
@@ -152,7 +154,7 @@ class Grammar:
         # Parse the ASP program to populate the Grammar instance
         # This is a placeholder for actual parsing logic
         # For example, you might use clingo to parse and extract types and constructors
-        print(grammar)
+        log.debug(grammar)
         if not grammar.check_grammar():
             raise ValueError("Grammar check failed. Please fix the issues in the grammar definition.")
         return grammar

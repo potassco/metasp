@@ -31,6 +31,10 @@ class Formula:
         return str(self.symbol)
 
 
+def is_tuple(s: Symbol) -> bool:
+    return s.type == SymbolType.Function and s.name == ""
+
+
 class FormulaRegistery:
 
     def __init__(self, grammar: Grammar):
@@ -68,19 +72,17 @@ class FormulaRegistery:
         return True
 
     def replace(self, pattern_symbol: Symbol, matched_variables: Dict[str, Formula]) -> Symbol:
-        print(f"Replacing pattern symbol {pattern_symbol} with matched variables {matched_variables}")
+        # print(f"Replacing pattern symbol {pattern_symbol} with matched variables {matched_variables}")
         if pattern_symbol.type != SymbolType.Function:
             return pattern_symbol
         if self.grammar.is_variable(pattern_symbol):
-            print(
-                f"  Pattern is variable {pattern_symbol.name}, replaced with {matched_variables[pattern_symbol.name]}"
-            )
+            # print(
+            # f"  Pattern is variable {pattern_symbol.name}, replaced with {matched_variables[pattern_symbol.name]}"
+            # )
             # variable = self.grammar.variables[pattern_symbol.name]
             # print(str(matched_variables[pattern_symbol.name].symbol))
             return matched_variables[pattern_symbol.name].symbol_with_prefix()
         new_args = [self.replace(arg, matched_variables) for arg in pattern_symbol.arguments]
-        print("B")
-        print(str(Function(pattern_symbol.name, new_args, True)))
         return Function(pattern_symbol.name, new_args, True)
 
     def remove_syntactic_sugar(self, f: Formula, as_type=None) -> Formula:
@@ -88,10 +90,10 @@ class FormulaRegistery:
             matched_variables = {}
             if sugar.type != "any":
                 if as_type is None:
-                    print(f"Skipping sugar because as_type is None and sugar.type is {sugar.type}")
+                    # print(f"Skipping sugar because as_type is None and sugar.type is {sugar.type}")
                     continue
                 if as_type != sugar.type:
-                    print(f"Skipping sugar because as_type {as_type} != sugar.type {sugar.type}")
+                    # print(f"Skipping sugar because as_type {as_type} != sugar.type {sugar.type}")
                     continue
             if self.match_sugar_pattern(sugar.pattern.symbol, f, matched_variables):
                 log.info(
@@ -102,36 +104,43 @@ class FormulaRegistery:
                 return self.match(new_symbol, as_type=as_type)
         return f
 
-    def is_atom(self, s: Symbol, level=0) -> bool:
+    def is_atom(self, s: Symbol) -> bool:
         if s.type != SymbolType.Function or s.name.startswith(self._prefix):
             return False
-        # log.info(level * "\t" + f"Matched atom {s}")
+        # log.info( f"Matched atom {s}")
         constructor_keys = self.grammar.get_constructors_keys()
         if (s.name, len(s.arguments)) in constructor_keys:
             log.warning(
-                level * "\t"
-                + f"Symbol `{s}` looks like a constructor but is missing the & prefix. Did you forget it?. Considered as atom."
+                f"Symbol `{s}` looks like a constructor but is missing the & prefix. Did you forget it?. Considered as atom."
             )
         return True
 
-    def match(self, s: Symbol, as_type=None, level=0) -> Formula | None:
+    def assert_type_in(self, as_type: str | None, possible_types: List[str], symbol: Symbol) -> None:
+        if as_type is not None and as_type not in possible_types:
+            m = f"Type mismatch for symbol {symbol} expected {as_type}, but matches only with: {possible_types}"
+            log.error(m)
+            raise ValueError(m)
+
+    def match(self, s: Symbol, as_type: str | None = None) -> Formula | None:
 
         # --------- Base cases
-        # print(level * "\t" + "----------------------------")
-        # print(level * "\t" + f"Matching symbol {s}")
+        # print( "----------------------------")
+        # print( f"Matching symbol {s} as type {as_type}")
         if s.type == SymbolType.Number:
             formula_type = self.grammar.types.get("number", None)
-            f = Formula(name=str(s), symbol=s, supertypes=formula_type.super_types + [formula_type.name], arguments=[])
+            f = Formula(name=str(s), symbol=s, supertypes=formula_type.all_types, arguments=[])
+            self.assert_type_in(as_type, formula_type.all_types, s)
             new_f = self.remove_syntactic_sugar(f, as_type=as_type)
             return self.add_formula(new_f)
         if s.type != SymbolType.Function:
-            log.warn(level * "\t" + "Ignored")
+            log.warn("Ignored")
             return None
         if s.name in self._reserved_names:
             return None
         if self.is_atom(s):
             formula_type = self.grammar.types.get("atom", None)
-            f = Formula(name=s.name, symbol=s, supertypes=formula_type.super_types + [formula_type.name], arguments=[])
+            f = Formula(name=s.name, symbol=s, supertypes=formula_type.all_types, arguments=[])
+            self.assert_type_in(as_type, formula_type.all_types, s)
             new_f = self.remove_syntactic_sugar(f, as_type=as_type)
             return self.add_formula(new_f)
 
@@ -140,61 +149,62 @@ class FormulaRegistery:
         arity = len(s.arguments)
         constructor = self.grammar.get_constructor(name, arity)
         if constructor is None:
-            log.error(level * "\t" + f"No constructor found for {s}.")
+            log.error(f"No constructor found for {s}.")
             raise ValueError(f"No constructor found for {s}.")
 
         formula_type = self.grammar.types.get(constructor.type_name, None)
-        supertypes = formula_type.super_types + [formula_type.name]
+        supertypes = formula_type.all_types
 
-        if as_type is not None and as_type not in supertypes:
-            log.error(
-                level * "\t"
-                + f"Type mismatch for constructor {constructor.name}: expected {as_type}, got {constructor.type_name}"
-            )
-            raise ValueError(
-                f"Type mismatch for constructor {constructor.name}: expected {as_type}, got {constructor.type_name}"
-            )
+        self.assert_type_in(as_type, supertypes, s)
         # --------- Match arguments
-        # log.info(level * "\t" + f"Matched constructor {constructor.name} of type {constructor.type_name}")
+        # log.info( f"Matched constructor {constructor.name} of type {constructor.type_name}")
         arguments = []
         for i, a in enumerate(s.arguments):
             arg_defs = constructor.args.get(i, None)
             arg_expected_types = [arg.value for arg in arg_defs or [] if arg.key == "type"]
-            if len(arg_expected_types) == 0:
-                log.warning(level * "\t" + f"No fixed type for argument {i} of constructor {constructor.name}")
             if len(arg_expected_types) > 1:
-                log.warning(
-                    level * "\t" + f"Multiple expected types for argument {i} of constructor {constructor.name}"
-                )
+                log.warning(f"Multiple expected types for argument {i} of constructor {constructor.name}")
                 raise ValueError("Multiple expected types not supported ")
-            expected_type = arg_expected_types[0] if len(arg_expected_types) == 1 else None
-            # print(level * "\t" + f"Matching argument {i}: {a}")
+            if len(arg_expected_types) == 0:
+                log.warning(f"No fixed type for argument {i} of constructor {constructor.name}")
+                expected_type = None
+            else:
+                expected_type = arg_expected_types[0]
+            # print( f"Matching argument {i}: {a}")
             try:
-                arg_formula = self.match(a, level=level + 1, as_type=expected_type)
-                if arg_formula is None:
-                    raise ValueError("No match found")
-            except ValueError as e:
-                log.error(level * "\t" + f"Could not match argument {a} of {s}: {e}")
-                raise e
-
-            # Additional checks (Like subtypes)
-            arg_defs = constructor.args.get(i, None)
-            for arg in arg_defs or []:
-                if arg.key == "type":
-                    # print(level * "\t" + f"Checking type {arg.value} in {matched_type['supertypes']}")
-                    if arg.value not in arg_formula.supertypes:
+                if is_tuple(a):
+                    if not is_tuple(expected_type.symbol):
                         log.error(
-                            level * "\t"
-                            + f"Type mismatch for argument {i} of constructor {constructor.name}: expected {arg.value}, got {arg_formula.supertypes}"
+                            f"Type mismatch for argument {i} of constructor {constructor.name} in {s}: expected {expected_type}, got tuple {a}"
                         )
-                        return None
+                        raise ValueError("Type mismatch: expected non-tuple, got tuple")
+                    args_to_match = a.arguments
+                    expected_types = expected_type.symbol.arguments
+                else:
+                    args_to_match = [a]
+                    expected_types = [expected_type]
+                final_args = []
+                for arg, expected in zip(args_to_match, expected_types):
+                    expected_type_name = None if expected is None else str(expected)
+                    arg_formula = self.match(arg, as_type=expected_type_name)
+                    if arg_formula is None:
+                        raise ValueError("No match found for argument")
+                    final_args.append(arg_formula)
 
-            arguments.append(arg_formula)
-            # if arg_formula.supertypes is not None and arg_def.type not in arg_formula.supertypes:
-            #     log.error(
-            #         f"Type mismatch for argument {i} of constructor {c.name}: expected {arg_def.type}, got {arg_formula.supertypes}"
-            #     )
-            #     return None
+                arg_formula = (
+                    final_args[0]
+                    if not is_tuple(a)
+                    else Formula(
+                        name="",
+                        symbol=Function("", [f.symbol for f in final_args], True),
+                        arguments=final_args,
+                        supertypes=[],
+                    )
+                )
+                arguments.append(arg_formula)
+            except ValueError as e:
+                log.error(f"Could not match argument {a} of {s}: {e}")
+                raise e
 
         new_symbol_fun = Function(name, [a.symbol for a in arguments], True)
         formula = Formula(

@@ -32,7 +32,7 @@ class Arg(Predicate):
     cons_id: ConstructorID
     index: int
     key: ConstantStr
-    value: ConstantStr
+    value: Raw
 
 
 class Var(Predicate):

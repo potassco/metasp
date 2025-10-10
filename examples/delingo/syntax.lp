@@ -2,7 +2,7 @@ type(del).
 type(path).
 subtype(atom, del).
 subtype(atom, path).
-subtype(tel, del).
+% subtype(tel, del).
 
 
 constructor(del, (box, 2), body).

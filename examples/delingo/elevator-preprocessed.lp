@@ -34,10 +34,20 @@ ready :- called(X), at(X).
 		),
 		__star(wait)
 	),
-	__final
+	__box(__step, __bot)
 ).
 
 
+% :- not __box(
+% 	__star(__step),
+% 	__box(__step, __bot)
+% ).
+
+
+% #external __box(
+% 	__star(__step),
+% 	__box(__step, __bot)
+% ).
 
 _show.
 _show(down):-down.
@@ -56,4 +66,4 @@ _show(final):-final.
 #external down.
 #external serve.
 #external at(X):floor(X).
-#external __dia(__seq(__star(__seq(__choice(__star(up),__star(down)),__seq(__test(ready),serve))),__star(wait)),__final).
+#external __dia(__seq(__star(__seq(__choice(__star(up),__star(down)),__seq(__test(ready),serve))),__star(wait)),__box(__step, __bot)).
