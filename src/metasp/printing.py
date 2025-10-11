@@ -34,9 +34,17 @@ def telingo_print_model(model: Model, system) -> None:
     assert "horizon" in system.constants, "system must have a 'horizon' property to use telingo_print_model"
     l = int(system.constants["horizon"]) + 1
     table = {}
+    extra_shown = []
     for sym in model.symbols(shown=True):
         if sym.type == SymbolType.Function and len(sym.arguments) > 0 and sym.name == "true":
             table.setdefault(sym.arguments[-1].number, []).append(sym.arguments[0])
+        else:
+            extra_shown.append(sym)
+    if len(extra_shown) > 0:
+        sys.stdout.write(" Other shown symbols:\n")
+        for sym in extra_shown:
+            sys.stdout.write(" {}".format(sym))
+        sys.stdout.write("\n\n")
     for step in range(l):
         symbols = table.get(step, [])
         sys.stdout.write(" State {}:".format(step))

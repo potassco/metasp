@@ -8,7 +8,9 @@ formula(del, box(P1,F)) :- formula(del, box(choice(P1,P2),F)).
 formula(del, box(P2,F)) :- formula(del, box(choice(P1,P2),F)).
 
 formula(del, box(P1,box(P2,F))) :- formula(del, box(seq(P1,P2),F)).
+formula(del, box(P2,F)) :- formula(del, box(seq(P1,P2),F)). %This had to be included since we don't have rules for subformulas anymore
 formula(del, dia(P1,dia(P2,F))) :- formula(del, dia(seq(P1,P2),F)).
+formula(del, dia(P2,F)) :- formula(del, dia(seq(P1,P2),F)). %This had to be included since we don't have rules for subformulas anymore
 
 
 %% ------- Semantics --------- %%
@@ -43,6 +45,7 @@ true(dia(star(P),F),K):-  formula(del, dia(star(P),F)), true(dia(P,dia(star(P),F
 % box step
 true(F,K+1):- formula(del,box(step,F)), true(box(step,F),K), time(K+1).
 true(box(step,F),K) :- true(F,K+1), formula(del,box(step,F)), time(K).
+true(box(step,F),K) :- formula(del,box(step,F)), time(K), not time(K+1).
 
 % box test
 true(F,K) :- formula(del,box(test(F2),F)), true(box(test(F2),F),K), true(F2,K).
@@ -65,6 +68,4 @@ true(box(seq(P1,P2),F),K):- true(box(P1,box(P2,F)),K), formula(del, box(seq(P1,P
 true(F,K):-  true(box(star(P),F),K).
 true(box(P,box(star(P),F)),K):-  true(box(star(P),F),K).
 true(box(star(P),F),K):-  formula(del, box(star(P),F)), true(F,K), true(box(P,box(star(P),F)),K).
-
-
 

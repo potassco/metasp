@@ -88,11 +88,11 @@ attr(main(state), order, 1).
 
             elem(elem_container(type(T)), container, content(types)):-type(T).
 
-                elem(elem_title(type(T)), checkbox, elem_container(type(T))):-constructor(T,_,_,_).
-                attr(elem_title(type(T)), label, T):-constructor(T,_,_,_).
-                attr(elem_title(type(T)), checked, true):-constructor(T,_,_,_),shown_type(T).
-                when(elem_title(type(T)), click,call, set_external(shown_type(T),true)):-constructor(T,_,_,_),not shown_type(T).
-                when(elem_title(type(T)), click,call, set_external(shown_type(T),false)):-constructor(T,_,_,_), shown_type(T).
+                elem(elem_title(type(T)), checkbox, elem_container(type(T))):-type(T).
+                attr(elem_title(type(T)), label, T):-type(T).
+                attr(elem_title(type(T)), checked, true):-type(T),shown_type(T).
+                when(elem_title(type(T)), click,call, set_external(shown_type(T),true)):-type(T),not shown_type(T).
+                when(elem_title(type(T)), click,call, set_external(shown_type(T),false)):-type(T), shown_type(T).
 
                 % elem(elem_val(type(M)), label, elem_container(type(M))):-type(M,_,_,_).
                 % attr(elem_val(type(M)), label,V):-type(M,_,V).
@@ -234,7 +234,7 @@ attr(main(model), order, 3).
                     attr(elem_title(model(A,W)), label, A):-show_model(true(A,W)).
                     attr(elem_title(model(A,W)), class, "font-monospace"):-show_model(true(A,W)).
                     attr(elem_title(model(A,W)), class, "opacity-25"):- _all(A), show_model(true(A,W)).
-                    attr(elem_title(model(A,W)), class, "text-primary"):-  show_model(true(A,W)), formula(M,A), M!=atom.
+                    attr(elem_title(model(A,W)), class, "text-primary"):-  show_model(true(A,W)), not formula(atom,A).
                     attr(elem_title(model(A,W)), class, "text-decoration-underline"):-  show_model(true(A,W)),  _clinguin_assume(true(A,W),true).
                     attr(elem_title(model(A,W)), class, ("text-decoration-line-through")):-  show_model(true(A,W)),  _clinguin_assume(true(A,W),false).
                     attr(elem_title(model(A,W)), opacity, "0.4"):-  show_model(true(A,W)), not true(A,W).

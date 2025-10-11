@@ -47,15 +47,3 @@ true(R,J) :- true(until_then(L,R,J),K).
 true(until_then(L,R,J),K)
   :- formula(tel,until(L,R)), time(K), time(J), K<=J, true(R,J),
      true(L,I) : I=K..J-1.
-
-%--------- Derived
-
-derive(wnext(F),or(next(F),final),tel) :- formula(tel,wnext(F)).
-% wprev/1
-derive(wprev(F),or(prev(F),initial),tel) :- formula(tel,wprev(F)).
-% eventually_after/1
-derive(eventually(F),until(true,F),tel) :- formula(tel,eventually(F)).
-% always/1
-derive(always(F),release(false,F),tel) :- formula(tel,always(F)).
-% release/2
-derive(release(L,R),until(R,and(R,or(L,final))),tel) :- formula(tel,release(L,R)).

@@ -4,6 +4,13 @@ subtype(atom, tel).
 constructor(tel, (initial, 0), body).
 constructor(tel, (final, 0), body).
 constructor(tel, (true, 0), body).
+constructor(tel, (false, 0), body).
+constructor(tel, (and, 2), any).
+	arg((and, 2), 0, type, tel).
+	arg((and, 2), 1, type, tel).
+constructor(tel, (or, 2), any).
+	arg((or, 2), 0, type, tel).
+	arg((or, 2), 1, type, tel).
 constructor(tel, (next, 1), any).
 	arg((next, 1), 0, type, tel).
 	arg((next, 1), 0, safety, unsafe).
@@ -18,9 +25,19 @@ constructor(tel, (until, 2), any).
 	arg((until, 2), 0, safety, unsafe).
 	arg((until, 2), 1, type, tel).
 	arg((until, 2), 1, safety, safe).
+constructor(tel, (release, 2), any).
+	arg((release, 2), 0, type, tel).
+	arg((release, 2), 0, safety, unsafe).
+	arg((release, 2), 1, type, tel).
+	arg((release, 2), 1, safety, safe).
 
 var(_a, tel).
+var(_l, tel).
+var(_r, tel).
 defined_as(any, eventually(_a), __until(__true, _a)).
+defined_as(any, always(_a), __release(__false, _a)).
+defined_as(any, release(_l,_r), __until(_r, __and(_r,__or(_l,__final)))).
+
 
 % type(tel).
 % subtype(atom, tel).

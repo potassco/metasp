@@ -38,16 +38,6 @@ ready :- called(X), at(X).
 ).
 
 
-% :- not __box(
-% 	__star(__step),
-% 	__box(__step, __bot)
-% ).
-
-
-% #external __box(
-% 	__star(__step),
-% 	__box(__step, __bot)
-% ).
 
 _show.
 _show(down):-down.
@@ -55,13 +45,13 @@ _show(up):-up.
 _show(wait):-wait.
 _show(serve):-serve.
 _show(at(X)):-at(X).
-_show(final):-final.
 
 
 #external __initial.
 #external __final.
 #external wait.
 #external __top.
+#external __bot.
 #external up.
 #external down.
 #external serve.
