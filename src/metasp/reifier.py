@@ -122,10 +122,10 @@ class FormulaRegistery:
             raise ValueError(m)
 
     def match(self, s: Symbol, as_type: str | None = None) -> Formula | None:
-
-        # --------- Base cases
         # print( "----------------------------")
         # print( f"Matching symbol {s} as type {as_type}")
+
+        # --------- Base cases
         if s.type == SymbolType.Number:
             formula_type = self.grammar.types.get("number", None)
             f = Formula(name=str(s), symbol=s, supertypes=formula_type.all_types, arguments=[])
@@ -170,7 +170,6 @@ class FormulaRegistery:
                 expected_type = None
             else:
                 expected_type = arg_expected_types[0]
-            # print( f"Matching argument {i}: {a}")
             try:
                 if is_tuple(a):
                     if not is_tuple(expected_type.symbol):
@@ -233,16 +232,12 @@ class MetaReifier(Reifier):
         self._formula_registery = formula_registery
 
     def output_atom(self, symbol: Symbol, atom: int) -> None:
-        # print(f"----------Output atom: {symbol} with atom {atom}")
         formula = self._formula_registery.match(symbol)
-        # print("=====\nCurrent formulas:")
-        # print(self._formula_registery.formulas)
         if formula is not None:
             symbol = formula.symbol
         self._output("output", [symbol, self._lit_tuple([] if atom == 0 else [atom])])
 
     def output_term(self, symbol: Symbol, condition: Sequence[int]) -> None:
-        # print(f"----------Output term: {symbol} with condition {condition}")
         self._output("output", [symbol, self._lit_tuple(condition)])
 
     def cb_formulas(self) -> None:
@@ -254,7 +249,7 @@ class MetaReifier(Reifier):
                 )
 
 
-def reify(prg: str, constants: dict[str, str], syntax_encoding: Sequence[str]) -> str:
+def reify(prg: str, constants: dict[str, str], grammar: Grammar) -> str:
     """
     Reify the input data with the given constants.
     The input predicate is expected to have the required externals
@@ -263,14 +258,13 @@ def reify(prg: str, constants: dict[str, str], syntax_encoding: Sequence[str]) -
     Args:
         prg (str): The input data to be reified.
         constants (Sequence[str]): The constants to be used in the reification.
-        syntax_encoding (Sequence[str]): The syntax encoding defining the grammar
+        grammar (Grammar): The grammar defining the syntax and safety.
     Returns:
         str: The reified input data.
     """
     symbols: Sequence[Symbol] = []
 
     ctl = Control(["--warn=none"] + [f"-c {k}={v}" for k, v in constants.items()])
-    grammar = Grammar.from_asp_files(syntax_encoding)
     fr = FormulaRegistery(grammar)
     reifier = MetaReifier(symbols.append, reify_steps=False, formula_registery=fr)
     ctl.register_observer(reifier)

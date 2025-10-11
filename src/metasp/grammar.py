@@ -10,7 +10,6 @@ from clingo import Symbol, SymbolType
 log = logging.getLogger(__name__)
 
 
-# -------- Metasp Grammar
 @dataclass
 class Arg:
     key: str
@@ -20,7 +19,7 @@ class Arg:
 @dataclass
 class Constructor:
     type_name: str
-    name: str  # e.g., "until"
+    name: str
     arity: int
     args: Dict[int, List[Arg]] = field(default_factory=dict)
 
@@ -114,7 +113,6 @@ class Grammar:
     @classmethod
     def from_asp_files(cls, asp_files: Sequence[str]) -> "Grammar":
         grammar = Grammar()
-        # clorm_ctrl = clorm.Control(unifier=[UNIFIERS])
         try:
             fb = clorm.parse_fact_files(asp_files, clorm_db.UNIFIERS, raise_nonfact=True, raise_nomatch=True)
         except clorm.UnifierNoMatchError as e:
@@ -124,6 +122,7 @@ class Grammar:
             log.warning("Grammar contains rules which will be ignored %s", e)
             fb = clorm.parse_fact_files(asp_files, clorm_db.UNIFIERS)
 
+        grammar.asp_str = fb.asp_str(commented=True)
         for t in fb.query(clorm_db.Type).all():
             type_def = Type(name=t.name)
             for c in fb.query(clorm_db.Constructor).where(clorm_db.Constructor.type == t.name).all():
@@ -151,14 +150,11 @@ class Grammar:
             sugar = DefinedAs(type=defined.type, pattern=defined.lhs, expansion=defined.rhs)
             grammar.add_syntactic_sugar(sugar)
 
-        # Parse the ASP program to populate the Grammar instance
-        # This is a placeholder for actual parsing logic
-        # For example, you might use clingo to parse and extract types and constructors
         log.debug(grammar)
+        log.info(grammar.asp_str)
         if not grammar.check_grammar():
             raise ValueError("Grammar check failed. Please fix the issues in the grammar definition.")
         return grammar
 
     def __str__(self) -> str:
-        # Use the built-in repr() for a more readable output
         return pprint.pformat(self.__dict__, indent=2, width=120)

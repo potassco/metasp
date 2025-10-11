@@ -5,14 +5,14 @@ from clingo import Control, Symbol
 from metasp.grammar import Grammar
 
 
-def preprocess(input_files: Sequence[str], constants: dict[str, str], syntax_encoding: Sequence[str]) -> str:
+def preprocess(input_files: Sequence[str], constants: dict[str, str], grammar: Grammar) -> str:
     """
     Preprocess the input files.
 
     Args:
         input_files (Sequence[str]): The input files to be preprocessed.
-        syntax_encoding (Sequence[str]): The syntax encoding defining the grammar and safety.
         constants (dict[str,str]): The constants to be used during preprocessing <id>:<term>.
+        grammar (Grammar): The grammar defining the syntax and safety.
     Returns:
         str: The preprocessed input as a string. With externals and transformed show statements.
     Raises:
