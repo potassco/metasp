@@ -15,6 +15,7 @@ from metasp.reifier import reify
 from metasp.system import MetaSystem
 from metasp.utils.logging import configure_logging
 from metasp.app import make_app
+from metasp.grammar import Grammar
 import subprocess
 
 
@@ -91,11 +92,12 @@ def main() -> None:
     system_config = meta_systems_configs[args.system]
     meta_system = MetaSystem.from_dict(system_config)
     meta_system.set_constants(constants_dict)
-    processed_input = preprocess(args.files, constants_dict, meta_system.syntax_encoding)
+    grammar = Grammar.from_asp_files(meta_system.syntax_encoding)
+    processed_input = preprocess(args.files, constants_dict, grammar)
     if args.output == "extend":
         sys.stdout.write(processed_input + "\n")
         exit(0)
-    reified_input = reify(processed_input, constants_dict, syntax_encoding=meta_system.syntax_encoding)
+    reified_input = reify(processed_input, constants_dict, grammar)
     if args.output == "reify":
         sys.stdout.write(reified_input + "\n")
         exit(0)

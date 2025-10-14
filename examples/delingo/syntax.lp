@@ -4,15 +4,16 @@ subtype(atom, del).
 subtype(atom, path).
 % subtype(tel, del).
 
-
-constructor(del, (box, 2), body).
+constructor(del, (box, 2), any).
     arg((box, 2), 0, type, path).
     arg((box, 2), 1, type, del).
-constructor(del, (dia, 2), body).
+constructor(del, (dia, 2), any).
     arg((dia, 2), 0, type, path).
     arg((dia, 2), 1, type, del).
-constructor(del, (top, 0), body).
-constructor(del, (bot, 0), body).
+constructor(del, (top, 0), any).
+constructor(del, (bot, 0), any).
+
+allow(del, any).
 
 
 constructor(path, (step, 0), none).
@@ -27,13 +28,8 @@ constructor(path, (seq, 2), none).
 constructor(path, (star, 1), none).
     arg((star, 1), 0, type, path).
 
-
-
 % Derived We need this in the grammar to parse the input
-
 %% ------- Derived --------- %%
-% derive(box(A,F),box(seq(test(A),step),F),del) :- formula(del,box(A,F)),  formula(atom,A).
-% derive(dia(A,F),dia(seq(test(A),step),F),del) :- formula(del,dia(A,F)),  formula(atom,A).
 
 % defined_as((path,_formula(atom,a)), (path, seq(test(_formula(atom,a)), step))).
 % var(_a, path).
