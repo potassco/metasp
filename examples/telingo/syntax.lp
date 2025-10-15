@@ -1,43 +1,64 @@
-type(tel).
-subtype(atom, tel).
+% :- a: &eventually(a) Can we do this? is it then body or head?
+% HEAD_ATOM :: TEL
+% BODY_ATOM :: TEL
 
-constructor(tel, (initial, 0), body).
-constructor(tel, (final, 0), body).
-constructor(tel, (true, 0), body).
-constructor(tel, (false, 0), body).
-constructor(tel, (and, 2), any).
+% TEL:: ATOM | initial | final | true | false
+% 	| and TEL TEL | or TEL TEL
+% 	| next TEL
+% 	| until TEL TEL | release TEL TEL
+
+% f1:= TEL
+% &eventually(f1):TEL = &until(&true, f1)
+% &always(f1):TEL = &release(&false, f1)
+% &release(f2,f1):TEL = &until(f1, &and(f1, &or(f2, &final)))
+
+
+type(tel).
+type(test).
+allow(test, head).
+
+allow(tel, head).
+allow(tel, body).
+
+subtype(atom, tel).
+% constructor(tel, atom).
+constructor(tel, (initial, 0)).
+constructor(tel, (final, 0)).
+constructor(tel, (true, 0)).
+constructor(tel, (false, 0)).
+constructor(tel, (and, 2)).
 	arg((and, 2), 0, type, tel).
 	arg((and, 2), 1, type, tel).
-constructor(tel, (or, 2), any).
+constructor(tel, (or, 2)).
 	arg((or, 2), 0, type, tel).
 	arg((or, 2), 1, type, tel).
-constructor(tel, (next, 1), any).
+constructor(tel, (next, 1)).
 	arg((next, 1), 0, type, tel).
 	arg((next, 1), 0, safety, unsafe).
-constructor(tel, (eventually, 1), any).
-	arg((eventually, 1), 0, type, tel).
-	arg((eventually, 1), 0, safety, unsafe).
-constructor(tel, (always, 1), any).
-	arg((always, 1), 0, type, tel).
-	arg((always, 1), 0, safety, unsafe).
-constructor(tel, (until, 2), any).
+% constructor(tel, (eventually, 1)).
+% 	arg((eventually, 1), 0, type, tel).
+% 	arg((eventually, 1), 0, safety, unsafe).
+% constructor(tel, (always, 1)).
+% 	arg((always, 1), 0, type, tel).
+% 	arg((always, 1), 0, safety, unsafe).
+constructor(tel, (until, 2)).
 	arg((until, 2), 0, type, tel).
 	arg((until, 2), 0, safety, unsafe).
 	arg((until, 2), 1, type, tel).
 	arg((until, 2), 1, safety, safe).
-constructor(tel, (release, 2), any).
+constructor(tel, (release, 2)).
 	arg((release, 2), 0, type, tel).
 	arg((release, 2), 0, safety, unsafe).
 	arg((release, 2), 1, type, tel).
 	arg((release, 2), 1, safety, safe).
 
-var(_a, tel).
-var(_l, tel).
-var(_r, tel).
-defined_as(any, eventually(_a), __until(__true, _a)).
-defined_as(any, always(_a), __release(__false, _a)).
-defined_as(any, release(_l,_r), __until(_r, __and(_r,__or(_l,__final)))).
+var(f1, tel).
+var(f2, tel).
+defined_as(tel, __eventually(f1), __until(__true, f1)).
+defined_as(tel, __always(f1), __release(__false, f1)).
+% defined_as(tel, __release(f1,f2), __until(f2, __and(f2,__or(f1,__final)))).
 
+% &eventually(X):-&next(X).
 
 % type(tel).
 % subtype(atom, tel).

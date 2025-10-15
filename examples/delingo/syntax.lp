@@ -1,3 +1,32 @@
+% What about conditionals?
+% % :- a: &eventually(a) Can we do this? is it then body or head?
+% HEAD_ATOM :: DEL
+% BODY_ATOM :: DEL
+
+% DEL:: ATOM | box PATH DEL | dia PATH DEL | top | bot
+% PATH:: step | test DEL | choice PATH PATH | seq PATH PATH | star PATH
+
+% a:= ATOM
+% a:PATH = &seq(&test (a), &step)
+
+% % boxAtom :: String -> Formula -> Formula
+% % Not good because it would not replace in [a;b]f, since it does not match
+% a:= ATOM
+% f:= DEL
+% &box a f = &box (&seq(&test (a), &step)) f
+
+
+if head(f) then check what can be a head head_types.
+
+    match_f = match(f, as=[head_types]) This would mean looking for constructors only in the possible types
+                if not match_f then
+                    match with syntactic sugar
+                    syntactic_sugar = match (f, as=[head_types])
+                    % Might have multiple matches then it will use the first...
+    if not match_f error
+
+
+
 type(del).
 type(path).
 subtype(atom, del).
@@ -39,3 +68,4 @@ var(a, atom).
 % defined_as(seq(_c,_a), __seq(_c,__seq(__test(_a), __step))).
 defined_as(path, a, __seq(__test(a), __step)).
 % defined_as(eventually(_a), __until(__true, _a)).
+

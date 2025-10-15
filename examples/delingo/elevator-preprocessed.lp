@@ -37,6 +37,15 @@ ready :- called(X), at(X).
 	__box(__step, __bot)
 ).
 
+% a.
+% a:-b.
+
+% formula(atom,a).
+% formula(del,a).
+% formula(path,a).
+% formula(tel,a).
+
+
 
 
 _show.

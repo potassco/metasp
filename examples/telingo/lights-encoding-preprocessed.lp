@@ -3,7 +3,6 @@ __next(push) :- __initial.
 red :- not green.
 __eventually(__and(green,__always(green))):- push.
 
-
 #external __initial.
 #external push.
 #external __always(green).

@@ -13,6 +13,18 @@ ProgramAppearance = refine_field(
 )
 
 
+class Allow(Predicate):
+    """
+    Defines a type in the grammar.
+
+    Args:
+        name (const): The name of the type.
+    """
+
+    type: ConstantStr
+    position: ConstantStr
+
+
 class Type(Predicate):
     """
     Defines a type in the grammar.
@@ -47,7 +59,6 @@ class Constructor(Predicate):
 
     type: ConstantStr
     id: ConstructorID
-    kind: ConstantStr
 
 
 class Arg(Predicate):
@@ -97,4 +108,4 @@ class DefinedAs(Predicate, name="defined_as"):
     rhs: Raw
 
 
-UNIFIERS = [Type, Subtype, Constructor, Arg, Var, DefinedAs, ConstructorID]
+UNIFIERS = [Type, Subtype, Constructor, Arg, Var, DefinedAs, ConstructorID, Allow]

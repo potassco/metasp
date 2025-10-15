@@ -5,7 +5,7 @@ import clorm
 import logging
 import pprint
 import metasp.clorm_db as clorm_db
-from clingo import Symbol, SymbolType
+from clingo import Symbol, SymbolType, Function
 
 log = logging.getLogger(__name__)
 
@@ -35,11 +35,18 @@ class DefinedAs:
 class Type:
     name: str
     super_types: List[str] = field(default_factory=list)
+    sub_types: List[str] = field(default_factory=list)
     constructors: Dict[Tuple[str, int], Constructor] = field(default_factory=dict)
+    allow_in_head: bool = False
+    allow_in_body: bool = False
 
     @property
     def all_types(self) -> List[str]:
         return self.super_types + [self.name]
+
+    @property
+    def is_base_type(self) -> bool:
+        return self.name in ["atom", "number", "string"]
 
 
 @dataclass
@@ -54,6 +61,7 @@ class Grammar:
         self.types: Dict[str, Type] = {}
         self.syntactic_sugar: List[DefinedAs] = []
         self.variables: Dict[str, List[Var]] = {}
+        self._prefix = "__"
         self.add_base_types()
 
     def add_base_types(self) -> None:
@@ -62,6 +70,28 @@ class Grammar:
 
         type_number = Type(name="number")
         self.add_type(type_number)
+
+        type_string = Type(name="string")
+        self.add_type(type_string)
+
+        # type_head = Type(name="head")
+        # self.add_type(type_head)
+
+        # type_body = Type(name="body")
+        # self.add_type(type_body)
+
+    def allowed_types_in_position(self, position: str = None) -> List[str]:
+        assert position in [None, "head", "body"], f"Unknown position '{position}'"
+        allowed = []
+        for type_def in self.types.values():
+            if position is None:
+                if type_def.allow_in_head or type_def.allow_in_body:
+                    allowed.append(type_def.name)
+            elif position == "head" and type_def.allow_in_head:
+                allowed.append(type_def.name)
+            elif position == "body" and type_def.allow_in_body:
+                allowed.append(type_def.name)
+        return allowed
 
     def add_type(self, type_def: Type) -> None:
         if type_def.name in self.types:
@@ -83,6 +113,108 @@ class Grammar:
             return False
         return s.name in self.variables
 
+    def is_atom(self, s: Symbol) -> bool:
+        if s.type != SymbolType.Function or s.name.startswith(self._prefix):
+            return False
+        # log.info( f"Matched atom {s}")
+        constructor_keys = self.get_constructors_keys()
+        if (s.name, len(s.arguments)) in constructor_keys:
+            log.warning(
+                f"Symbol `{s}` looks like a constructor but is missing the & prefix. Did you forget it?. Will be considered as atom."
+            )
+        return True
+
+    def apply_sugar_with_vars(self, sugar_expansion: Symbol, matched_variables: Dict[str, Symbol]) -> Symbol:
+        # print(f"Replacing pattern symbol {sugar_expansion} with matched variables {matched_variables}")
+        if sugar_expansion.type != SymbolType.Function:
+            log.warning(f"Unexpected expansion symbol type {sugar_expansion}.")
+            return sugar_expansion
+        if self.is_variable(sugar_expansion):
+            return matched_variables[sugar_expansion.name]
+            # return matched_variables[sugar_expansion.name].symbol_with_prefix()
+        new_args = [self.apply_sugar_with_vars(arg, matched_variables) for arg in sugar_expansion.arguments]
+        return Function(sugar_expansion.name, new_args, True)
+
+    def get_fl_type(self, s: Symbol, check_sugar: bool = False) -> Optional[Type]:
+        # --------- Base cases
+        if s.type == SymbolType.Number:
+            return self.types.get("number", None)
+        if s.type == SymbolType.String:
+            return self.types.get("string", None)
+        if s.type != SymbolType.Function:
+            raise ValueError(f"Unexpected symbol type {s}.")
+        # Maybe handle reserved names here
+        if self.is_atom(s):
+            return self.types.get("atom", None)
+
+        # --------- Constructor case
+        name = s.name[len(self._prefix) :]
+        arity = len(s.arguments)
+        constructor = self.get_constructor(name, arity)
+        if constructor is not None:
+            return self.types.get(constructor.type_name, None)
+
+        if check_sugar:
+            sugar = self.find_sugar(s)
+            if sugar is not None:
+                return self.get_fl_type(sugar.expansion.symbol, check_sugar=True)
+
+        return None
+
+    def find_sugar(
+        self, s: Symbol, as_type: Optional[str] = None, match_variables: Optional[Dict[str, Symbol]] = None
+    ) -> Optional[DefinedAs]:
+        if match_variables is None:
+            match_variables = {}
+        if s.type != SymbolType.Function:
+            return None
+
+        for sugar in self.syntactic_sugar:
+            if as_type is not None and sugar.type != as_type:
+                continue
+            if self.match_sugar_pattern(sugar.pattern.symbol, s, match_variables):
+                return sugar
+        return None
+
+    def name_without_prefix(self, s: Symbol) -> str:
+        if s.type != SymbolType.Function:
+            raise ValueError(f"Unexpected symbol type {s}.")
+        if not s.name.startswith(self._prefix):
+            return s.name
+        return s.name[len(self._prefix) :]  # Remove prefix
+
+    def match_sugar_pattern(self, pattern_symbol: Symbol, symbol: Symbol, matched_variables: Dict[str, Symbol]) -> bool:
+        if self.is_variable(pattern_symbol):
+            variables = self.variables[pattern_symbol.name]
+            if len(variables) == 0:
+                raise ValueError(f"Variable {pattern_symbol.name} not defined in grammar.")
+            var = variables[0]
+            # TODO here I should make it softer to include possible sugar
+            symbol_type = self.get_fl_type(symbol, check_sugar=True)
+            if var.type.name not in symbol_type.all_types:
+                # print(f"  ->Variable {pattern_symbol.name} type mismatch, {var.type.name} != {symbol_type.name}")
+                return False
+            matched_variables[pattern_symbol.name] = symbol
+            return True
+        if self.is_atom(pattern_symbol):
+            log.warning(f"Pattern {pattern_symbol} is atom, pehaps you meant to use a variable?")
+        # TODO what if symbol is not a function?
+        if (symbol.name, len(symbol.arguments)) != (
+            pattern_symbol.name,
+            len(pattern_symbol.arguments),
+        ):
+            # log.debug(
+            #     f"  ->Name or arity mismatch: {symbol.name}/{len(symbol.arguments)} != {pattern_symbol.name}/{len(pattern_symbol.arguments)}"
+            # )
+            return False
+        log.debug(f"  ->Matched sugar pattern {pattern_symbol} with formula {symbol}, will check arguments")
+
+        for p_arg, s_arg in zip(pattern_symbol.arguments, symbol.arguments):
+            # print(f"  ->Matching argument {p_arg} with {s_arg}")
+            if not self.match_sugar_pattern(p_arg, s_arg, matched_variables):
+                return False
+        return True
+
     @lru_cache(maxsize=None)
     def get_constructors_keys(self) -> List[Tuple[str, int]]:
         keys = []
@@ -93,7 +225,7 @@ class Grammar:
     @lru_cache(maxsize=None)
     def get_constructor(self, name: str, arity: int) -> Optional[Constructor]:
         for type_def in self.types.values():
-            constructor = type_def.constructors.get((name, arity), None)
+            constructor = type_def.constructors.get((str(name), arity), None)
             if constructor is not None:
                 return constructor
         return None
@@ -140,6 +272,18 @@ class Grammar:
         for type_def in grammar.types.values():
             for c in fb.query(clorm_db.Subtype).where(clorm_db.Subtype.sub == type_def.name).all():
                 type_def.super_types.append(c.sup)
+            for c in fb.query(clorm_db.Subtype).where(clorm_db.Subtype.sup == type_def.name).all():
+                type_def.sub_types.append(c.sub)
+
+        for type_def in grammar.types.values():
+            for c in fb.query(clorm_db.Allow).where(clorm_db.Allow.type == type_def.name).all():
+                position = str(c.position)
+                if position not in ["head", "body"]:
+                    raise ValueError(f"Unknown allow position '{position}' for type '{type_def.name}'.")
+                if position == "head":
+                    type_def.allow_in_head = True
+                if position == "body":
+                    type_def.allow_in_body = True
 
         for var in fb.query(clorm_db.Var).all():
             if var.type not in grammar.types:
