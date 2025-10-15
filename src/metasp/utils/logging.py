@@ -25,6 +25,17 @@ COLORS = {
 }
 
 
+def _print_done_decorator(func):
+    def wrapper(self, *args, **kwargs):
+        try:
+            log.debug("*" * 30)
+            return func(self, *args, **kwargs)
+        finally:
+            log.debug("*" * 30 + "\n")
+
+    return wrapper
+
+
 class SingleLevelFilter(logging.Filter):
     """
     Filter levels.

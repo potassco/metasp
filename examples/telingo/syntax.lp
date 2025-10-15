@@ -14,9 +14,6 @@
 
 
 type(tel).
-type(test).
-allow(test, head).
-
 allow(tel, head).
 allow(tel, body).
 

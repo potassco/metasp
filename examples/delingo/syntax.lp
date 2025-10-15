@@ -16,45 +16,35 @@
 % &box a f = &box (&seq(&test (a), &step)) f
 
 
-if head(f) then check what can be a head head_types.
-
-    match_f = match(f, as=[head_types]) This would mean looking for constructors only in the possible types
-                if not match_f then
-                    match with syntactic sugar
-                    syntactic_sugar = match (f, as=[head_types])
-                    % Might have multiple matches then it will use the first...
-    if not match_f error
-
-
-
 type(del).
+allow(del, head).
+allow(del, body).
+
 type(path).
 subtype(atom, del).
-subtype(atom, path).
-% subtype(tel, del).
+% subtype(atom, path).
 
-constructor(del, (box, 2), any).
+constructor(del, (box, 2)).
     arg((box, 2), 0, type, path).
     arg((box, 2), 1, type, del).
-constructor(del, (dia, 2), any).
+constructor(del, (dia, 2)).
     arg((dia, 2), 0, type, path).
     arg((dia, 2), 1, type, del).
-constructor(del, (top, 0), any).
-constructor(del, (bot, 0), any).
-
-allow(del, any).
+constructor(del, (top, 0)).
+constructor(del, (bot, 0)).
 
 
-constructor(path, (step, 0), none).
-constructor(path, (test, 1), none).
+
+constructor(path, (step, 0)).
+constructor(path, (test, 1)).
     arg((test, 1), 0, type, del).
-constructor(path, (choice, 2), none).
+constructor(path, (choice, 2)).
     arg((choice, 2), 0, type, path).
     arg((choice, 2), 1, type, path).
-constructor(path, (seq, 2), none).
+constructor(path, (seq, 2)).
     arg((seq, 2), 0, type, path).
     arg((seq, 2), 1, type, path).
-constructor(path, (star, 1), none).
+constructor(path, (star, 1)).
     arg((star, 1), 0, type, path).
 
 % Derived We need this in the grammar to parse the input

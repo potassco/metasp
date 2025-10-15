@@ -6,10 +6,12 @@ from clingo import Control, Symbol
 from collections.abc import Callable, Sequence
 from metasp.grammar import Grammar, Type
 from clingo import SymbolType, Function
-
+from metasp.utils.logging import COLORS
 import logging
 
 log = logging.getLogger(__name__)
+
+RESERVED_NAMES = {"_show"}
 
 
 @dataclass
@@ -18,10 +20,16 @@ class Formula:
     symbol: Symbol
     type: Type
     arguments: List["Formula"] = None
+    super_types: List[str] = None
 
     @property
     def signature(self) -> tuple[str, int]:
         return (self.name, len(self.symbol.arguments))
+
+    @property
+    def used_types(self) -> List[str]:
+        types = [self.type.name] + (self.super_types or [])
+        return types
 
     def symbol_with_prefix(self) -> Symbol:
         if self.type.is_base_type():
@@ -32,8 +40,29 @@ class Formula:
         return str(self.symbol)
 
 
+def _print_done_decorator(func):
+    def wrapper(self, *args, **kwargs):
+        try:
+            log.debug("*" * 30)
+            return func(self, *args, **kwargs)
+        finally:
+            log.debug("*" * 30 + "\n")
+
+    return wrapper
+
+
 def is_tuple(s: Symbol) -> bool:
     return s.type == SymbolType.Function and s.name == ""
+
+
+def p(s) -> str:
+    s_str = str(s)
+    s_str = s_str.replace("__", "&")
+    return f"{COLORS['YELLOW']}{s_str}{COLORS['NORMAL']}{COLORS['GREY']}"
+
+
+def t(s) -> str:
+    return f"{COLORS['GREEN']}{str(s)}{COLORS['NORMAL']}{COLORS['GREY']}"
 
 
 class FormulaRegistery:
@@ -53,17 +82,23 @@ class FormulaRegistery:
         if not sugar:
             return symbol
         new_symbol = self.grammar.apply_sugar_with_vars(sugar.expansion.symbol, matched_variables)
-        log.debug(f"✴️Removing syntactic sugar of `{str(symbol)}` using rule`{sugar.pattern}` -> `{sugar.expansion}`")
-        log.debug(f"  New symbol: `{new_symbol}`")
+        log.debug(f"✴️ Removing syntactic sugar of {p(symbol)} using rule {p(sugar.pattern)} -> {p(sugar.expansion)}")
+        log.debug(f"  New symbol: {p(new_symbol)}")
         return new_symbol
 
     def assert_type_in(self, as_type: str | None, possible_types: List[str], symbol: Symbol) -> None:
         if as_type is not None and as_type not in possible_types:
-            m = f"Type mismatch for symbol {symbol} expected {as_type}, but matches only with: {possible_types}"
-            log.error(m)
+            m = f"Type mismatch for symbol {p(symbol)} expected {t(as_type)}, but matches only with: {possible_types}"
+            # log.error(m)
             raise ValueError(m)
 
+    def is_reserved(self, s: Symbol) -> bool:
+        return s.type == SymbolType.Function and s.name in RESERVED_NAMES
+
     def match_top_level(self, s: Symbol) -> Formula:
+        if self.is_reserved(s):
+            # log.debug(f"Symbol {p(s)} is reserved, skipping.")
+            return None
         possible_types = self.grammar.allowed_types_in_position()
         errors = []
         if len(possible_types) == 0:
@@ -73,37 +108,27 @@ class FormulaRegistery:
             return None
         for possible_type in possible_types:
             log.debug(f"\033[94m{'=' * 30}\033[0m")
-            log.debug(f"1️⃣ Trying to match `{s}` as top level type `{possible_type}`")
+            log.debug(f"1️⃣ Trying to match {p(s)} as top level type {t(possible_type)}")
             try:
                 f = self.match(s, as_type=possible_type)
                 if f is not None:
                     log.debug(
-                        "✳️ Matched top-level symbol `%s` as type `%s`. (Types that were not checked: %s)",
-                        s,
-                        possible_type,
-                        possible_types[possible_types.index(possible_type) + 1 :],
+                        "✳️ Matched top-level symbol %s as type %s.",
+                        p(s),
+                        t(possible_type),
                     )
                     return f
             except ValueError as e:
                 errors.append((possible_type, e))
-        for t, e in errors:
-            log.error(f"Could not match {s} as type {t}: {e}")
+                log.debug("Not possible to match with top-level type %s", t(possible_type))
+        for type_name, e in errors:
+            log.error(f"Could not match {p(s)} as type {t(type_name)}: {e}")
 
-        raise ValueError(f"Could not match top-level symbol {s} as any of the allowed types: {possible_types}")
-
-    def _print_done_decorator(func):
-        def wrapper(self, *args, **kwargs):
-            try:
-                log.debug("*" * 30)
-                return func(self, *args, **kwargs)
-            finally:
-                log.debug("*" * 30 + "\n")
-
-        return wrapper
+        raise ValueError(f"Could not match top-level symbol {p(s)} as any of the allowed types: {possible_types}")
 
     @_print_done_decorator
     def match(self, s: Symbol, as_type: str | None = None) -> Formula:
-        log.debug(f"▶️ Trying to match symbol {s} as type {as_type}")
+        log.debug(f"▶️ Trying to match symbol {p(s)} as type {t(as_type)}")
         formula_type = self.grammar.get_fl_type(s)  # Just to raise error if not valid
         if formula_type is None:
             log.debug(f"Symbol {s} has no direct type or constructor, checking syntactic sugar")
@@ -115,15 +140,26 @@ class FormulaRegistery:
             new_symbol = self.remove_syntactic_sugar(s, as_type=as_type)
             new_formula = self.match(new_symbol, as_type=as_type)
             return self.add_formula(new_formula)
-        self.assert_type_in(as_type, formula_type.all_types, s)
-        if formula_type.is_base_type:
-            log.debug(f"✅ Symbol {s} is base type {formula_type.name}, returning directly")
+        try:
+            self.assert_type_in(as_type, formula_type.all_types, s)
+        except ValueError as e:
+            log.debug(f"No match of symbol {p(s)} as type {t(as_type)}: {e}. Will try to remove sugar.")
             new_symbol = self.remove_syntactic_sugar(s, as_type=as_type)
+            if new_symbol == s:
+                log.debug(f"No syntactic sugar removed for {p(s)}")
+                raise e
+            log.debug(f"Syntactic sugar removed for {p(s)}, matching new symbol {p(new_symbol)}")
+            return self.match(new_symbol, as_type=as_type)
+
+        if formula_type.is_base_type:
+            log.debug(f"✅ Symbol {p(s)} is base type {t(formula_type.name)}, returning directly")
+            # new_symbol = self.remove_syntactic_sugar(s, as_type=as_type)
             new_formula = Formula(
-                name=str(new_symbol),
-                symbol=new_symbol,
+                name=str(s),
+                symbol=s,
                 type=formula_type,
                 arguments=[],
+                super_types=[as_type] if as_type is not None else [],
             )
             return self.add_formula(new_formula)
 
@@ -133,7 +169,7 @@ class FormulaRegistery:
         constructor = self.grammar.get_constructor(name, arity)
 
         # --------- Match arguments
-        log.debug(f"☑️ Matched constructor `{constructor.name}` of type `{constructor.type_name}`")
+        log.debug(f"☑️ Matched constructor {p(constructor.name)} of type {t(constructor.type_name)}")
         log.debug(f"  Trying to match arguments...")
         arguments = []
         for i, a in enumerate(s.arguments):
@@ -152,7 +188,7 @@ class FormulaRegistery:
                 if is_tuple(a):
                     if not is_tuple(expected_type.symbol):
                         log.error(
-                            f"Type mismatch for argument {i} of constructor {constructor.name} in {s}: expected {expected_type}, got tuple {a}"
+                            f"Type mismatch for argument {i} of constructor {constructor.name} in {s}: expected {t(expected_type)}, got tuple {a}"
                         )
                         raise ValueError("Type mismatch: expected non-tuple, got tuple")
                     args_to_match = a.arguments
@@ -180,11 +216,11 @@ class FormulaRegistery:
                 )
                 arguments.append(arg_formula)
             except ValueError as e:
-                log.error(f"Could not match argument {a} of {s}: {e}")
+                log.error(f"Could not match argument {p(a)} of {p(s)}: {e}")
                 raise e
         log.debug(f"  All arguments matched!")
         log.debug(
-            f"✅ Symbol `{s}` is type `{formula_type.name}`, with constructor ({constructor.name},{constructor.arity})"
+            f"✅ Symbol {p(s)} is type {t(formula_type.name)}, with constructor ({constructor.name},{constructor.arity})"
         )
         new_symbol_fun = Function(name, [a.symbol for a in arguments], True)
         formula = Formula(
@@ -192,6 +228,7 @@ class FormulaRegistery:
             symbol=new_symbol_fun,
             type=formula_type,
             arguments=arguments,
+            super_types=[as_type] if as_type is not None else [],
         )
         return self.add_formula(formula)
 
@@ -224,7 +261,8 @@ class MetaReifier(Reifier):
     def cb_formulas(self) -> None:
         for f in self._formula_registery.formulas.values():
             # TODO only use types that were actually matched.
-            for s in f.type.all_types:
+            used_types = f.used_types
+            for s in used_types:
                 self._output(
                     "formula",
                     [Function(s, [], True), f.symbol],

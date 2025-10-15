@@ -120,7 +120,7 @@ class Grammar:
         constructor_keys = self.get_constructors_keys()
         if (s.name, len(s.arguments)) in constructor_keys:
             log.warning(
-                f"Symbol `{s}` looks like a constructor but is missing the & prefix. Did you forget it?. Will be considered as atom."
+                f"⚠️Symbol `{s}` looks like a constructor but is missing the & prefix. Did you forget it?. Will be considered as atom."
             )
         return True
 
