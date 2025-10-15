@@ -1,34 +1,34 @@
 % Acceleration changes
-assign(next(4,acc), 1135):-initial.
-assign(next(6,acc), -230):-initial.
+__assign(__next(4,acc), 1135):-__initial.
+__assign(__next(6,acc), -230):-__initial.
 
 % Initial position
-assign(p,0):-initial.
+__assign(p,0):-__initial.
 
 % Initial speed
-assign(s,8000):-initial.
+__assign(s,8000):-__initial.
 
-assign(next(s), sum(s,acc)).
-assign(next(p), sum(p,s)).
+__assign(__next(s), __sum(s,acc)).
+__assign(__next(p), __sum(p,s)).
 
 % Either inertia for the s like this
 % Or adding an acceleration of 0, one is enough
-assign(next(s), s):- not neq(next(s),s).
-% assign(acc, 0):- not neq(acc,0).
+__assign(__next(s), s):- not __neq(__next(s),s).
+% __assign(acc, 0):- not neq(acc,0).
 
 % Radar limit and position
-assign(rdlimit,9000).
-assign(rdpos,40000).
+__assign(rdlimit,9000).
+__assign(rdpos,40000).
 
 % If the car’s speed (s) exceeds the radar’s speed limit (rdlimit)
 % at or after passing the radar’s position (rdpos) at any time, a ﬁne is issued.
-next(fine):- lt(p,rdpos), leq(rdpos, next(p)), lt(rdlimit,next(s)),not final.
+__next(fine):- __lt(p,rdpos), __leq(rdpos, __next(p)), __lt(rdlimit,__next(s)),not __final.
 
-#external initial.
-#external final.
+#external __initial.
+#external __final.
 #external not_yet.
-#external neq(next(s),s).
-#external neq(acc,0).
-#external lt(p,rdpos).
-#external leq(rdpos, next(p)).
-#external lt(rdlimit,next(s)).
+#external __neq(__next(s),s).
+#external __neq(acc,0).
+#external __lt(p,rdpos).
+#external __leq(rdpos, __next(p)).
+#external __lt(rdlimit,__next(s)).

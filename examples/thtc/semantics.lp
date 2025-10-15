@@ -130,6 +130,7 @@ true(op(leq,X,Y),T):-
 
 % Other side not needed since assign is only in the head
 true(op(eq,X,Y),T):-
+
             true(op(assign,X,Y),T), % Assign operation is true
             X = sum(mul(1,next(XN1,XA1)),mul(0,next(0,_one))),
             Y = sum(

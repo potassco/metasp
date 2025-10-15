@@ -52,7 +52,7 @@ class Type:
 @dataclass
 class Var:
     name: str
-    type: Type
+    type: str
 
 
 class Grammar:
@@ -101,9 +101,9 @@ class Grammar:
     def add_syntactic_sugar(self, sugar: DefinedAs) -> None:
         self.syntactic_sugar.append(sugar)
 
-    def add_var(self, var_name: str, var_type: Type) -> None:
-        if var_type.name not in self.types:
-            raise ValueError(f"Type '{var_type.name}' is not defined in the grammar.")
+    def add_var(self, var_name: str, var_type: str) -> None:
+        if var_type not in self.types and var_type != "any":
+            raise ValueError(f"Type '{var_type}' is not defined in the grammar.")
         if var_name not in self.variables:
             self.variables[var_name] = []
         self.variables[var_name].append(Var(name=var_name, type=var_type))  # Allow multiple types for the same variable
@@ -117,7 +117,7 @@ class Grammar:
         if s.type != SymbolType.Function or s.name.startswith(self._prefix):
             return False
         # log.info( f"Matched atom {s}")
-        constructor_keys = self.get_constructors_keys()
+        constructor_keys = self.get_constructors_keys(include_sugar=True)
         if (s.name, len(s.arguments)) in constructor_keys:
             log.warning(
                 f"⚠️Symbol `{s}` looks like a constructor but is missing the & prefix. Did you forget it?. Will be considered as atom."
@@ -127,7 +127,6 @@ class Grammar:
     def apply_sugar_with_vars(self, sugar_expansion: Symbol, matched_variables: Dict[str, Symbol]) -> Symbol:
         # print(f"Replacing pattern symbol {sugar_expansion} with matched variables {matched_variables}")
         if sugar_expansion.type != SymbolType.Function:
-            log.warning(f"Unexpected expansion symbol type {sugar_expansion}.")
             return sugar_expansion
         if self.is_variable(sugar_expansion):
             return matched_variables[sugar_expansion.name]
@@ -135,7 +134,7 @@ class Grammar:
         new_args = [self.apply_sugar_with_vars(arg, matched_variables) for arg in sugar_expansion.arguments]
         return Function(sugar_expansion.name, new_args, True)
 
-    def get_fl_type(self, s: Symbol, check_sugar: bool = False) -> Optional[Type]:
+    def get_fl_type(self, s: Symbol, check_sugar: bool = False, as_type: str | None = None) -> Optional[Type]:
         # --------- Base cases
         if s.type == SymbolType.Number:
             return self.types.get("number", None)
@@ -155,8 +154,10 @@ class Grammar:
             return self.types.get(constructor.type_name, None)
 
         if check_sugar:
-            sugar = self.find_sugar(s)
+            sugar = self.find_sugar(s, as_type=as_type)
             if sugar is not None:
+                log.debug("Found sugar %s->%s for symbol %s", sugar.pattern, sugar.expansion, s)
+                log.debug("Will return the type of the expansion %s", sugar.expansion)
                 return self.get_fl_type(sugar.expansion.symbol, check_sugar=True)
 
         return None
@@ -166,8 +167,8 @@ class Grammar:
     ) -> Optional[DefinedAs]:
         if match_variables is None:
             match_variables = {}
-        if s.type != SymbolType.Function:
-            return None
+        # if s.type != SymbolType.Function:
+        # return None
 
         for sugar in self.syntactic_sugar:
             if as_type is not None and sugar.type != as_type:
@@ -184,14 +185,17 @@ class Grammar:
         return s.name[len(self._prefix) :]  # Remove prefix
 
     def match_sugar_pattern(self, pattern_symbol: Symbol, symbol: Symbol, matched_variables: Dict[str, Symbol]) -> bool:
+        # print(f"Matching pattern symbol {pattern_symbol} with symbol {symbol}")
         if self.is_variable(pattern_symbol):
             variables = self.variables[pattern_symbol.name]
             if len(variables) == 0:
                 raise ValueError(f"Variable {pattern_symbol.name} not defined in grammar.")
-            var = variables[0]
+            var_types = [v.type for v in variables]
             # TODO here I should make it softer to include possible sugar
             symbol_type = self.get_fl_type(symbol, check_sugar=True)
-            if var.type.name not in symbol_type.all_types:
+
+            valid_type = "any" in var_types or any(v in symbol_type.all_types for v in var_types)
+            if not valid_type:
                 # print(f"  ->Variable {pattern_symbol.name} type mismatch, {var.type.name} != {symbol_type.name}")
                 return False
             matched_variables[pattern_symbol.name] = symbol
@@ -210,16 +214,20 @@ class Grammar:
         log.debug(f"  ->Matched sugar pattern {pattern_symbol} with formula {symbol}, will check arguments")
 
         for p_arg, s_arg in zip(pattern_symbol.arguments, symbol.arguments):
-            # print(f"  ->Matching argument {p_arg} with {s_arg}")
             if not self.match_sugar_pattern(p_arg, s_arg, matched_variables):
                 return False
         return True
 
     @lru_cache(maxsize=None)
-    def get_constructors_keys(self) -> List[Tuple[str, int]]:
+    def get_constructors_keys(self, include_sugar: bool = False) -> List[Tuple[str, int]]:
         keys = []
         for type_def in self.types.values():
             keys.extend(type_def.constructors.keys())
+        if include_sugar:
+            for sugar in self.syntactic_sugar:
+                pattern = sugar.pattern.symbol
+                if pattern.name.startswith(self._prefix):
+                    keys.append((pattern.name[len(self._prefix) :], len(pattern.arguments)))
         return keys
 
     @lru_cache(maxsize=None)
@@ -286,16 +294,14 @@ class Grammar:
                     type_def.allow_in_body = True
 
         for var in fb.query(clorm_db.Var).all():
-            if var.type not in grammar.types:
-                raise ValueError(f"Type '{var.type}' for variable '{var.name}' is not defined in the grammar.")
-            grammar.add_var(var.name, grammar.types[var.type])
+            grammar.add_var(var.name, var.type)
 
         for defined in fb.query(clorm_db.DefinedAs).all():
             sugar = DefinedAs(type=defined.type, pattern=defined.lhs, expansion=defined.rhs)
             grammar.add_syntactic_sugar(sugar)
 
         log.debug(grammar)
-        log.info(grammar.asp_str)
+        log.debug(grammar.asp_str)
         if not grammar.check_grammar():
             raise ValueError("Grammar check failed. Please fix the issues in the grammar definition.")
         return grammar

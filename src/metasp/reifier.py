@@ -131,13 +131,18 @@ class FormulaRegistery:
         log.debug(f"▶️ Trying to match symbol {p(s)} as type {t(as_type)}")
         formula_type = self.grammar.get_fl_type(s)  # Just to raise error if not valid
         if formula_type is None:
-            log.debug(f"Symbol {s} has no direct type or constructor, checking syntactic sugar")
-            formula_type = self.grammar.get_fl_type(s, check_sugar=True)  # Just to raise error if not valid
+            log.debug(f"Symbol {p(s)} has no direct type or constructor, checking syntactic sugar")
+            formula_type = self.grammar.get_fl_type(
+                s, check_sugar=True, as_type=as_type
+            )  # Just to raise error if not valid
             if formula_type is None:
-                # TODO print without the __
-                log.debug(f"No type or constructor found for symbol {s}, even after checking syntactic sugar.")
+                log.debug(f"No syntactic sugar found for {p(s)} as type {t(as_type)}.")
                 raise ValueError(f"No constructor or syntactic sugar found for symbol {s}.")
             new_symbol = self.remove_syntactic_sugar(s, as_type=as_type)
+            same_symbol = new_symbol == s
+            if same_symbol:
+                m = f"Symbol {p(s)} was not changed by syntactic sugar removal. This would lead to infinite recursion."
+                raise ValueError(m)
             new_formula = self.match(new_symbol, as_type=as_type)
             return self.add_formula(new_formula)
         try:

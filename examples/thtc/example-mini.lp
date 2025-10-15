@@ -9,18 +9,18 @@
 
 % assign(next(a),10):- initial.
 % assign(next(a),10):- initial.
-assign(a,10):- initial.
-assign(next(3,a),20):- initial.
+__assign(a,10):- __initial.
+__assign(__next(3,a),20):- __initial.
 
 % assign(next(a),a):- not neq(next(a),a).
-assign(next(a),a):- not neq(next(a),a).
+__assign(__next(a),a):- not __neq(__next(a),a).
 % eq(next(a),a):- not initial.
 % eq(next(a),a).
 
 % a.
 % next(fine):- smaller(p,rdpos), smaller_eq(rdpos, next(p)), smaller(rdlimit,next(s)),not final.
-#external initial.
-#external neq(next(a),a).
+#external __initial.
+#external __neq(__next(a),a).
 
 
 
