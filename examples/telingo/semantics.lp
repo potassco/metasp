@@ -45,3 +45,7 @@ true(R,J) :- true(until_then(L,R,J),K).
 true(until_then(L,R,J),K)
   :- formula(tel,until(L,R)), time(K), time(J), K<=J, true(R,J),
      true(L,I) : I=K..J-1.
+
+true(F,J): time(J), K<=J :- true(eventually(F),K).
+true(eventually(F),K) :- formula(tel,eventually(F)), time(K),
+                        time(J), K<=J, true(F,J).

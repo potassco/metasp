@@ -46,7 +46,9 @@ ready :- called(X), at(X).
 % formula(tel,a).
 
 
+box(star(A),top):- action(A).
 
+eventually((D,w), goal):- duration(P1,P1,D).
 
 _show.
 _show(down):-down.
