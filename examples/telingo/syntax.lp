@@ -32,9 +32,9 @@ constructor(tel, (or, 2)).
 constructor(tel, (next, 1)).
 	arg((next, 1), 0, type, tel).
 	arg((next, 1), 0, safety, unsafe).
-constructor(tel, (eventually, 1)).
-	arg((eventually, 1), 0, type, tel).
-	arg((eventually, 1), 0, safety, unsafe).
+% constructor(tel, (eventually, 1)).
+% 	arg((eventually, 1), 0, type, tel).
+% 	arg((eventually, 1), 0, safety, unsafe).
 % constructor(tel, (always, 1)).
 % 	arg((always, 1), 0, type, tel).
 % 	arg((always, 1), 0, safety, unsafe).

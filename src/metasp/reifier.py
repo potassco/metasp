@@ -28,8 +28,8 @@ class Formula:
 
     @property
     def used_types(self) -> List[str]:
-        types = [self.type.name] + (self.super_types or [])
-        return types
+        types = set([self.type.name] + (self.super_types or []))
+        return list(types)
 
     def symbol_with_prefix(self) -> Symbol:
         if self.type.is_base_type():
@@ -265,7 +265,6 @@ class MetaReifier(Reifier):
 
     def cb_formulas(self) -> None:
         for f in self._formula_registery.formulas.values():
-            # TODO only use types that were actually matched.
             used_types = f.used_types
             for s in used_types:
                 self._output(

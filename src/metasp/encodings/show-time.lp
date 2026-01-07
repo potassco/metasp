@@ -1,6 +1,6 @@
 #show.
 
-% Show all true formulas unless #show. in original program
+% Show all true atom formulas unless #show. in original program
 #show true(F,K) : formula(atom,F), true(F,K), not output(_show,_).
 
 % Show all true formulas that have a condition

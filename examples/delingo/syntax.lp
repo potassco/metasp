@@ -33,8 +33,6 @@ constructor(del, (dia, 2)).
 constructor(del, (top, 0)).
 constructor(del, (bot, 0)).
 
-
-
 constructor(path, (step, 0)).
 constructor(path, (test, 1)).
     arg((test, 1), 0, type, del).
@@ -50,12 +48,20 @@ constructor(path, (star, 1)).
 % Derived We need this in the grammar to parse the input
 %% ------- Derived --------- %%
 
-% defined_as((path,_formula(atom,a)), (path, seq(test(_formula(atom,a)), step))).
-% var(_a, path).
 var(a, atom).
-% var(_c, path).
-% defined_as(dia(_a,_b), __dia(__seq(__test(_a), __step),_b)).
-% defined_as(seq(_c,_a), __seq(_c,__seq(__test(_a), __step))).
 defined_as(path, a, __seq(__test(a), __step)).
-% defined_as(eventually(_a), __until(__true, _a)).
 
+
+
+% #type del{
+%     expressions: {
+%         &top/0;
+%         &bot/0;
+%         &box/2:     {
+%             type: path;
+%             type: del;
+%         }
+
+%         ;
+%     }
+% }

@@ -49,3 +49,4 @@ true(until_then(L,R,J),K)
 true(F,J): time(J), K<=J :- true(eventually(F),K).
 true(eventually(F),K) :- formula(tel,eventually(F)), time(K),
                         time(J), K<=J, true(F,J).
+
