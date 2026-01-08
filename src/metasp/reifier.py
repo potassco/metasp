@@ -135,13 +135,13 @@ class FormulaRegistery:
         log.debug(f"▶️ Trying to match symbol {p(s)} as type {t(as_type)}")
         formula_type = self.grammar.get_fl_type(s)  # Just to raise error if not valid
         if formula_type is None:
-            log.debug(f"Symbol {p(s)} has no direct type or constructor, checking syntactic sugar")
+            log.debug(f"Symbol {p(s)} has no direct type or expression, checking syntactic sugar")
             formula_type = self.grammar.get_fl_type(
                 s, check_sugar=True, as_type=as_type
             )  # Just to raise error if not valid
             if formula_type is None:
                 log.debug(f"No syntactic sugar found for {p(s)} as type {t(as_type)}.")
-                raise ValueError(f"No constructor or syntactic sugar found for symbol {s}.")
+                raise ValueError(f"No expression or syntactic sugar found for symbol {s}.")
             new_symbol = self.remove_syntactic_sugar(s, as_type=as_type)
             same_symbol = new_symbol == s
             if same_symbol:
@@ -175,21 +175,21 @@ class FormulaRegistery:
         # --------- Recursive case
         name = s.name[len(self._prefix) :]
         arity = len(s.arguments)
-        constructor = self.grammar.get_constructor(name, arity)
+        expression = self.grammar.get_expression(name, arity)
 
         # --------- Match arguments
-        log.debug(f"☑️ Matched constructor {p(constructor.name)} of type {t(constructor.type_name)}")
+        log.debug(f"☑️ Matched expression {p(expression.name)} of type {t(expression.type_name)}")
         log.debug(f"  Trying to match arguments...")
         arguments = []
         for i, a in enumerate(s.arguments):
-            arg_defs = constructor.args.get(i, None)
+            arg_defs = expression.args.get(i, None)
             arg_expected_types = [arg.value for arg in arg_defs or [] if arg.key == "type"]
             if len(arg_expected_types) > 1:
                 # TODO This could be a check when the grammar is created
-                log.warning(f"Multiple expected types for argument {i} of constructor {constructor.name}")
+                log.warning(f"Multiple expected types for argument {i} of expression {expression.name}")
                 raise ValueError("Multiple expected types not supported ")
             if len(arg_expected_types) == 0:
-                log.warning(f"No fixed type for argument {i} of constructor {constructor.name}")
+                log.warning(f"No fixed type for argument {i} of expression {expression.name}")
                 expected_type = None
             else:
                 expected_type = arg_expected_types[0]
@@ -197,7 +197,7 @@ class FormulaRegistery:
                 if is_tuple(a):
                     if not is_tuple(expected_type.symbol):
                         log.error(
-                            f"Type mismatch for argument {i} of constructor {constructor.name} in {s}: expected {t(expected_type)}, got tuple {a}"
+                            f"Type mismatch for argument {i} of expression {expression.name} in {s}: expected {t(expected_type)}, got tuple {a}"
                         )
                         raise ValueError("Type mismatch: expected non-tuple, got tuple")
                     args_to_match = a.arguments
@@ -229,7 +229,7 @@ class FormulaRegistery:
                 raise e
         log.debug(f"  All arguments matched!")
         log.debug(
-            f"✅ Symbol {p(s)} is type {t(formula_type.name)}, with constructor ({constructor.name},{constructor.arity})"
+            f"✅ Symbol {p(s)} is type {t(formula_type.name)}, with expression ({expression.name},{expression.arity})"
         )
         new_symbol_fun = Function(name, [a.symbol for a in arguments], True)
         formula = Formula(

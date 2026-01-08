@@ -17,7 +17,7 @@ class Arg:
 
 
 @dataclass
-class Constructor:
+class Expression:
     type_name: str
     name: str
     arity: int
@@ -25,7 +25,7 @@ class Constructor:
 
 
 @dataclass
-class DefinedAs:
+class Macro:
     type: str
     pattern: str
     expansion: str
@@ -36,7 +36,7 @@ class Type:
     name: str
     super_types: List[str] = field(default_factory=list)
     sub_types: List[str] = field(default_factory=list)
-    constructors: Dict[Tuple[str, int], Constructor] = field(default_factory=dict)
+    expressions: Dict[Tuple[str, int], Expression] = field(default_factory=dict)
     allow_in_head: bool = False
     allow_in_body: bool = False
 
@@ -59,7 +59,7 @@ class Grammar:
 
     def __init__(self) -> None:
         self.types: Dict[str, Type] = {}
-        self.syntactic_sugar: List[DefinedAs] = []
+        self.syntactic_sugar: List[Macro] = []
         self.variables: Dict[str, List[Var]] = {}
         self._prefix = "__"
         self.add_base_types()
@@ -98,7 +98,7 @@ class Grammar:
             raise ValueError(f"Type '{type_def.name}' is already defined.")
         self.types[type_def.name] = type_def
 
-    def add_syntactic_sugar(self, sugar: DefinedAs) -> None:
+    def add_syntactic_sugar(self, sugar: Macro) -> None:
         self.syntactic_sugar.append(sugar)
 
     def add_var(self, var_name: str, var_type: str) -> None:
@@ -117,10 +117,10 @@ class Grammar:
         if s.type != SymbolType.Function or s.name.startswith(self._prefix):
             return False
         # log.info( f"Matched atom {s}")
-        constructor_keys = self.get_constructors_keys(include_sugar=True)
-        if (s.name, len(s.arguments)) in constructor_keys:
+        expression_keys = self.get_expressions_keys(include_sugar=True)
+        if (s.name, len(s.arguments)) in expression_keys:
             log.warning(
-                f"⚠️Symbol `{s}` looks like a constructor but is missing the & prefix. Did you forget it?. Will be considered as atom."
+                f"⚠️Symbol `{s}` looks like a expression but is missing the & prefix. Did you forget it?. Will be considered as atom."
             )
         return True
 
@@ -146,12 +146,12 @@ class Grammar:
         if self.is_atom(s):
             return self.types.get("atom", None)
 
-        # --------- Constructor case
+        # --------- Expression case
         name = s.name[len(self._prefix) :]
         arity = len(s.arguments)
-        constructor = self.get_constructor(name, arity)
-        if constructor is not None:
-            return self.types.get(constructor.type_name, None)
+        expression = self.get_expression(name, arity)
+        if expression is not None:
+            return self.types.get(expression.type_name, None)
 
         if check_sugar:
             sugar = self.find_sugar(s, as_type=as_type)
@@ -164,7 +164,7 @@ class Grammar:
 
     def find_sugar(
         self, s: Symbol, as_type: Optional[str] = None, match_variables: Optional[Dict[str, Symbol]] = None
-    ) -> Optional[DefinedAs]:
+    ) -> Optional[Macro]:
         if match_variables is None:
             match_variables = {}
         # if s.type != SymbolType.Function:
@@ -219,10 +219,10 @@ class Grammar:
         return True
 
     @lru_cache(maxsize=None)
-    def get_constructors_keys(self, include_sugar: bool = False) -> List[Tuple[str, int]]:
+    def get_expressions_keys(self, include_sugar: bool = False) -> List[Tuple[str, int]]:
         keys = []
         for type_def in self.types.values():
-            keys.extend(type_def.constructors.keys())
+            keys.extend(type_def.expressions.keys())
         if include_sugar:
             for sugar in self.syntactic_sugar:
                 pattern = sugar.pattern.symbol
@@ -231,22 +231,22 @@ class Grammar:
         return keys
 
     @lru_cache(maxsize=None)
-    def get_constructor(self, name: str, arity: int) -> Optional[Constructor]:
+    def get_expression(self, name: str, arity: int) -> Optional[Expression]:
         for type_def in self.types.values():
-            constructor = type_def.constructors.get((str(name), arity), None)
-            if constructor is not None:
-                return constructor
+            expression = type_def.expressions.get((str(name), arity), None)
+            if expression is not None:
+                return expression
         return None
 
     def check_grammar(self) -> bool:
-        # Check that there are no two constructors with the same name and arity in different types
+        # Check that there are no two expressions with the same name and arity in different types
         seen = set()
         for type_def in self.types.values():
-            for constructor in type_def.constructors.values():
-                if (constructor.name, constructor.arity) in seen:
-                    log.error(f"Constructor '{constructor.name}/{constructor.arity}' is defined in multiple types.")
+            for expression in type_def.expressions.values():
+                if (expression.name, expression.arity) in seen:
+                    log.error(f"Expression '{expression.name}/{expression.arity}' is defined in multiple types.")
                     return False
-                seen.add((constructor.name, constructor.arity))
+                seen.add((expression.name, expression.arity))
 
         return True
 
@@ -265,21 +265,19 @@ class Grammar:
         grammar.asp_str = fb.asp_str(commented=True)
         for t in fb.query(clorm_db.Type).all():
             type_def = Type(name=t.name)
-            for c in fb.query(clorm_db.Constructor).where(clorm_db.Constructor.type == t.name).all():
+            for c in fb.query(clorm_db.Expression).where(clorm_db.Expression.type == t.name).all():
                 args = {}
                 for a in fb.query(clorm_db.Arg).where(clorm_db.Arg.cons_id == c.id).all():
                     if a.index not in args:
                         args[a.index] = []
                     args[a.index].append(Arg(key=a.key, value=a.value))
-                constructor_name = c.id.name
-                if not constructor_name.startswith(grammar._prefix):
-                    raise ValueError(
-                        f"Constructor name '{constructor_name}' must start with prefix '{grammar._prefix}'."
-                    )
-                constructor_name = constructor_name[len(grammar._prefix) :]  # Remove prefix
-                constructor = Constructor(type_name=t.name, name=constructor_name, arity=c.id.arity, args=args)
+                expression_name = c.id.name
+                if not expression_name.startswith(grammar._prefix):
+                    raise ValueError(f"Expression name '{expression_name}' must start with prefix '{grammar._prefix}'.")
+                expression_name = expression_name[len(grammar._prefix) :]  # Remove prefix
+                expression = Expression(type_name=t.name, name=expression_name, arity=c.id.arity, args=args)
 
-                type_def.constructors[(constructor_name, c.id.arity)] = constructor
+                type_def.expressions[(expression_name, c.id.arity)] = expression
 
             grammar.add_type(type_def)
 
@@ -302,8 +300,8 @@ class Grammar:
         for var in fb.query(clorm_db.Var).all():
             grammar.add_var(var.name, var.type)
 
-        for defined in fb.query(clorm_db.DefinedAs).all():
-            sugar = DefinedAs(type=defined.type, pattern=defined.lhs, expansion=defined.rhs)
+        for defined in fb.query(clorm_db.Macro).all():
+            sugar = Macro(type=defined.type, pattern=defined.lhs, expansion=defined.rhs)
             grammar.add_syntactic_sugar(sugar)
 
         log.debug(grammar)

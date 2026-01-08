@@ -2,7 +2,7 @@
 from clorm import Predicate, ConstantStr, IntegerField, StringField, refine_field, ConstantField, Raw
 
 
-class ConstructorID(Predicate, is_tuple=True):
+class ExpressionID(Predicate, is_tuple=True):
     name: ConstantStr
     arity: int
 
@@ -48,31 +48,31 @@ class Subtype(Predicate):
     sup: ConstantStr
 
 
-class Constructor(Predicate):
+class Expression(Predicate):
     """
-    Defines a constructor for a type, which can be used as &name(args...) in the logic program.
+    Defines a expression for a type, which can be used as &name(args...) in the logic program.
     Args:
-        type (const): The type this constructor belongs to.
-        id (tuple): The identifier of the constructor (name, arity).
+        type (const): The type this expression belongs to.
+        id (tuple): The identifier of the expression (name, arity).
         kind (const): Where it might appear: any, head, body, none.
     """
 
     type: ConstantStr
-    id: ConstructorID
+    id: ExpressionID
 
 
 class Arg(Predicate):
     """
-    Argument information for a constructor.
+    Argument information for a expression.
 
     Args:
-        cons_id (tuple): The identifier of the constructor this argument belongs to (name, arity).
+        cons_id (tuple): The identifier of the expression this argument belongs to (name, arity).
         index (int): The index of the argument (0-based).
         key (const): The key of the argument (e.g., "type" "safety").
         value (raw): The value of the argument.
     """
 
-    cons_id: ConstructorID
+    cons_id: ExpressionID
     index: int
     key: ConstantStr
     value: Raw
@@ -80,7 +80,7 @@ class Arg(Predicate):
 
 class Var(Predicate):
     """
-    Variable declaration in the grammar to be used in defined_as
+    Variable declaration in the grammar to be used in macro
 
     Args:
         name (const): The name of the variable.
@@ -91,7 +91,7 @@ class Var(Predicate):
     type: ConstantStr
 
 
-class DefinedAs(Predicate, name="defined_as"):
+class Macro(Predicate, name="macro"):
     """
     Defines syntactic sugar in the grammar.
 
@@ -100,7 +100,7 @@ class DefinedAs(Predicate, name="defined_as"):
             If a context is given then formulas appearing directly in the program are not replaced, since the context there is not known.
             To replace in any context use "any".
         lhs (raw): The pattern to be replaced. Can use any defined variable.
-        rhs (raw): The expansion of the pattern. #TODO at the moment this pattern needs to use __ for constructors
+        rhs (raw): The expansion of the pattern. #TODO at the moment this pattern needs to use __ for expressions
     """
 
     type: ConstantStr
@@ -108,4 +108,4 @@ class DefinedAs(Predicate, name="defined_as"):
     rhs: Raw
 
 
-UNIFIERS = [Type, Subtype, Constructor, Arg, Var, DefinedAs, ConstructorID, Allow]
+UNIFIERS = [Type, Subtype, Expression, Arg, Var, Macro, ExpressionID, Allow]

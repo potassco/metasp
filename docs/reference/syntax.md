@@ -13,12 +13,12 @@ A grammar is defined as follows:
 
 - `type(name)`, where `name` is the name of the grammar (e.g., `tel` for temporal logic).
 - `subtype(parent, child)`, where `child` is a subtype of `parent`.
-- `constructor(type, operator, arity, (arg1_type, ..., argN_type))`, where `type` is the type of formula the operator constructs, `operator` is the name of the operator, `arity` is the number of arguments, and `argX_type` is the type of the X-th argument (for `0 <= X < arity`).
+- `expression(type, operator, arity, (arg1_type, ..., argN_type))`, where `type` is the type of formula the operator constructs, `operator` is the name of the operator, `arity` is the number of arguments, and `argX_type` is the type of the X-th argument (for `0 <= X < arity`).
 - `arg(operator, position, property)`, where `position` is the argument position (0-indexed) and `property` is one of `unsafe`, `num`, or `fixed(X)`, indicating that the argument at `position` of `operator` has the given property.
 
 
 **Built-in Types:**
-- `atom`: Any atom, not matching any constructor
+- `atom`: Any atom, not matching any expression
 - `num`: Numeric arguments.
 
 

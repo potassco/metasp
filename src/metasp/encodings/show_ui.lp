@@ -3,7 +3,7 @@
 
 #show type/1.
 #show subtype/2.
-#show constructor/4.
+#show expression/4.
 #show world/1.
 #show conjunction/2.
 #show output/2.
