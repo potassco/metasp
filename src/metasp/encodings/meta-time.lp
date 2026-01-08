@@ -74,7 +74,7 @@ Args:
 % hold(L,T) :- output(O,B), time(T), true(O,T),  literal_tuple(B,L).
 
 
-% Does it work with facts
+% Does it work with facts? I think it works with the preserve-facts flag
 symbol_literal(S,L):- output(S,B), literal_tuple(B,L).
 
 true(S,T) :- symbol_literal(S, L), hold(L,T).

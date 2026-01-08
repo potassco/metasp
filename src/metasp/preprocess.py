@@ -1,5 +1,4 @@
 from collections.abc import Sequence
-from metasp.reifier import MetaReifier, FormulaRegistery
 from typing import List
 from clingo import Control, Symbol
 from metasp.grammar import Grammar

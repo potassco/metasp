@@ -7,7 +7,11 @@ from collections.abc import Callable, Sequence
 from metasp.grammar import Grammar, Type
 from clingo import SymbolType, Function
 from metasp.utils.logging import COLORS
+from meta_tools import classic_reify, extend_reification, transform
+from meta_tools.extensions import ShowExtension
+from meta_tools.extensions.base_extension import ReifyExtension
 import logging
+from importlib.resources import path
 
 log = logging.getLogger(__name__)
 
@@ -32,7 +36,7 @@ class Formula:
         return list(types)
 
     def symbol_with_prefix(self) -> Symbol:
-        if self.type.is_base_type():
+        if self.type.is_base_type:
             return self.symbol
         return Function(f"__{self.symbol.name}", [a.symbol_with_prefix() for a in self.arguments], self.symbol.positive)
 
@@ -238,39 +242,40 @@ class FormulaRegistery:
         return self.add_formula(formula)
 
 
-class MetaReifier(Reifier):
-    """
-    A reifier that extends the clingox Reifier to handle meta-specific constructs.
-    """
+class MetaspExtension(ReifyExtension):
 
     def __init__(
         self,
-        cb: Callable[[Symbol], None],
-        calculate_sccs: bool = False,
-        reify_steps: bool = False,
-        formula_registery: FormulaRegistery = None,
-    ):
-        super().__init__(cb, calculate_sccs, reify_steps)
-        self._formula_registery = formula_registery
+        grammar: Grammar,
+    ) -> None:
+        super().__init__()
+        self._grammar = grammar
+        self._formula_registery = FormulaRegistery(grammar)
 
-    def output_atom(self, symbol: Symbol, atom: int) -> None:
-        # TODO check not a reserved name like _show before matching
-        formula = self._formula_registery.match_top_level(symbol)
-        if formula is not None:
-            symbol = formula.symbol
-        self._output("output", [symbol, self._lit_tuple([] if atom == 0 else [atom])])
+    def add_extension_encoding(self, ctl: Control) -> None:
+        """ """
+        with path("metasp.encodings", "reify-extension.lp") as base_encoding:
+            log.debug("Loading encoding: %s", base_encoding)
+            ctl.load(str(base_encoding))
 
-    def output_term(self, symbol: Symbol, condition: Sequence[int]) -> None:
-        self._output("output", [symbol, self._lit_tuple(condition)])
+    def update_context(self, context: object) -> None:
+        def process_output(symbol: Symbol) -> Symbol:
+            formula = self._formula_registery.match_top_level(symbol)
+            if formula is not None:
+                return formula.symbol_with_prefix()
+            return symbol
 
-    def cb_formulas(self) -> None:
+        setattr(context, "process_output", process_output)
+
+    def additional_symbols(self) -> Sequence[Symbol]:
+        formula_symbols = []
         for f in self._formula_registery.formulas.values():
             used_types = f.used_types
             for s in used_types:
-                self._output(
-                    "formula",
-                    [Function(s, [], True), f.symbol],
+                formula_symbols.append(
+                    Function("formula", [Function(s, [], True), f.symbol_with_prefix()]),
                 )
+        return formula_symbols
 
 
 def reify(prg: str, constants: dict[str, str], grammar: Grammar) -> str:
@@ -286,15 +291,13 @@ def reify(prg: str, constants: dict[str, str], grammar: Grammar) -> str:
     Returns:
         str: The reified input data.
     """
-    symbols: Sequence[Symbol] = []
-
-    ctl = Control(["--warn=none"] + [f"-c {k}={v}" for k, v in constants.items()])
-    fr = FormulaRegistery(grammar)
-    reifier = MetaReifier(symbols.append, reify_steps=False, formula_registery=fr)
-    ctl.register_observer(reifier)
-    ctl.add("base", [], prg)
-    ctl.ground([("base", [])])
-    reifier.cb_formulas()
-    reified_input = "\n".join([str(s) + "." for s in symbols])
-    title = "\n\n%%%%%% Reified Input %%%%%%\n\n"
-    return title + reified_input
+    extensions = [ShowExtension(), MetaspExtension(grammar=grammar)]
+    program_str = transform([], prg, extensions)
+    rsymbols = classic_reify(
+        [f"-c {k}={v}" for k, v in constants.items()],
+        program_str,
+        programs=[("base", [])],
+    )
+    reified_prg = "\n".join([f"{str(s)}." for s in rsymbols])
+    reified_prg = extend_reification(reified_out_prg=reified_prg, extensions=extensions, clean_output=True)
+    return reified_prg

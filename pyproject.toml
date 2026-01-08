@@ -19,6 +19,7 @@ dependencies = [
     "rich-argparse",
     "clingox",
     "clingcon",
+    "meta-tools-clingo>=0.3.3",
 ]
 
 [project.urls]

@@ -7,3 +7,5 @@ __next(push(l1)) :- __initial.
 #external green(L):push(L).
 #external __initial.
 #external push(l1).
+
+#show __next/1.

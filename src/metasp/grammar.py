@@ -271,9 +271,15 @@ class Grammar:
                     if a.index not in args:
                         args[a.index] = []
                     args[a.index].append(Arg(key=a.key, value=a.value))
-                constructor = Constructor(type_name=t.name, name=c.id.name, arity=c.id.arity, args=args)
+                constructor_name = c.id.name
+                if not constructor_name.startswith(grammar._prefix):
+                    raise ValueError(
+                        f"Constructor name '{constructor_name}' must start with prefix '{grammar._prefix}'."
+                    )
+                constructor_name = constructor_name[len(grammar._prefix) :]  # Remove prefix
+                constructor = Constructor(type_name=t.name, name=constructor_name, arity=c.id.arity, args=args)
 
-                type_def.constructors[(c.id.name, c.id.arity)] = constructor
+                type_def.constructors[(constructor_name, c.id.arity)] = constructor
 
             grammar.add_type(type_def)
 
