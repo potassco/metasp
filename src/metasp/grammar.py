@@ -73,7 +73,7 @@ class Grammar:
     def add_base_types(self) -> None:
         type_symbol = Type(name="symbol", sub_types=["function", "number", "string", "tuple", "infimum", "sumpremum"])
         type_tuple = Type(name="tuple", super_types=["symbol"])
-        type_function = Type(name="function", super_types=["symbol"])
+        type_function = Type(name="function", super_types=["symbol"], allow_in_head=True, allow_in_body=True)
         type_number = Type(name="number", super_types=["symbol"])
         type_string = Type(name="string", super_types=["symbol"])
         type_infimum = Type(name="infimum", super_types=["symbol"])
@@ -332,20 +332,19 @@ class Grammar:
 
     @property
     def asp_str(self) -> str:
-        fb = clorm.FactBase()
+        asp_str = "%%%%%%%%%%%% GRAMMAR DEFINITION %%%%%%%%%%%%\n"
+
         for t in self.types.values():
+            fb = clorm.FactBase()
+            asp_str += f"%----------- TYPE {t.name} \n"
             fb.add(clorm_db.Type(name=t.name))
-            # prg += f"type({t.name}).\n"
             if t.allow_in_head:
                 fb.add(clorm_db.Allow(type=t.name, position="head"))
-                # prg += f"allow({t.name}, head).\n"
             if t.allow_in_body:
                 fb.add(clorm_db.Allow(type=t.name, position="body"))
-                # prg += f"allow({t.name}, body).\n"
 
             for st in t.sub_types:
                 fb.add(clorm_db.Subtype(sub=st, sup=t.name))
-                # prg += f"subtype({st}, {t.name}).\n"
 
             for expr in t.expressions.values():
                 fb.add(
@@ -354,7 +353,6 @@ class Grammar:
                         id=clorm_db.ExpressionID(name=f"{self._prefix}{expr.name}", arity=expr.arity),
                     )
                 )
-                # prg += f"expression({t.name}, ({self._prefix}{expr.name}, {expr.arity})).\n"
                 for index, args in expr.args.items():
                     for arg in args:
                         fb.add(
@@ -365,15 +363,14 @@ class Grammar:
                                 value=arg.value,
                             )
                         )
-                        # prg += f"arg(({self._prefix}{expr.name}, {expr.arity}), {index}, {arg.key}, {arg.value}).\n"
 
             for v in t.variables.values():
                 for var in v:
                     fb.add(clorm_db.Var(type=t.name, name=var.name, type_var=var.type_var))
-                    # prg += f"var({t.name}, {var.name}, {var.type_var}).\n"
 
             for macro in t.macros:
                 fb.add(clorm_db.Macro(type=macro.type, lhs=macro.pattern, rhs=macro.expansion))
-                # prg += f"macro({sugar.type}, {sugar.pattern}, {sugar.expansion}).\n"
 
-        return fb.asp_str()
+            asp_str += fb.asp_str()
+
+        return asp_str

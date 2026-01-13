@@ -4,9 +4,9 @@ import sys
 from metasp.printing import print_symbol_str
 
 
-def melingo_print_model(model: Model, system) -> None:
+def mel_print_model(model: Model, system) -> None:
     """
-    Prints the model as in melingo separating the states.
+    Prints the model as in mel separating the states.
 
     Args:
         model (Model): The clingo model to be printed.

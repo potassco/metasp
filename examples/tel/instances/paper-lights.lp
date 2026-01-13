@@ -9,4 +9,4 @@ __next(__eventually(green(L))):- push(L).
 #external __initial.
 #external push(l1).
 
-#show __next/1.
+% #show __next/1.

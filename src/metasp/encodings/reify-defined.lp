@@ -43,6 +43,16 @@ Args:
 #defined literal_tuple/2.
 
 %*
+weighted_literal_tuple(B)
+...............................
+Represents a tuple or set of weighted literals identified by `B`, without a specified order.
+
+Args:
+    B (int): Numerical identifier for the weighted literal tuple.
+*%
+#defined weighted_literal_tuple/1.
+
+%*
 weighted_literal_tuple(B, L, W)
 ...............................
 Literal `L` is part of the literal tuple identified by `B` and has a weight of `W`.

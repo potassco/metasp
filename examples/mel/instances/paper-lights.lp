@@ -13,5 +13,3 @@ __eventually((1,15),__always((0,30),green(L))):- push(L).
 % Trick just to force the states and see the behaviour
 % __next((2,3),__next((5,6),__top)):- push(L).
 % #external top:push(L).
-
-

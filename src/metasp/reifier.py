@@ -261,7 +261,6 @@ class MetaspExtension(ReifyExtension):
         """ """
         with path("metasp.encodings", "reify-extension.lp") as base_encoding:
             log.debug("Loading encoding: %s", base_encoding)
-            ctl.add("base", [], self._grammar.asp_str)
             ctl.load(str(base_encoding))
 
     def update_context(self, context: object) -> None:
@@ -304,6 +303,10 @@ def reify(prg: str, constants: dict[str, str], grammar: Grammar) -> str:
         program_str,
         programs=[("base", [])],
     )
-    reified_prg = "\n".join([f"{str(s)}." for s in rsymbols])
-    reified_prg = extend_reification(reified_out_prg=reified_prg, extensions=extensions, clean_output=True)
+    simple_reified_prg = "\n".join([f"{str(s)}." for s in rsymbols])
+    reified_prg = "\n%%%%%%%%%% REIFIED INPUT %%%%%%%%%%%%\n"
+    reified_prg += extend_reification(reified_out_prg=simple_reified_prg, extensions=extensions, clean_output=True)
+
+    reified_prg += grammar.asp_str
+
     return reified_prg

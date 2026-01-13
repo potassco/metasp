@@ -1,61 +1,44 @@
 metasp-systems:
-  - name: melingo
-    description: "Meta ASP system with for metric equilibrium logic (MEL) using clingcon as backend solver."
-    control-name: clingcon
-    syntax-encoding:
-      - "./melingo/syntax-facts.lp"
-    semantics-encoding:
-      - "./melingo/semantics.lp"
-    ui-encoding:
-      - "./melingo/ui.lp"
-    python-scripts:
-      - "./melingo/print_functions.py"
-    print-model: melingo_print_model
-    constants:
-      - "horizon"
-
-  - name: telingo
+  - name: tel
     description: "Meta ASP system for temporal equilibrium logic (TEL)."
     control-name: clingo
     syntax-encoding:
-      - "./telingo/syntax-facts.lp"
+      - "./tel/syntax.lp"
     semantics-encoding:
-      - "./telingo/semantics.lp"
+      - "./tel/semantics.lp"
     print-model: telingo_print_model
     ui-encoding:
-      - "./telingo/ui.lp"
+      - "./tel/ui.lp"
     constants:
       - "horizon"
 
-  - name: delingo
+  - name: del
     description: "Meta ASP system joining temporal equilibrium logic (TEL) with dynamic logic (DEL)."
     control-name: clingo
     syntax-encoding:
-      - "./telingo/syntax-facts.lp"
-      - "./delingo/syntax-facts.lp"
+      - "./del/syntax.lp"
+      - "./tel/syntax.lp"
     semantics-encoding:
-      - "./telingo/semantics.lp"
-      - "./delingo/semantics.lp"
+      - "./del/semantics.lp"
+      - "./tel/semantics.lp"
     print-model: telingo_print_model
     ui-encoding:
-      - "./delingo/ui.lp"
-      - "./telingo/ui.lp"
+      - "./del/ui.lp"
+      - "./tel/ui.lp"
     constants:
       - "horizon"
 
-  - name: thtc
-    description: "Meta ASP system for THTc"
-    control-name: fclingo
+  - name: mel
+    description: "Meta ASP system with for metric equilibrium logic (MEL) using clingcon as backend solver."
+    control-name: clingcon
     syntax-encoding:
-      - "./thtc/syntax.lp"
-      - "./telingo/syntax.lp"
+      - "./mel/syntax.lp"
     semantics-encoding:
-      - "./thtc/semantics.lp"
-      - "./telingo/semantics.lp"
+      - "./mel/semantics.lp"
     ui-encoding:
-      - "./thtc/ui.lp"
-    print-model: thtc_print_model
+      - "./melingo/ui.lp"
     python-scripts:
-      - "./thtc/print_functions.py"
+      - "./mel/print_functions.py"
+    print-model: mel_print_model
     constants:
       - "horizon"
