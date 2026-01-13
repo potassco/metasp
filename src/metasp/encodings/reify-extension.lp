@@ -5,10 +5,11 @@ reserved_predicate(output(_show(A),B)):-
     output(_show(A),B).
 
 
-processed((A,L), @process_output(A)):-output(A,L), not reserved_predicate(output(A, L)).
+processed((O,L), @process_output(O)):-output(O,L), not reserved_predicate(output(O, L)).
 
 % Remove the previous output
-hide(output(A,L)):-output(A,L).
+hide(output(O,L)):-output(O,L).
 
 % Add the processed output
-#show output(O, L):processed((A,L),O).
+#show output(F, L):processed((O,L),F).
+#show sugar(F, O):processed((O,L),F).

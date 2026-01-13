@@ -22,6 +22,8 @@ metasp-systems:
     semantics-encoding:
       - "./telingo/semantics.lp"
     print-model: telingo_print_model
+    ui-encoding:
+      - "./telingo/ui.lp"
     constants:
       - "horizon"
 
@@ -30,11 +32,14 @@ metasp-systems:
     control-name: clingo
     syntax-encoding:
       - "./telingo/syntax.lp"
-      - "./delingo/syntax.lp"
+      - "./delingo/syntax-facts.lp"
     semantics-encoding:
       - "./telingo/semantics.lp"
       - "./delingo/semantics.lp"
     print-model: telingo_print_model
+    ui-encoding:
+      - "./delingo/ui.lp"
+      - "./telingo/ui.lp"
     constants:
       - "horizon"
 

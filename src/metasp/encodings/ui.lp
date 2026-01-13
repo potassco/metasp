@@ -217,21 +217,28 @@ attr(main(model), order, 3).
             _any_or_browse(A):-_clinguin_browsing, _clinguin_model(A).
             _any_or_browse(A):-not _clinguin_browsing, _any(A).
 
-            show_model(true(X,W)):-_any_or_browse(true(X,W)), formula(atom,X),not output(_show,_).
-            show_model(true(X,W)):-_any_or_browse(conjunction(B,W)), output(_show(X),B),formula(atom,X).
+            show_model(true(X,W)):-_any_or_browse(true(X,W)), formula(atom,X),not show_hide.
+            show_model(true(X,W)):-_any_or_browse(conjunction(B,W)), formula(atom,X), show(X,B).
             show_model(true(X,W)):-_any_or_browse(true(X,W)), formula(M,X), shown_type(M), not derive(_,X,_).
             show_model(true(X,W)):-_clinguin_assume(true(X,W),_).
+
+            % show_model(true(X,W)):-_any_or_browse(true(X,W)), formula(atom,X).
 
 
             elem(sub_content(model(W)), container, content(model(W))):-world(W).
 
-
+                % final_label(F,L):-show_model(true(F,W)), not show(F,_), label(F,L).
+                % final_label(F,L):-show_model(true(F,W)), processed((F,_),O), label(O,L).
+                % final_label(F,F):-show_model(true(F,W)), not show(F,_),not label(F,_).
+                % final_label(F,O):-show_model(true(F,W)), processed((F,_),O), not label(F,_).
 
                 elem(elem_container(model(A,W)), container, sub_content(model(W))):-show_model(true(A,W)).
 
                     elem(elem_title(model(A,W)), button, elem_container(model(A,W))):-show_model(true(A,W)).
                     % attr(elem_title(model(A,W)), label, A):-show_model(true(A,W)).
-                    attr(elem_title(model(A,W)), label, A):-show_model(true(A,W)).
+                    attr(elem_title(model(A,W)), label, L):-show_model(true(A,W)), label(A,L).
+                    attr(elem_title(model(A,W)), label, A):-show_model(true(A,W)), not label(A,_).
+                    attr(elem_title(model(A,W)), "white-space", "nowrap"):-show_model(true(A,W)).
                     attr(elem_title(model(A,W)), class, "font-monospace"):-show_model(true(A,W)).
                     attr(elem_title(model(A,W)), class, "opacity-25"):- _all(A), show_model(true(A,W)).
                     attr(elem_title(model(A,W)), class, "text-primary"):-  show_model(true(A,W)), not formula(atom,A).

@@ -213,11 +213,13 @@ class MetaSystem:
 
         files = list(self.get_files(reified_input))
         files.append(tmp_file.name)
+        files.append(os.path.join(ENCODINGS_PATH, "ui-show.lp"))
         command = ["clinguin", "client-server", "--domain-files"] + files
         command += ["--ui-files", os.path.join(ENCODINGS_PATH, "ui.lp")]
         command += self.ui_encoding
         command += [f"-c {k}={v}" for k, v in self.constants.items()]
         backend_name = get_clinguin_backend_control(self.control_name)
         command += ["--backend", backend_name]
+        command += ["--explicit-show"]
         # command += ["--server-log-level", "DEBUG"]
         return command

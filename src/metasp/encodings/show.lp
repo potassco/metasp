@@ -3,7 +3,7 @@
 #show.
 
 % Show all true formulas unless #show. in original program
-#show F : formula(atom,F), true(F), not show(_,_), not show_hide.
+#show F : formula(atom,F), true(F), not show_hide.
 
 #show S : show(S,B), conjunction(B).
 

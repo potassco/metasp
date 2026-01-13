@@ -69,13 +69,14 @@ Args:
 
 
 % True if the literal tuple for the output holds
-% true(O,T) :- output(O,B), time(T), hold(L,T) : literal_tuple(B,L).
+true(O,T) :- output(O,B), time(T), hold(L,T) : literal_tuple(B,L).
 % If a formula its true, its literal holds
-% hold(L,T) :- output(O,B), time(T), true(O,T),  literal_tuple(B,L).
+hold(L,T) :- output(O,B), time(T), true(O,T),  literal_tuple(B,L).
 
 
 % Does it work with facts? I think it works with the preserve-facts flag
-symbol_literal(S,L):- output(S,B), literal_tuple(B,L).
+% Does not work with the exising symbol_literal from the show extension because that one does not have the syntactic sugar transformation.
+% symbol_literal(S,L):- output(S,B), literal_tuple(B,L).
 
-true(S,T) :- symbol_literal(S, L), hold(L,T).
-hold(L,T) :- true(S,T), symbol_literal(S,L).
+% true(S,T) :- symbol_literal(S, L), hold(L,T).
+% hold(L,T) :- true(S,T), symbol_literal(S,L).

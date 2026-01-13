@@ -62,6 +62,7 @@ class Grammar:
         self.syntactic_sugar: List[Macro] = []
         self.variables: Dict[str, List[Var]] = {}
         self._prefix = "__"
+        self._prefix_sugar = "&"
         self.add_base_types()
 
     def add_base_types(self) -> None:
@@ -273,7 +274,9 @@ class Grammar:
                     args[a.index].append(Arg(key=a.key, value=a.value))
                 expression_name = c.id.name
                 if not expression_name.startswith(grammar._prefix):
-                    raise ValueError(f"Expression name '{expression_name}' must start with prefix '{grammar._prefix}'.")
+                    raise ValueError(
+                        f"Expression name '{expression_name}' must start with prefix '{grammar._prefix_sugar}'."
+                    )
                 expression_name = expression_name[len(grammar._prefix) :]  # Remove prefix
                 expression = Expression(type_name=t.name, name=expression_name, arity=c.id.arity, args=args)
 
