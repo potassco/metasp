@@ -83,12 +83,14 @@ class Var(Predicate):
     Variable declaration in the grammar to be used in macro
 
     Args:
+        type_from (const): The type this variable belongs to.
         name (const): The name of the variable.
         type (const): The type of the variable, if multiple types are given then all must match.
     """
 
-    name: ConstantStr
     type: ConstantStr
+    name: ConstantStr
+    type_var: ConstantStr
 
 
 class Macro(Predicate, name="macro"):

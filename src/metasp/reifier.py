@@ -87,11 +87,11 @@ class FormulaRegistery:
 
     def remove_syntactic_sugar(self, symbol: Symbol, as_type=None) -> Symbol:
         matched_variables = {}
-        sugar = self.grammar.find_sugar(symbol, as_type, matched_variables)
-        if not sugar:
+        macro = self.grammar.find_macro(symbol, as_type, matched_variables)
+        if not macro:
             return symbol
-        new_symbol = self.grammar.apply_sugar_with_vars(sugar.expansion.symbol, matched_variables)
-        log.debug(f"✴️ Removing syntactic sugar of {p(symbol)} using rule {p(sugar.pattern)} -> {p(sugar.expansion)}")
+        new_symbol = self.grammar.apply_sugar_with_vars(macro.type, macro.expansion.symbol, matched_variables)
+        log.debug(f"✴️ Removing syntactic sugar of {p(symbol)} using rule {p(macro.pattern)} -> {p(macro.expansion)}")
         log.debug(f"  New symbol: {p(new_symbol)}")
         return new_symbol
 
@@ -261,6 +261,7 @@ class MetaspExtension(ReifyExtension):
         """ """
         with path("metasp.encodings", "reify-extension.lp") as base_encoding:
             log.debug("Loading encoding: %s", base_encoding)
+            ctl.add("base", [], self._grammar.asp_str)
             ctl.load(str(base_encoding))
 
     def update_context(self, context: object) -> None:
@@ -299,7 +300,7 @@ def reify(prg: str, constants: dict[str, str], grammar: Grammar) -> str:
     extensions = [ShowExtension(), MetaspExtension(grammar=grammar)]
     program_str = transform([], prg, extensions)
     rsymbols = classic_reify(
-        [f"-c {k}={v}" for k, v in constants.items()],
+        ["--preserve-facts=symtab"] + [f"-c {k}={v}" for k, v in constants.items()],
         program_str,
         programs=[("base", [])],
     )
