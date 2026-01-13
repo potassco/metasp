@@ -36,9 +36,14 @@ class Formula:
         return list(types)
 
     def symbol_with_prefix(self) -> Symbol:
-        if self.type.is_base_type:
-            return self.symbol
-        return Function(f"__{self.symbol.name}", [a.symbol_with_prefix() for a in self.arguments], self.symbol.positive)
+        is_tuple = self.type is None
+        if is_tuple:
+            name = ""
+        else:
+            if self.type.is_base_type:
+                return self.symbol
+            name = f"__{self.symbol.name}"
+        return Function(name, [a.symbol_with_prefix() for a in self.arguments], self.symbol.positive)
 
     def __str__(self) -> str:
         return str(self.symbol)

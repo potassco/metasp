@@ -1,7 +1,8 @@
 
 #type mel {
     expressions: {
-	    &true/0;
+	    &top/0;
+	    &bottom/0;
         &initial/0;
         &final/0;
         &next/2: {
@@ -10,7 +11,7 @@
         };
     };
     subtypes: {
-        atom;
+        function;
     };
     macros: {
         &next(v1): &next(0, v1);

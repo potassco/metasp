@@ -3,7 +3,7 @@ type(thtc).
 allow(thtc, body).
 allow(thtc, head).
 expression(thtc, (op, 3)).
-    arg((op, 3), 0, type, atom).
+    arg((op, 3), 0, type, function).
     arg((op, 3), 1, type, linear_temp_cons_atom).
     arg((op, 3), 2, type, linear_temp_cons_atom).
 
@@ -20,7 +20,7 @@ expression(mul, (mul, 2)).
 type(simple_tel).
 expression(simple_tel, (next, 2)).
     arg((next, 2), 0, type, number).
-    arg((next, 2), 1, type, atom).
+    arg((next, 2), 1, type, function).
 
 
 % -----------------------------
@@ -37,13 +37,13 @@ macro(thtc, __leq(x,y), __op(leq,x,y)).
 macro(thtc, __assign(x,y), __op(assign,x,y)).
 
 % Atoms directly in the operator.
-var(c, atom).
+var(c, function).
 var(c, simple_tel).
 var(c, number).
 macro(linear_temp_cons_atom, c, __sum(c,0)).
 
 % A <-> 1*A and next(A) <-> 1*next(A)
-var(b, atom).
+var(b, atfunctionom).
 var(b, simple_tel).
 macro(mul, b, __mul(1,b)).
 
@@ -52,7 +52,7 @@ var(n, number).
 macro(mul, n, __mul(n,_one)).
 
 % A <-> next(0,A)
-var(a, atom).
+var(a, function).
 macro(simple_tel, a, __next(0,a)).
 macro(mul, a, __next(0,a)).
 macro(linear_temp_cons_atom, a, __next(0,a)).

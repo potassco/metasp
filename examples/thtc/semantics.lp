@@ -143,10 +143,10 @@ true(op(eq,X,Y),T):-
             % &sus{var(YA2,TYN2)}=var(YA2,TYN2), %With defined body
             TYN1=T+YN1, TYN2=T+YN2.
 
-% So that it can match the rules with formula((atom;simple_tel), A) as a condition where there is no number of next
-formula(atom, _one).
+% So that it can match the rules with formula((function;simple_tel), A) as a condition where there is no number of next
+formula(function, _one).
 &sus{var(_one,T)}=1:-time(T).
 
-formula(simple_tel, next(A)):-formula(atom, A).
+formula(simple_tel, next(A)):-formula(function, A).
 % formula(thtc, op(eq,sum(mul(1,X),mul(0,next(0,_one))),Y)):-formula(thtc, op(assign,X,Y)).
 

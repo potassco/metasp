@@ -55,5 +55,5 @@ goal :- at(ram,dentist), has(ram,icard), has(ram,cash).
 #external at(I,L): item(I), loc(L).
 #external has(ram,I): item(I).
 
-_show(go(P,L)):-go(P,L).
-_show.
+#show has/2.
+#show at/2.

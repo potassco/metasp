@@ -160,7 +160,7 @@ attr(main(state), order, 1).
         attr(footer_item(select(btn)),label,"Select solution").
         attr(footer_item(select(btn)),icon,"fa-hand-pointer").
         attr(footer_item(select(btn)),class,"btn-success").
-        when(footer_item(select(btn)),click,call, select("#show. #show true(X,W): true(X,W), formula(atom,X).")).
+        when(footer_item(select(btn)),click,call, select("#show. #show true(X,W): true(X,W), formula(function,X).")).
 
 
         elem(footer_item(download(btn)),button,footer_elem(select)).
@@ -168,7 +168,7 @@ attr(main(state), order, 1).
         attr(footer_item(download(btn)),label,"Download solution").
         attr(footer_item(download(btn)),icon,"fa-download").
         attr(footer_item(download(btn)),class,"btn-success").
-        when(footer_item(download(btn)),click,call, download("#show. #show (X,W): true(X,W), formula(atom,X).","metasp-solution.lp")).
+        when(footer_item(download(btn)),click,call, download("#show. #show (X,W): true(X,W), formula(function,X).","metasp-solution.lp")).
 
 
     elem(footer_elem(browse), container, footer(model)).
@@ -217,12 +217,12 @@ attr(main(model), order, 3).
             _any_or_browse(A):-_clinguin_browsing, _clinguin_model(A).
             _any_or_browse(A):-not _clinguin_browsing, _any(A).
 
-            show_model(true(X,W)):-_any_or_browse(true(X,W)), formula(atom,X),not show_hide.
-            show_model(true(X,W)):-_any_or_browse(conjunction(B,W)), formula(atom,X), show(X,B).
+            show_model(true(X,W)):-_any_or_browse(true(X,W)), formula(function,X),not show_hide.
+            show_model(true(X,W)):-_any_or_browse(conjunction(B,W)), formula(function,X), show(X,B).
             show_model(true(X,W)):-_any_or_browse(true(X,W)), formula(M,X), shown_type(M), not derive(_,X,_).
             show_model(true(X,W)):-_clinguin_assume(true(X,W),_).
 
-            % show_model(true(X,W)):-_any_or_browse(true(X,W)), formula(atom,X).
+            % show_model(true(X,W)):-_any_or_browse(true(X,W)), formula(function,X).
 
 
             elem(sub_content(model(W)), container, content(model(W))):-world(W).
@@ -241,7 +241,7 @@ attr(main(model), order, 3).
                     attr(elem_title(model(A,W)), "white-space", "nowrap"):-show_model(true(A,W)).
                     attr(elem_title(model(A,W)), class, "font-monospace"):-show_model(true(A,W)).
                     attr(elem_title(model(A,W)), class, "opacity-25"):- _all(A), show_model(true(A,W)).
-                    attr(elem_title(model(A,W)), class, "text-primary"):-  show_model(true(A,W)), not formula(atom,A).
+                    attr(elem_title(model(A,W)), class, "text-primary"):-  show_model(true(A,W)), not formula(function,A).
                     attr(elem_title(model(A,W)), class, "text-decoration-underline"):-  show_model(true(A,W)),  _clinguin_assume(true(A,W),true).
                     attr(elem_title(model(A,W)), class, ("text-decoration-line-through")):-  show_model(true(A,W)),  _clinguin_assume(true(A,W),false).
                     attr(elem_title(model(A,W)), opacity, "0.4"):-  show_model(true(A,W)), not true(A,W).

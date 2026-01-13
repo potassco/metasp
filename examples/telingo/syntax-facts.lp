@@ -12,7 +12,7 @@
 % 		};
 %     };
 %     subtypes: {
-% 		atom;
+% 		function;
 %     };
 %     macros: {
 % 		&eventually(v1): &until(&true, v1);
@@ -26,7 +26,7 @@
 type(tel).
 allow(tel, body).
 
-subtype(atom, tel).
+subtype(function, tel).
 expression(tel, (__initial, 0)).
 expression(tel, (__true, 0)).
 expression(tel, (__next, 1)).

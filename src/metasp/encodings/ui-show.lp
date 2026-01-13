@@ -19,7 +19,7 @@
 #show show/2.
 
 
-% #show true(F,K) : formula(atom,F), true(F,K), not show(_,_), not show_hide.
+% #show true(F,K) : formula(function,F), true(F,K), not show(_,_), not show_hide.
 
 % Show all true formulas that have a condition
 % #show true(S,K) : show(S,B), conjunction(B,K).

@@ -19,7 +19,7 @@
     macros: {
         a: &seq(&test(a), &step);
         where: {
-            a: atom;
+            a: function;
         };
     };
 }.
@@ -38,7 +38,7 @@
         };
     };
     subtypes: {
-        atom;
+        function;
     };
     occurrence: any;
 }.

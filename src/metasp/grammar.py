@@ -46,7 +46,7 @@ class Type:
 
     @property
     def is_base_type(self) -> bool:
-        return self.name in ["atom", "number", "string"]
+        return self.name in ["function", "number", "string", "tuple", "infimum", "sumpremum", "symbol"]
 
 
 @dataclass
@@ -66,20 +66,21 @@ class Grammar:
         self.add_base_types()
 
     def add_base_types(self) -> None:
-        type_atom = Type(name="atom")
-        self.add_type(type_atom)
+        type_symbol = Type(name="symbol", sub_types=["function", "number", "string", "tuple", "infimum", "sumpremum"])
+        type_tuple = Type(name="tuple", super_types=["symbol"])
+        type_function = Type(name="function", super_types=["symbol"])
+        type_number = Type(name="number", super_types=["symbol"])
+        type_string = Type(name="string", super_types=["symbol"])
+        type_infimum = Type(name="infimum", super_types=["symbol"])
+        type_sumpremum = Type(name="sumpremum", super_types=["symbol"])
 
-        type_number = Type(name="number")
+        self.add_type(type_symbol)
+        self.add_type(type_function)
+        self.add_type(type_tuple)
         self.add_type(type_number)
-
-        type_string = Type(name="string")
         self.add_type(type_string)
-
-        # type_head = Type(name="head")
-        # self.add_type(type_head)
-
-        # type_body = Type(name="body")
-        # self.add_type(type_body)
+        self.add_type(type_infimum)
+        self.add_type(type_sumpremum)
 
     def allowed_types_in_position(self, position: str = None) -> List[str]:
         assert position in [None, "head", "body"], f"Unknown position '{position}'"
@@ -114,14 +115,14 @@ class Grammar:
             return False
         return s.name in self.variables
 
-    def is_atom(self, s: Symbol) -> bool:
+    def is_function(self, s: Symbol) -> bool:
         if s.type != SymbolType.Function or s.name.startswith(self._prefix):
             return False
-        # log.info( f"Matched atom {s}")
+        # log.info( f"Matched function {s}")
         expression_keys = self.get_expressions_keys(include_sugar=True)
         if (s.name, len(s.arguments)) in expression_keys:
             log.warning(
-                f"⚠️Symbol `{s}` looks like a expression but is missing the & prefix. Did you forget it?. Will be considered as atom."
+                f"⚠️Symbol `{s}` looks like a expression but is missing the & prefix. Did you forget it?. Will be considered as function."
             )
         return True
 
@@ -141,11 +142,15 @@ class Grammar:
             return self.types.get("number", None)
         if s.type == SymbolType.String:
             return self.types.get("string", None)
-        if s.type != SymbolType.Function:
-            raise ValueError(f"Unexpected symbol type {s}.")
         # Maybe handle reserved names here
-        if self.is_atom(s):
-            return self.types.get("atom", None)
+        if s.type == SymbolType.Function and s.name == "":
+            return self.types.get("tuple", None)
+        if s.type == SymbolType.Infimum:
+            return self.types.get("infimum", None)
+        if s.type == SymbolType.Supremum:
+            return self.types.get("sumpremum", None)
+        if self.is_function(s):
+            return self.types.get("function", None)
 
         # --------- Expression case
         name = s.name[len(self._prefix) :]
@@ -201,8 +206,8 @@ class Grammar:
                 return False
             matched_variables[pattern_symbol.name] = symbol
             return True
-        if self.is_atom(pattern_symbol):
-            log.warning(f"Pattern {pattern_symbol} is atom, pehaps you meant to use a variable?")
+        if self.is_function(pattern_symbol):
+            log.warning(f"Pattern {pattern_symbol} is function, pehaps you meant to use a variable?")
         # TODO what if symbol is not a function?
         if (symbol.name, len(symbol.arguments)) != (
             pattern_symbol.name,

@@ -21,7 +21,7 @@ allow(del, head).
 allow(del, body).
 
 type(path).
-subtype(atom, del).
+subtype(function, del).
 % subtype(atom, path).
 
 expression(del, (__box, 2)).
@@ -47,7 +47,7 @@ expression(path, (__star, 1)).
 % Derived We need this in the grammar to parse the input
 %% ------- Derived --------- %%
 
-var(a, atom).
+var(a, function).
 macro(path, a, __seq(__test(a), __step)).
 
 

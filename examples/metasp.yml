@@ -3,7 +3,7 @@ metasp-systems:
     description: "Meta ASP system with for metric equilibrium logic (MEL) using clingcon as backend solver."
     control-name: clingcon
     syntax-encoding:
-      - "./melingo/syntax.lp"
+      - "./melingo/syntax-facts.lp"
     semantics-encoding:
       - "./melingo/semantics.lp"
     ui-encoding:
@@ -18,7 +18,7 @@ metasp-systems:
     description: "Meta ASP system for temporal equilibrium logic (TEL)."
     control-name: clingo
     syntax-encoding:
-      - "./telingo/syntax.lp"
+      - "./telingo/syntax-facts.lp"
     semantics-encoding:
       - "./telingo/semantics.lp"
     print-model: telingo_print_model
@@ -31,7 +31,7 @@ metasp-systems:
     description: "Meta ASP system joining temporal equilibrium logic (TEL) with dynamic logic (DEL)."
     control-name: clingo
     syntax-encoding:
-      - "./telingo/syntax.lp"
+      - "./telingo/syntax-facts.lp"
       - "./delingo/syntax-facts.lp"
     semantics-encoding:
       - "./telingo/semantics.lp"
