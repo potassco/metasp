@@ -6,7 +6,7 @@ metasp-systems:
       - "./tel/syntax.lp"
     semantics-encoding:
       - "./tel/semantics.lp"
-    print-model: telingo_print_model
+    printer: temporal_printer
     ui-encoding:
       - "./tel/ui.lp"
     constants:
@@ -21,7 +21,7 @@ metasp-systems:
     semantics-encoding:
       - "./del/semantics.lp"
       - "./tel/semantics.lp"
-    print-model: telingo_print_model
+    printer: temporal_printer
     ui-encoding:
       - "./del/ui.lp"
       - "./tel/ui.lp"
@@ -39,6 +39,6 @@ metasp-systems:
       - "./melingo/ui.lp"
     python-scripts:
       - "./mel/print_functions.py"
-    print-model: mel_print_model
+    printer: mel_print_model
     constants:
       - "horizon"

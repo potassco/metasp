@@ -32,7 +32,7 @@ def print_symbol_str(s: Symbol) -> str:
     return str(s)
 
 
-def telingo_print_model(model: Model, system) -> None:
+def temporal_printer(model: Model, system) -> None:
     """
     Prints the model as in telingo, separating the states.
 
@@ -40,7 +40,7 @@ def telingo_print_model(model: Model, system) -> None:
         model (Model): The clingo model to be printed.
         system (MetaSystem): The metasp system.
     """
-    assert "horizon" in system.constants, "system must have a 'horizon' property to use telingo_print_model"
+    assert "horizon" in system.constants, "system must have a 'horizon' property to use temporal_printer"
     l = int(system.constants["horizon"]) + 1
     table = {}
     extra_shown = []
@@ -61,7 +61,7 @@ def telingo_print_model(model: Model, system) -> None:
         sig = None
         for sym in sorted(symbols):
             if (sym.name, len(sym.arguments), sym.positive) != sig:
-                sys.stdout.write("\n ")
+                # sys.stdout.write("\n ")
                 sig = (sym.name, len(sym.arguments), sym.positive)
             sys.stdout.write(" {}".format(print_symbol_str(sym)))
         sys.stdout.write("\n")

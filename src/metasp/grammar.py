@@ -332,7 +332,7 @@ class Grammar:
 
     @property
     def asp_str(self) -> str:
-        asp_str = "%%%%%%%%%%%% GRAMMAR DEFINITION %%%%%%%%%%%%\n"
+        asp_str = "\n%%%%%%%%%%%% GRAMMAR DEFINITION %%%%%%%%%%%%\n"
 
         for t in self.types.values():
             fb = clorm.FactBase()

@@ -4,13 +4,13 @@
 %*
 time(T)
 .......
-Represents the time steps in the temporal logic that are between 0 and `lambda-1`.
+Represents the time steps in the temporal logic that are between 0 and `horizon`.
 
 Args:
     T (int): Numerical identifier for the time step.
 *%
 
-time(0..lambda-1).
+time(0..horizon).
 
 %*
 conjunction(B, T)
@@ -80,3 +80,6 @@ hold(L,T) :- output(O,B), time(T), true(O,T),  literal_tuple(B,L).
 
 % true(S,T) :- symbol_literal(S, L), hold(L,T).
 % hold(L,T) :- true(S,T), symbol_literal(S,L).
+
+
+world(W):-time(W).

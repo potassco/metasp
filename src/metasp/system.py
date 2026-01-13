@@ -84,7 +84,7 @@ class MetaSystem:
             syntax_encoding=config["syntax-encoding"],
             semantics_encoding=config["semantics-encoding"],
             ui_encoding=config.get("ui-encoding", []),
-            print_model=config.get("print-model", None),
+            print_model=config.get("printer", None),
             constants=config.get("constants", []),
             python_scripts=config.get("python-scripts", []),
         )

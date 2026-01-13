@@ -49,7 +49,7 @@ metasp-systems:
       - "<path/to/semantics.lp>"
     python-scripts:
       - "<path/to/script.py>"
-    print-model: <python_function_to_print_model>
+    printer: <python_function_to_print_model>
     constants:
       - "<constant_name>"
 ```
@@ -62,7 +62,7 @@ metasp-systems:
 - `syntax-encoding`: List of relative paths to ASP files encoding the input language syntax, see [Syntax](reference/syntax.md).
 - `semantics-encoding`: List of relative paths to ASP files encoding the system's semantics, see [Semantics](reference/semantics.md).
 - `python-scripts`: Optional Python scripts for custom processing or printing, see [Printing](reference/print.md).
-- `print-model`: Python function (from scripts) to format output models, see [Printing](reference/print.md).
+- `printer`: Python function (from scripts) to format output models, see [Printing](reference/print.md).
 - `constants`: List of constant parameters required by the system, each constant in this list will generate a corresponding attribute in the system. This attribute can be used in the printing of the model. In case the constant is not provided, an error will be raised.
 
 You can define multiple systems by adding more entries to the `metasp-systems` list. Adjust paths and options as needed for your use case.

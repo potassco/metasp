@@ -2,11 +2,6 @@
 #include "metasp.show-time.lp".
 #include "metasp.reify-defined.lp".
 
-#const lambda= horizon+1.
-world(W):-time(W).
-
-
-%================================================
 % __top/0
 true(__top,K) :- formula(mel,__top), time(K).
 % __bot/0
@@ -16,16 +11,16 @@ true(__top,K) :- formula(mel,__top), time(K).
 true(__initial,0).
 
 %--------- finally
-:- true(__final,K), time(K), K!=lambda-1.
-true(__final,lambda-1).
+:- true(__final,K), time(K), K!=horizon.
+true(__final,horizon).
 
 %--------- Next
 % ->
-true(V,K+1) :- true(__next(I,V),K), time(K), K<lambda-1.
-:- true(__next(_,_),K), time(K), K=lambda-1.
-:- true(__next(I,_),K), outside(I,(K,K+1)), time(K), K<lambda-1.
+true(V,K+1) :- true(__next(I,V),K), time(K), K<horizon.
+:- true(__next(_,_),K), time(K), K=horizon.
+:- true(__next(I,_),K), outside(I,(K,K+1)), time(K), K<horizon.
 % <-
-true(__next(I,V),K) :-  true(V,K+1), not outside(I,(K,K+1)), time(K), K<lambda-1,
+true(__next(I,V),K) :-  true(V,K+1), not outside(I,(K,K+1)), time(K), K<horizon,
                       formula(mel,__next(I,V)).
 
 % --------- Always
