@@ -21,7 +21,7 @@
 % 		};
 %     };
 % 	subtypes: {
-% 		function;
+% 		atom;
 % 	};
 %     macros: {
 % 		&wnext(v1): &or{&next(v1), &final};
@@ -63,6 +63,6 @@ macro(tel, __release(v1, v2), __until(v2, __and(v2, __or(v1, __final)))).
 var(tel, v1, tel).
 var(tel, v2, tel).
 
-subtype(function, tel).
+subtype(atom, tel).
 allow(tel, body).
 allow(tel, head).

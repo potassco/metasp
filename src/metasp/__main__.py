@@ -9,13 +9,11 @@ import yaml
 import argparse
 from clingo.application import clingo_main
 from .utils.parser import get_parser
-from rich_argparse import ArgumentDefaultsRichHelpFormatter
-from metasp.preprocess import preprocess
-from metasp.reifier import reify
 from metasp.system import MetaSystem
 from metasp.utils.logging import configure_logging
 from metasp.app import make_app
 from metasp.grammar import Grammar
+from metasp import MetaspProcessor
 import subprocess
 
 
@@ -93,17 +91,19 @@ def main() -> None:
     meta_system = MetaSystem.from_dict(system_config)
     meta_system.set_constants(constants_dict)
     grammar = Grammar.from_asp_files(meta_system.syntax_encoding)
-    processed_input = preprocess(args.files, constants_dict, grammar)
-    if args.output == "extend":
-        sys.stdout.write(processed_input + "\n")
+
+    processor = MetaspProcessor(grammar)
+    transformed_input = processor.fo_transform(args.files, "")
+    if args.output == "transform":
+        sys.stdout.write(transformed_input + "\n")
         exit(0)
-    reified_input = reify(processed_input, constants_dict, grammar)
+    reified = processor.reify_and_extend(transformed_input, constants_dict)
     if args.output == "reify":
-        sys.stdout.write(reified_input + "\n")
+        sys.stdout.write(reified + "\n")
         exit(0)
     if args.output == "ui":
         print("Running in user interface mode. Use Ctrl+C to exit.")
-        command = meta_system.clinguin_command(reified_input)
+        command = meta_system.clinguin_command(reified)
         print(f"Running command: {' '.join(command)}")
         result = subprocess.run(command, shell=False)
         if result.returncode != 0:

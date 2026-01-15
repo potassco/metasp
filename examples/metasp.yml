@@ -39,6 +39,6 @@ metasp-systems:
       - "./melingo/ui.lp"
     python-scripts:
       - "./mel/print_functions.py"
-    printer: mel_print_model
+    printer: mel_printer
     constants:
       - "horizon"

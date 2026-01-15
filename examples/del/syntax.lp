@@ -19,7 +19,7 @@
 %     macros: {
 %         a: &seq(&test(a), &step);
 %         where: {
-%             a: function;
+%             a: atom;
 %         };
 %     };
 % }.
@@ -38,7 +38,7 @@
 %         };
 %     };
 %     subtypes: {
-%         function;
+%         atom;
 %     };
 %     occurrence: any;
 % }.
@@ -59,7 +59,7 @@ expression(del, (__top, 0)).
 expression(del, (__bot, 0)).
 
 type(path).
-subtype(function, del).
+subtype(atom, del).
 expression(path, (__step, 0)).
 expression(path, (__test, 1)).
     arg((__test, 1), 0, type, del).
@@ -72,5 +72,5 @@ expression(path, (__seq, 2)).
 expression(path, (__star, 1)).
     arg((__star, 1), 0, type, path).
 
-var(path, a, function).
+var(path, a, atom).
 macro(path, a, __seq(__test(a), __step)).

@@ -71,8 +71,8 @@ def get_parser(config: dict[str, Any]) -> ArgumentParser:
         )
         output_options = {
             "solve": "Solve the processed and reified input files with the meta encoding for the semantics.",
-            "extend": "Output the extended input and run syntactic checks.",
-            "reify": "Output the reified input.",
+            "transform": "Output the transformed first order program and run syntactic checks.",
+            "reify": "Output the reification with extensions.",
             "ui": "User interface mode.",
         }
         for option, description in output_options.items():

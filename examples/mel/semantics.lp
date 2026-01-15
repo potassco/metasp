@@ -1,6 +1,7 @@
 #include "metasp.meta-time.lp".
 #include "metasp.show-time.lp".
 #include "metasp.reify-defined.lp".
+#include "metasp.reify-defined-metasp.lp".
 
 % __top/0
 true(__top,K) :- formula(mel,__top), time(K).
@@ -59,11 +60,11 @@ witness(eventually(I,V),(K,J)):- true(V,J), not outside(I,(K,J)), formula(mel,__
 %================================================
 % Intervals
 %================================================
-i(I) :- formula(mel, __eventually(I,V)).
-i(I) :- formula(mel, __always(I,V)).
-i(I) :- formula(mel, __next(I,V)).
+i((M,N)) :- formula(mel, __eventually(__i(M,N),V)).
+i((M,N)) :- formula(mel, __always(__i(M,N),V)).
+i((M,N)) :- formula(mel, __next(__i(M,N),V)).
 
 outside((M,N),(K,K')):-
     i((M,N)), time(K), time(K'), K<=K', &sum{t(K); -t(K')} > -M.
 outside((M,N),(K,K')):-
-    i((M,N)), time(K), time(K'), K<=K', &sum{t(K'); -t(K)} > N-1, N!=w.
+    i((M,N)), time(K), time(K'), K<=K', &sum{t(K'); -t(K)} > N-1, N!=#sup.

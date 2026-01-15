@@ -24,7 +24,7 @@ expression(tel, (__next, 1)).
 expression(tel, (__eventually, 1)).
 	arg((__eventually, 1), 0, type, tel).
 
-subtype(function, tel).
+subtype(atom, tel).
 allow(tel, body).
 allow(tel, head).
 

@@ -15,8 +15,6 @@ from importlib.resources import path
 
 log = logging.getLogger(__name__)
 
-RESERVED_NAMES = {"_show"}
-
 
 @dataclass
 class Formula:
@@ -101,13 +99,7 @@ class FormulaRegistery:
             # log.error(m)
             raise ValueError(m)
 
-    def is_reserved(self, s: Symbol) -> bool:
-        return s.type == SymbolType.Function and s.name in RESERVED_NAMES
-
     def match_top_level(self, s: Symbol) -> Formula:
-        if self.is_reserved(s):
-            # log.debug(f"Symbol {p(s)} is reserved, skipping.")
-            return None
         possible_types = self.grammar.allowed_types_in_position()
         errors = []
         if len(possible_types) == 0:
@@ -245,68 +237,3 @@ class FormulaRegistery:
             super_types=[as_type] if as_type is not None else [],
         )
         return self.add_formula(formula)
-
-
-class MetaspExtension(ReifyExtension):
-
-    def __init__(
-        self,
-        grammar: Grammar,
-    ) -> None:
-        super().__init__()
-        self._grammar = grammar
-        self._formula_registery = FormulaRegistery(grammar)
-
-    def add_extension_encoding(self, ctl: Control) -> None:
-        """ """
-        with path("metasp.encodings", "reify-extension.lp") as base_encoding:
-            log.debug("Loading encoding: %s", base_encoding)
-            ctl.load(str(base_encoding))
-
-    def update_context(self, context: object) -> None:
-        def process_output(symbol: Symbol) -> Symbol:
-            formula = self._formula_registery.match_top_level(symbol)
-            if formula is not None:
-                return formula.symbol_with_prefix()
-            return symbol
-
-        setattr(context, "process_output", process_output)
-
-    def additional_symbols(self) -> Sequence[Symbol]:
-        formula_symbols = []
-        for f in self._formula_registery.formulas.values():
-            used_types = f.used_types
-            for s in used_types:
-                formula_symbols.append(
-                    Function("formula", [Function(s, [], True), f.symbol_with_prefix()]),
-                )
-        return formula_symbols
-
-
-def reify(prg: str, constants: dict[str, str], grammar: Grammar) -> str:
-    """
-    Reify the input data with the given constants.
-    The input predicate is expected to have the required externals
-    which can be achieved by calling preprocess first.
-
-    Args:
-        prg (str): The input data to be reified.
-        constants (Sequence[str]): The constants to be used in the reification.
-        grammar (Grammar): The grammar defining the syntax and safety.
-    Returns:
-        str: The reified input data.
-    """
-    extensions = [ShowExtension(), MetaspExtension(grammar=grammar)]
-    program_str = transform([], prg, extensions)
-    rsymbols = classic_reify(
-        ["--preserve-facts=symtab"] + [f"-c {k}={v}" for k, v in constants.items()],
-        program_str,
-        programs=[("base", [])],
-    )
-    simple_reified_prg = "\n".join([f"{str(s)}." for s in rsymbols])
-    reified_prg = "\n%%%%%%%%%% REIFIED INPUT %%%%%%%%%%%%\n"
-    reified_prg += extend_reification(reified_out_prg=simple_reified_prg, extensions=extensions, clean_output=True)
-
-    reified_prg += grammar.asp_str
-
-    return reified_prg

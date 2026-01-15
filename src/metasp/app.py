@@ -10,9 +10,8 @@ from fclingo.__main__ import FclingoApp
 
 from .utils.logging import configure_logging
 from .system import MetaSystem
-from metasp.preprocess import preprocess
-from metasp.reifier import reify
 from metasp.grammar import Grammar
+from metasp import MetaspProcessor
 from clingo.script import enable_python
 
 log = logging.getLogger(__name__)
@@ -149,11 +148,11 @@ def make_app(app_name: str) -> Application:
 
             grammar = Grammar.from_asp_files(self.meta_system.syntax_encoding)
             self.meta_system.set_constants(self.constants)
-            processed_input = preprocess(files, self.constants, grammar)
-            reified_input = reify(processed_input, self.constants, grammar)
-            final_files = self.meta_system.get_files(reified_input)
+            # processed_input = preprocess(files, self.constants, grammar)
+            processor = MetaspProcessor(grammar)
+            transformed_input = processor.fo_transform(files, "")
+            reified = processor.reify_and_extend(transformed_input, self.constants)
+            final_files = self.meta_system.get_files(reified)
             super().main(control, final_files)
-            # self.meta_system.set_control(control)
-            # self.meta_system.meta_compute(reified_input)
 
     return MetaspApp

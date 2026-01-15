@@ -227,10 +227,6 @@ attr(main(model), order, 3).
 
             elem(sub_content(model(W)), container, content(model(W))):-world(W).
 
-                % final_label(F,L):-show_model(true(F,W)), not show(F,_), label(F,L).
-                % final_label(F,L):-show_model(true(F,W)), processed((F,_),O), label(O,L).
-                % final_label(F,F):-show_model(true(F,W)), not show(F,_),not label(F,_).
-                % final_label(F,O):-show_model(true(F,W)), processed((F,_),O), not label(F,_).
 
                 elem(elem_container(model(A,W)), container, sub_content(model(W))):-show_model(true(A,W)).
 

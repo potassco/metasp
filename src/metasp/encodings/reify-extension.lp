@@ -1,15 +1,15 @@
-reserved_predicate(output(_show,B)):-
+reserved_predicate(_show):-
     output(_show,B).
 
-reserved_predicate(output(_show(A),B)):-
+reserved_predicate(_show(A)):-
     output(_show(A),B).
 
 
-processed((O,L), @process_output(O)):-output(O,L), not reserved_predicate(output(O, L)).
+match(output(O,L), @match_output(O)):- output(O,L), not reserved_predicate(O).
 
 % Remove the previous output
 hide(output(O,L)):-output(O,L).
 
-% Add the processed output
-#show output(F, L):processed((O,L),F).
-#show sugar(F, O):processed((O,L),F).
+% Add the match output
+#show output(F, L):match(output(O,L),F).
+#show sugar(F, O):match(output(O,L),F).
