@@ -2,8 +2,9 @@
 % Explicit show statements to include in the domain files for the UI to improve performance
 
 #show type/1.
+#show allow/2.
 #show subtype/2.
-#show expression/4.
+#show expression/2.
 #show world/1.
 #show conjunction/2.
 #show output/2.
@@ -15,9 +16,9 @@
 #show true(S,W): true(F,W), sugar(F,S).
 #show true(S,W): true(F,W), sugar(F,S).
 
-#show show_hide/0.
 #show show/2.
-
+#show show/0.
+#show metasp_system/1.
 
 % #show true(F,K) : formula(function,F), true(F,K), not show(_,_), not show_hide.
 

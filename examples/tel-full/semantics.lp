@@ -2,7 +2,6 @@
 #include "metasp.show-time.lp".
 #include "metasp.reify-defined.lp".
 
-#const lambda= horizon+1.
 world(W):-time(W).
 
 % true/0
@@ -27,8 +26,8 @@ true(__initial,0) :- formula(tel,__initial).
 :- true(__initial,K), formula(tel,__initial), K!=0.
 
 % final/0.
-true(__final,lambda-1) :- formula(tel,__final).
-:- true(__final,K), formula(tel,__final), K!=lambda-1.
+true(__final,n) :- formula(tel,__final).
+:- true(__final,K), formula(tel,__final), K!=n.
 
 % next/1
 true(F,K+1): time(K+1) :- formula(tel,__next(F)), true(__next(F),K).

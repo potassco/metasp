@@ -107,7 +107,7 @@ When running a system with `metasp <system_name> solve` the command line will be
     Run a specific system
 
     ```console
-    metasp telingo solve telingo/lights-encoding-preprocessed.lp -c horizon=4
+    metasp telingo solve telingo/lights-encoding-preprocessed.lp -c n=4
     ```
 
     For more examples visit the [Examples](examples/index.md) section.

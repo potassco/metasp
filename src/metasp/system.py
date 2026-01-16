@@ -209,6 +209,7 @@ class MetaSystem:
         """
         with tempfile.NamedTemporaryFile(mode="w", suffix=".lp", delete=False) as tmp_file:
             tmp_file.write("#external shown_type(T): type(T).\n")
+            tmp_file.write("shown_type(atom).\n")
             tmp_file.write(f"metasp_system({self.name}).\n")
 
         files = list(self.get_files(reified_input))

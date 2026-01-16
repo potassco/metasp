@@ -102,6 +102,7 @@ class FormulaRegistery:
     def match_top_level(self, s: Symbol) -> Formula:
         possible_types = self.grammar.allowed_types_in_position()
         errors = []
+        matched_formulas = {}
         if len(possible_types) == 0:
             log.warn(
                 "No types defined in the grammar to be allowed as atoms in the program. Make sure to define at least one type with allow(X,head) or allow(X,body)."
@@ -118,10 +119,22 @@ class FormulaRegistery:
                         p(s),
                         t(possible_type),
                     )
-                    return f
+                    matched_formulas[possible_type] = f
             except ValueError as e:
                 errors.append((possible_type, e))
                 log.debug("Not possible to match with top-level type %s", t(possible_type))
+
+        log.info(f"Matched {p(s)} as types: {matched_formulas.keys()}")
+        if len(matched_formulas) != 0:
+            found_formulas = set([str(f) for f in matched_formulas.values()])
+            if len(found_formulas) > 1:
+                log.warning(
+                    "Multiple type matches but formula %s, but syntactic sugar led to different formulas: %s. "
+                    "This may lead to unexpected results.",
+                    p(s),
+                    found_formulas,
+                )
+            return list(matched_formulas.values())[0]
         for type_name, e in errors:
             log.error(f"Could not match {p(s)} as type {t(type_name)}: {e}")
 

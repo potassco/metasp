@@ -10,7 +10,7 @@ Args:
     T (int): Numerical identifier for the time step.
 *%
 
-time(0..horizon).
+time(0..n).
 
 %*
 conjunction(B, T)
@@ -68,18 +68,19 @@ Args:
 *%
 
 
+
 % True if the literal tuple for the output holds
-% true(O,T) :- output(O,B), time(T), hold(L,T) : literal_tuple(B,L).
+true(O,T) :- output(O,B), conjunction(B, T).
 % If a formula its true, its literal holds
-% hold(L,T) :- output(O,B), time(T), true(O,T),  literal_tuple(B,L).
+hold(L,T) :- output(O,B), true(O,T),  literal_tuple(B,L).
 
 
 % Does it work with facts? I think it works with the preserve-facts flag
 % Does not work with the exising symbol_literal from the show extension because that one does not have the syntactic sugar transformation.
-symbol_literal(S,L):- output(S,B), literal_tuple(B,L).
+% symbol_literal(S,L):- output(S,B), literal_tuple(B,L).
 
-true(S,T) :- symbol_literal(S, L), hold(L,T).
-hold(L,T) :- true(S,T), symbol_literal(S,L).
+% true(S,T) :- symbol_literal(S, L), hold(L,T).
+% hold(L,T) :- true(S,T), symbol_literal(S,L).
 
 
 % For UI

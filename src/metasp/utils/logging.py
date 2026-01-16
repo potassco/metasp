@@ -64,7 +64,7 @@ def configure_logging(stream: TextIO, level: int, use_color: bool) -> None:
     def format_str(color: str) -> str:
         if use_color:
             return f"{COLORS[color]}%(levelname)-5s:{COLORS['GREY']}  - %(message)s{COLORS['NORMAL']}"
-        return "%(levelname)s:  - %(message)s"  # nocoverage
+        return f"%(levelname)s:  - %(message)s {COLORS['NORMAL']}"  # nocoverage
 
     def make_handler(level: int, color: str) -> "logging.StreamHandler[TextIO]":
         handler = logging.StreamHandler(stream)

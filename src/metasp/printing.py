@@ -40,8 +40,8 @@ def temporal_printer(model: Model, system) -> None:
         model (Model): The clingo model to be printed.
         system (MetaSystem): The metasp system.
     """
-    assert "horizon" in system.constants, "system must have a 'horizon' property to use temporal_printer"
-    l = int(system.constants["horizon"]) + 1
+    assert "n" in system.constants, "system must have a 'n' property for the trace length to use temporal_printer"
+    l = int(system.constants["n"]) + 1
     table = {}
     extra_shown = []
     for sym in model.symbols(shown=True):
