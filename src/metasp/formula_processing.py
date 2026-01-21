@@ -172,6 +172,7 @@ class FormulaRegistery:
             self.assert_type_in(as_type, formula_type.all_types, s)
         except ValueError as e:
             log.debug(f"No match of symbol {p(s)} as expression type {t(as_type)}: {e}.")
+            # TODO I am not sure why we apply here the macros again...... In which case did it not fall in the case before?
             new_symbol = self.remove_syntactic_sugar(s, as_type=as_type)
             if new_symbol == s:
                 log.debug(f"No macros applied {p(s)}")
