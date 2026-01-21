@@ -3,6 +3,17 @@ light(l1).
 
 __true:-__initial.
 
+
+&not(&true).
+
+&not/1{
+    type: temporal
+}
+
+#type temporal:{
+    subtypes: {del;tel;}
+}
+
 #external green(L):light(L).
 #external red(L):light(L).
 #external __initial.
