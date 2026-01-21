@@ -145,10 +145,12 @@ class FormulaRegistery:
     @_print_done_decorator
     def match(self, s: Symbol, as_type: str | None = None) -> Formula:
         log.debug(f"▶️ Trying to match symbol {p(s)} as type {t(as_type)}")
-        formula_types = self.grammar.get_fl_type(s)  # Just to raise error if not valid
+        formula_types = self.grammar.get_fl_type(s, as_type=as_type)
         direct_match = len(formula_types) > 0
 
         if not direct_match:
+            # It is an a function that starts with & but has no expression in the grammar
+            # Base cases will not fall in this case
             log.debug(f"Symbol {p(s)} has no direct type or expression, checking macros...")
             formula_types = self.grammar.get_fl_type(
                 s, check_sugar=True, as_type=as_type
@@ -168,17 +170,17 @@ class FormulaRegistery:
             new_formula = self.match(new_symbol, as_type=as_type)
             return self.add_formula(new_formula)
 
-        try:
-            self.assert_type_in(as_type, formula_type.all_types, s)
-        except ValueError as e:
-            log.debug(f"No match of symbol {p(s)} as expression type {t(as_type)}: {e}.")
-            # TODO I am not sure why we apply here the macros again...... In which case did it not fall in the case before?
-            new_symbol = self.remove_syntactic_sugar(s, as_type=as_type)
-            if new_symbol == s:
-                log.debug(f"No macros applied {p(s)}")
-                raise e
-            log.debug(f"Syntactic sugar removed for {p(s)}, matching new symbol {p(new_symbol)}")
-            return self.match(new_symbol, as_type=as_type)
+        # try:
+        #     self.assert_type_in(as_type, formula_type.all_types, s)
+        # except ValueError as e:
+        #     # That is when the formula did match a another type, could be a base type or another expression but was not in the context we need
+        #     log.debug(f"No match of symbol {p(s)} as expression type {t(as_type)}: {e}.")
+        #     new_symbol = self.remove_syntactic_sugar(s, as_type=as_type)
+        #     if new_symbol == s:
+        #         log.debug(f"No macros applied {p(s)}")
+        #         raise e
+        #     log.debug(f"Syntactic sugar removed for {p(s)}, matching new symbol {p(new_symbol)}")
+        #     return self.match(new_symbol, as_type=as_type)
 
         if formula_type.is_base_type:
             log.debug(f"✅ Symbol {p(s)} is base type {t(formula_type.name)}, returning directly")

@@ -213,29 +213,48 @@ class Grammar:
         return Function(sugar_expansion.name, new_args, True)
 
     def get_fl_type(self, s: Symbol, check_sugar: bool = False, as_type: str | None = None) -> List[Type]:
+        possible_types = []
         # --------- Base cases
         if s.type == SymbolType.Number:
-            return self.types.get("number", None)
+            possible_types.append(self.types.get("number", None))
         if s.type == SymbolType.String:
-            return self.types.get("string", None)
+            possible_types.append(self.types.get("string", None))
         if s.type == SymbolType.Infimum:
-            return self.types.get("infimum", None)
+            possible_types.append(self.types.get("infimum", None))
         if s.type == SymbolType.Supremum:
-            return self.types.get("supremum", None)
+            possible_types.append(self.types.get("supremum", None))
         if self.is_atom(s):
-            return self.types.get("atom", None)
+            possible_types.append(self.types.get("atom", None))
+        else:
+            # --------- Expression case
+            name = s.name[len(self._prefix) :]
+            arity = len(s.arguments)
+            expressions = self.get_expression(name, arity)
+            for e in expressions:
+                possible_types.append(self.types.get(e.type_name, None))
 
-        # --------- Expression case
-        name = s.name[len(self._prefix) :]
-        arity = len(s.arguments)
-        expressions = self.get_expression(name, arity)
-        if len(expressions) > 0:
-            return [self.types.get(e.type_name, None) for e in expressions if e is not None]
+        if len(possible_types) > 0:
+            log.debug("Found possible types %s for symbol %s", [t.name for t in possible_types if t], s)
 
+        if as_type is not None:
+            possible_types = [t for t in possible_types if t is not None and as_type in t.all_types]
+
+            log.debug(
+                "After filtering with context %s, possible types are %s for symbol %s",
+                as_type,
+                [t.name for t in possible_types if t],
+                s,
+            )
+
+        if len(possible_types) > 0:
+            return possible_types
+
+        # Macros are only applied if no direct type is found
         if check_sugar:
+            log.debug("No direct type found for symbol %s, checking macros...", s)
             sugar = self.find_macro(s, as_type=as_type)
             if sugar is not None:
-                log.debug("Found sugar %s->%s for symbol %s", sugar.pattern, sugar.expansion, s)
+                log.debug("Found macro %s->%s for symbol %s", sugar.pattern, sugar.expansion, s)
                 log.debug("Will return the type of the expansion %s", sugar.expansion)
                 return self.get_fl_type(sugar.expansion.symbol, check_sugar=True)
 
