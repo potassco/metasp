@@ -108,9 +108,11 @@ class FormulaRegistery:
                 "No types defined in the grammar to be allowed as atoms in the program. Make sure to define at least one type with allow(X,head) or allow(X,body)."
             )
             return None
+        log.debug(f"\n\033[93m{'=' * 30}\033[0m")
+        log.debug(f"🟧 Matching -> {p(s)}")
         for possible_type in possible_types:
-            log.debug(f"\033[94m{'=' * 30}\033[0m")
-            log.debug(f"1️⃣ Trying to match {p(s)} as top level type {t(possible_type)}")
+            log.debug(f"\033[94m{'-' * 30}\033[0m")
+            log.debug(f"🔶 Trying to match {p(s)} as top level type {t(possible_type)}")
             try:
                 f = self.match(s, as_type=possible_type)
                 if f is not None:

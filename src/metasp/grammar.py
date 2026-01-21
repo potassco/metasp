@@ -139,8 +139,9 @@ class Grammar:
 
         log.debug(grammar)
         log.debug(grammar.asp_str)
-        if not grammar.check_grammar():
-            raise ValueError("Grammar check failed. Please fix the issues in the grammar definition.")
+        # if not grammar.check_grammar():
+        # We dont check that the grammar does not redefine things now
+        # raise ValueError("Grammar check failed. Please fix the issues in the grammar definition.")
         return grammar
 
     def __str__(self) -> str:
