@@ -1,25 +1,14 @@
 light(l1).
-red(L) :- not green(L), light(L).
-__next(push(l1)) :- __initial.
+% __eventually(__star(__seq(green(L),red(L))), __final) :-__initial, light(L).
 
-% Once pushed green once then many times green and then red until the end
-% __dia(__seq(__seq(green(L),__star(green(L))),__star(red(L))),__box(__step,__bot)):- push(L).
-% __dia(__star(green(L)),__box(__step,__bot)):- push(L).
+__true:-__initial.
 
-% #show __dia/2.
-% #show __box/2.
-% #show red/0.
-% #show green/0.
-% #show push/0.
-
-
-% #external __star(green(L)):push(L).
-
-#external push(l1).
-#external green(L):push(L).
-#external __box(__step,__bot).
-#external __bot.
+#external green(L):light(L).
+#external red(L):light(L).
 #external __initial.
-#external __top.
 
 
+% #show __box/2.
+% #show __dfinal/0.
+% #external __dfinal.
+% #external __box(__step,__bot).

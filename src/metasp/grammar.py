@@ -139,8 +139,8 @@ class Grammar:
 
         log.debug(grammar)
         log.debug(grammar.asp_str)
-        if not grammar.check_grammar():
-            raise ValueError("Grammar check failed. Please fix the issues in the grammar definition.")
+        # if not grammar.check_grammar():
+        #     raise ValueError("Grammar check failed. Please fix the issues in the grammar definition.")
         return grammar
 
     def __str__(self) -> str:
@@ -212,7 +212,7 @@ class Grammar:
         new_args = [self.apply_sugar_with_vars(type, arg, matched_variables) for arg in sugar_expansion.arguments]
         return Function(sugar_expansion.name, new_args, True)
 
-    def get_fl_type(self, s: Symbol, check_sugar: bool = False, as_type: str | None = None) -> Optional[Type]:
+    def get_fl_type(self, s: Symbol, check_sugar: bool = False, as_type: str | None = None) -> List[Type]:
         # --------- Base cases
         if s.type == SymbolType.Number:
             return self.types.get("number", None)
@@ -228,9 +228,9 @@ class Grammar:
         # --------- Expression case
         name = s.name[len(self._prefix) :]
         arity = len(s.arguments)
-        expression = self.get_expression(name, arity)
-        if expression is not None:
-            return self.types.get(expression.type_name, None)
+        expressions = self.get_expression(name, arity)
+        if len(expressions) > 0:
+            return [self.types.get(e.type_name, None) for e in expressions if e is not None]
 
         if check_sugar:
             sugar = self.find_macro(s, as_type=as_type)
@@ -239,7 +239,7 @@ class Grammar:
                 log.debug("Will return the type of the expansion %s", sugar.expansion)
                 return self.get_fl_type(sugar.expansion.symbol, check_sugar=True)
 
-        return None
+        return []
 
     def find_macro(
         self, s: Symbol, as_type: Optional[str] = None, match_variables: Optional[Dict[str, Symbol]] = None
@@ -273,10 +273,10 @@ class Grammar:
                 raise ValueError(f"Variable {pattern_symbol.name} not defined in grammar.")
             var_types = [v.type_var for v in variables]
             # TODO here I should make it softer to include possible sugar
-            symbol_type = self.get_fl_type(symbol, check_sugar=True)
-
-            valid_type = "any" in var_types or any(v in symbol_type.all_types for v in var_types)
-            if not valid_type:
+            symbol_types = self.get_fl_type(symbol, check_sugar=True)
+            valid_types = ["any"] + [t.all_types for t in symbol_types]
+            is_valid_type = any(v in valid_types for v in var_types)
+            if not is_valid_type:
                 # print(f"  ->Variable {pattern_symbol.name} type mismatch, {var.type.name} != {symbol_type.name}")
                 return False
             matched_variables[pattern_symbol.name] = symbol
@@ -312,12 +312,13 @@ class Grammar:
         return keys
 
     @lru_cache(maxsize=None)
-    def get_expression(self, name: str, arity: int) -> Optional[Expression]:
+    def get_expression(self, name: str, arity: int) -> List[Expression]:
+        expressions = []
         for type_def in self.types.values():
             expression = type_def.expressions.get((str(name), arity), None)
             if expression is not None:
-                return expression
-        return None
+                expressions.append(expression)
+        return expressions
 
     def check_grammar(self) -> bool:
         # Check that there are no two expressions with the same name and arity in different types

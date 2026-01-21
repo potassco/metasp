@@ -108,9 +108,11 @@ class FormulaRegistery:
                 "No types defined in the grammar to be allowed as atoms in the program. Make sure to define at least one type with allow(X,head) or allow(X,body)."
             )
             return None
+        log.debug(f"\n\033[93m{'=' * 30}\033[0m")
+        log.debug(f"🟧 Matching -> {p(s)}")
         for possible_type in possible_types:
-            log.debug(f"\033[94m{'=' * 30}\033[0m")
-            log.debug(f"1️⃣ Trying to match {p(s)} as top level type {t(possible_type)}")
+            log.debug(f"\033[94m{'-' * 30}\033[0m")
+            log.debug(f"🔶 Trying to match {p(s)} as top level type {t(possible_type)}")
             try:
                 f = self.match(s, as_type=possible_type)
                 if f is not None:
@@ -143,15 +145,21 @@ class FormulaRegistery:
     @_print_done_decorator
     def match(self, s: Symbol, as_type: str | None = None) -> Formula:
         log.debug(f"▶️ Trying to match symbol {p(s)} as type {t(as_type)}")
-        formula_type = self.grammar.get_fl_type(s)  # Just to raise error if not valid
-        if formula_type is None:
-            log.debug(f"Symbol {p(s)} has no direct type or expression, checking syntactic sugar")
-            formula_type = self.grammar.get_fl_type(
+        formula_types = self.grammar.get_fl_type(s)  # Just to raise error if not valid
+        direct_match = len(formula_types) > 0
+
+        if not direct_match:
+            log.debug(f"Symbol {p(s)} has no direct type or expression, checking macros...")
+            formula_types = self.grammar.get_fl_type(
                 s, check_sugar=True, as_type=as_type
             )  # Just to raise error if not valid
-            if formula_type is None:
-                log.debug(f"No syntactic sugar found for {p(s)} as type {t(as_type)}.")
-                raise ValueError(f"No expression or syntactic sugar found for symbol {s}.")
+            if len(formula_types) > 1:
+                log.warning(f"Multiple macros found for symbol {p(s)} as types {[t(ft.name) for ft in formula_types]}")
+                log.warning(f"Using first match to apply macro: {t(formula_types[0].name)}")
+            if len(formula_types) == 0:
+                log.debug(f"No macros found for {p(s)} as type {t(as_type)}.")
+                raise ValueError(f"No expression or macro found for symbol {s}.")
+            formula_type = formula_types[0]
             new_symbol = self.remove_syntactic_sugar(s, as_type=as_type)
             same_symbol = new_symbol == s
             if same_symbol:
@@ -159,13 +167,14 @@ class FormulaRegistery:
                 raise ValueError(m)
             new_formula = self.match(new_symbol, as_type=as_type)
             return self.add_formula(new_formula)
+
         try:
             self.assert_type_in(as_type, formula_type.all_types, s)
         except ValueError as e:
-            log.debug(f"No match of symbol {p(s)} as type {t(as_type)}: {e}. Will try to remove sugar.")
+            log.debug(f"No match of symbol {p(s)} as expression type {t(as_type)}: {e}.")
             new_symbol = self.remove_syntactic_sugar(s, as_type=as_type)
             if new_symbol == s:
-                log.debug(f"No syntactic sugar removed for {p(s)}")
+                log.debug(f"No macros applied {p(s)}")
                 raise e
             log.debug(f"Syntactic sugar removed for {p(s)}, matching new symbol {p(new_symbol)}")
             return self.match(new_symbol, as_type=as_type)
@@ -239,7 +248,7 @@ class FormulaRegistery:
                 raise e
         log.debug(f"  All arguments matched!")
         log.debug(
-            f"✅ Symbol {p(s)} is type {t(formula_type.name)}, with expression ({expression.name},{expression.arity})"
+            f"✅ Symbol {p(s)} is type {t(formula_type.name)}, using expression {expression.name}/{expression.arity}"
         )
         new_symbol_fun = Function(name, [a.symbol for a in arguments], True)
         formula = Formula(

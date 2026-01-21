@@ -1,71 +1,68 @@
 %% ------- Fischer Ladner closure --------- %%
-formula(del, __dia(P,__dia(__star(P),F))) :- formula(del, __dia(__star(P),F)).
-formula(del, __box(P,__box(__star(P),F))) :- formula(del, __box(__star(P),F)).
+formula(del, __eventually(P,__eventually(__star(P),F))) :- formula(del, __eventually(__star(P),F)).
+formula(del, __eventually(P1,F)) :- formula(del, __eventually(__choice(P1,P2),F)).
+formula(del, __eventually(P2,F)) :- formula(del, __eventually(__choice(P1,P2),F)).
+formula(del, __eventually(P1,__eventually(P2,F))) :- formula(del, __eventually(__seq(P1,P2),F)).
+formula(del, __eventually(P2,F)) :- formula(del, __eventually(__seq(P1,P2),F)).
 
-formula(del, __dia(P1,F)) :- formula(del, __dia(__choice(P1,P2),F)).
-formula(del, __dia(P2,F)) :- formula(del, __dia(__choice(P1,P2),F)).
-formula(del, __box(P1,F)) :- formula(del, __box(__choice(P1,P2),F)).
-formula(del, __box(P2,F)) :- formula(del, __box(__choice(P1,P2),F)).
-
-formula(del, __box(P1,__box(P2,F))) :- formula(del, __box(__seq(P1,P2),F)).
-formula(del, __box(P2,F)) :- formula(del, __box(__seq(P1,P2),F)). %This had to be included since we don't have rules for subformulas anymore
-formula(del, __dia(P1,__dia(P2,F))) :- formula(del, __dia(__seq(P1,P2),F)).
-formula(del, __dia(P2,F)) :- formula(del, __dia(__seq(P1,P2),F)). %This had to be included since we don't have rules for subformulas anymore
+formula(del, __always(P,__always(__star(P),F))) :- formula(del, __always(__star(P),F)).
+formula(del, __always(P1,F)) :- formula(del, __always(__choice(P1,P2),F)).
+formula(del, __always(P2,F)) :- formula(del, __always(__choice(P1,P2),F)).
+formula(del, __always(P1,__always(P2,F))) :- formula(del, __always(__seq(P1,P2),F)).
+formula(del, __always(P2,F)) :- formula(del, __always(__seq(P1,P2),F)).
 
 
-%% ------- Semantics --------- %%
-% __top/0
-true(__top,K) :- formula(del,__top), time(K).
-% __bot/0
-:- formula(del,__bot), time(K), true(__bot,K).
+% __true/0
+true(__true,K) :- formula(del,__true), time(K).
+% __false/0
+:- formula(del,__false), time(K), true(__false,K).
 
 % dia __step
-true(F,K+1): time(K+1) :- formula(del,__dia(__step,F)), true(__dia(__step,F),K).
-true(__dia(__step,F),K) :- true(F,K+1), formula(del,__dia(__step,F)), time(K).
+true(F,K+1): time(K+1) :- formula(del,__eventually(__step,F)), true(__eventually(__step,F),K).
+true(__eventually(__step,F),K) :- true(F,K+1), formula(del,__eventually(__step,F)), time(K).
 
 % dia __test
-true(F,K) :- formula(del,__dia(__test(F2),F)), true(__dia(__test(F2),F),K).
-true(F2,K) :- formula(del,__dia(__test(F2),F)), true(__dia(__test(F2),F),K).
-true(__dia(__test(F2),F),K) :- true(F,K),true(F2,K), formula(del,__dia(__test(F2),F)).
+true(F,K) :- formula(del,__eventually(__test(F2),F)), true(__eventually(__test(F2),F),K).
+true(F2,K) :- formula(del,__eventually(__test(F2),F)), true(__eventually(__test(F2),F),K).
+true(__eventually(__test(F2),F),K) :- true(F,K),true(F2,K), formula(del,__eventually(__test(F2),F)).
 
 % dia choice
-true(__dia(P1,F),K);true(__dia(P2,F),K) :- true(__dia(__choice(P1,P2),F),K).
-true(__dia(__choice(P1,P2),F),K) :- true(__dia(P1,F),K), formula(del,__dia(__choice(P1,P2),F)).
-true(__dia(__choice(P1,P2),F),K) :- true(__dia(P2,F),K), formula(del,__dia(__choice(P1,P2),F)).
+true(__eventually(P1,F),K);true(__eventually(P2,F),K) :- true(__eventually(__choice(P1,P2),F),K).
+true(__eventually(__choice(P1,P2),F),K) :- true(__eventually(P1,F),K), formula(del,__eventually(__choice(P1,P2),F)).
+true(__eventually(__choice(P1,P2),F),K) :- true(__eventually(P2,F),K), formula(del,__eventually(__choice(P1,P2),F)).
 
 % dia seq
-true(__dia(P1,__dia(P2,F)),K) :- true(__dia(__seq(P1,P2),F),K).
-true(__dia(__seq(P1,P2),F),K):- true(__dia(P1,__dia(P2,F)),K), formula(del, __dia(__seq(P1,P2),F)).
+true(__eventually(P1,__eventually(P2,F)),K) :- true(__eventually(__seq(P1,P2),F),K).
+true(__eventually(__seq(P1,P2),F),K):- true(__eventually(P1,__eventually(P2,F)),K), formula(del, __eventually(__seq(P1,P2),F)).
 
 % dia __star
-true(F,K); true(__dia(P,__dia(__star(P),F)),K):-  true(__dia(__star(P),F),K).
-true(__dia(__star(P),F),K):-  formula(del, __dia(__star(P),F)), true(F,K).
-true(__dia(__star(P),F),K):-  formula(del, __dia(__star(P),F)), true(__dia(P,__dia(__star(P),F)),K).
+true(F,K); true(__eventually(P,__eventually(__star(P),F)),K):-  true(__eventually(__star(P),F),K).
+true(__eventually(__star(P),F),K):-  formula(del, __eventually(__star(P),F)), true(F,K).
+true(__eventually(__star(P),F),K):-  formula(del, __eventually(__star(P),F)), true(__eventually(P,__eventually(__star(P),F)),K).
 
 % box __step
-true(F,K+1):- formula(del,__box(__step,F)), true(__box(__step,F),K), time(K+1).
-true(__box(__step,F),K) :- true(F,K+1), formula(del,__box(__step,F)), time(K).
-true(__box(__step,F),K) :- formula(del,__box(__step,F)), time(K), not time(K+1).
+true(F,K+1):- formula(del,__always(__step,F)), true(__always(__step,F),K), time(K+1).
+true(__always(__step,F),K) :- true(F,K+1), formula(del,__always(__step,F)), time(K).
+true(__always(__step,F),K) :- formula(del,__always(__step,F)), time(K), not time(K+1).
 
 % box __test
-true(F,K) :- formula(del,__box(__test(F2),F)), true(__box(__test(F2),F),K), true(F2,K).
+true(F,K) :- formula(del,__always(__test(F2),F)), true(__always(__test(F2),F),K), true(F2,K).
 % Maybe there is something missing here because implications in HT are different
-true(__box(__test(F2),F),K) :- not true(F2,K), formula(del,__box(__test(F2),F)), time(K).
-true(__box(__test(F2),F),K) :- true(F2,K), true(F,K), formula(del,__box(__test(F2),F)).
+true(__always(__test(F2),F),K) :- not true(F2,K), formula(del,__always(__test(F2),F)), time(K).
+true(__always(__test(F2),F),K) :- true(F2,K), true(F,K), formula(del,__always(__test(F2),F)).
 
 
 % box choice
-true(__box(P1,F),K) :- true(__box(__choice(P1,P2),F),K).
-true(__box(P2,F),K) :- true(__box(__choice(P1,P2),F),K).
-true(__box(__choice(P1,P2),F),K) :- true(__box(P1,F),K), true(__box(P2,F),K), formula(del,__box(__choice(P1,P2),F)).
+true(__always(P1,F),K) :- true(__always(__choice(P1,P2),F),K).
+true(__always(P2,F),K) :- true(__always(__choice(P1,P2),F),K).
+true(__always(__choice(P1,P2),F),K) :- true(__always(P1,F),K), true(__always(P2,F),K), formula(del,__always(__choice(P1,P2),F)).
 
 
 % box seq
-true(__box(P1,__box(P2,F)),K) :- true(__box(__seq(P1,P2),F),K).
-true(__box(__seq(P1,P2),F),K):- true(__box(P1,__box(P2,F)),K), formula(del, __box(__seq(P1,P2),F)).
+true(__always(P1,__always(P2,F)),K) :- true(__always(__seq(P1,P2),F),K).
+true(__always(__seq(P1,P2),F),K):- true(__always(P1,__always(P2,F)),K), formula(del, __always(__seq(P1,P2),F)).
 
 % box __star
-true(F,K):-  true(__box(__star(P),F),K).
-true(__box(P,__box(__star(P),F)),K):-  true(__box(__star(P),F),K).
-true(__box(__star(P),F),K):-  formula(del, __box(__star(P),F)), true(F,K), true(__box(P,__box(__star(P),F)),K).
-
+true(F,K):-  true(__always(__star(P),F),K).
+true(__always(P,__always(__star(P),F)),K):-  true(__always(__star(P),F),K).
+true(__always(__star(P),F),K):-  formula(del, __always(__star(P),F)), true(F,K), true(__always(P,__always(__star(P),F)),K).
