@@ -45,7 +45,7 @@ def replace_prefix(files: List[str], prg: str) -> str:
     return program_str
 
 
-RESERVED_PREDICATES = [("_show", 0), ("_show", 1)]
+RESERVED_PREDICATES = [("_show", 0), ("_show_term", 1), ("_show_atom", 1)]
 
 
 def is_reserved_predicate(symbol: Symbol) -> bool:
