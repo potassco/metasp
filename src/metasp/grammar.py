@@ -77,6 +77,10 @@ class Grammar:
 
     @classmethod
     def from_asp_files(cls, asp_files: Sequence[str]) -> "Grammar":
+        log.debug("Loading grammar from ASP files: %s", asp_files)
+        if len(asp_files) == 0:
+            log.error("Syntax encoding files were not provided to load the grammar.")
+            raise ValueError("Syntax encoding files were not provided to load the grammar.")
         grammar = Grammar()
         try:
             fb = clorm.parse_fact_files(asp_files, clorm_db.UNIFIERS, raise_nonfact=True, raise_nomatch=True)

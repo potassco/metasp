@@ -2,19 +2,26 @@
 The main entry point for the application.
 """
 
+from logging import log
 import sys
 from typing import Optional
 import os
+from networkx import config
 import yaml
 import argparse
 from clingo.application import clingo_main
-from .utils.parser import get_parser
+from metasp.utils.parser import get_parser, load_config
 from metasp.system import MetaSystem
 from metasp.utils.logging import configure_logging
 from metasp.app import make_app
 from metasp.grammar import Grammar
-from metasp import MetaspProcessor
+from metasp import MetaspProcessor, replace_internal_prefix
 import subprocess
+from pprint import pprint
+
+import logging
+
+log = logging.getLogger(__name__)
 
 
 def parse_constants(arguments: list[str]) -> dict[str, str]:
@@ -65,41 +72,64 @@ def main() -> None:
     """
     Run the main function.
     """
-    config = get_configuration()
+    # config = get_configuration()
     constants_dict = parse_constants(sys.argv[2:])
-    if config is not None:
-        meta_systems_configs = {system["name"]: system for system in config.get("metasp-systems", [])}
-        if len(sys.argv) > 2 and sys.argv[1] in list(meta_systems_configs.keys()) and sys.argv[2] == "solve":
-            system = sys.argv[1]
-            app_class = make_app(meta_systems_configs[system].get("control-name", "clingo"))
-            exit_status = clingo_main(
-                app_class(config=meta_systems_configs[system], constants=constants_dict), sys.argv[3:]
-            )
-            sys.exit(exit_status)
-
-    if config is None:
-        print(
-            "\033[93mConfiguration file 'metasp.yml' not found in current directory. Make sure this file exists and defines at least one system to use metasp.\033[0m"
-        )
-        # parser.parse_args({})
+    if len(sys.argv) < 2:
+        print("---------- You need help")
+        parser = get_parser()
+        parser.print_help()
+        # print("Usage: metasp <solve | reify | transform> [options] <files>")
         exit(1)
-    parser = get_parser(config)
+
+    selected_command = sys.argv[1]
+    if selected_command == "solve":
+        system_name = sys.argv[2]
+        App_class = make_app(system_name)
+        exit_status = clingo_main(App_class(constants=constants_dict), sys.argv[3:])
+        sys.exit(exit_status)
+
+    parser = get_parser()
+    args, remaining = parser.parse_known_args()
+
+    defaults = {}
+    if args.meta_config:
+        defaults = load_config(args.meta_config)
+
+    # inject defaults
+    # Set defaults for each subparser instead of the main parser
+    for subparser in parser._subparsers._group_actions:
+        for choice, sub in subparser.choices.items():
+            sub.set_defaults(**defaults)
 
     args = parser.parse_args()
-    configure_logging(sys.stderr, args.log, sys.stderr.isatty())
-    system_config = meta_systems_configs[args.system]
-    meta_system = MetaSystem.from_dict(system_config)
-    meta_system.set_constants(constants_dict)
-    grammar = Grammar.from_asp_files(meta_system.syntax_encoding)
 
+    # pprint(vars(args))
+    configure_logging(sys.stderr, args.log, sys.stderr.isatty())
+
+    args_dict = vars(args)
+    log.debug("Arguments:\n%s", yaml.dump(args_dict))
+    # system_config = meta_systems_configs[args.system]
+    meta_system = MetaSystem.from_dict(args_dict)
+    meta_system.set_constants(constants_dict)
+    try:
+        grammar = Grammar.from_asp_files(meta_system.syntax_encoding)
+    except Exception as e:
+        log.error(f"Error loading grammar from syntax encoding files: {e}")
+        # TODO maybe more specific error message for syntax errors
+        log.error(
+            "Make sure the path to the syntax encoding files is correct (if using a config file, it should be relative where metasp is run)."
+        )
+        raise e
     processor = MetaspProcessor(grammar)
+    if len(args.files) == 0:
+        log.warning("No input files provided.")
     transformed_input = processor.fo_transform(args.files, "")
     if args.output == "transform":
-        sys.stdout.write(transformed_input + "\n")
+        sys.stdout.write(replace_internal_prefix(transformed_input) + "\n")
         exit(0)
     reified = processor.reify_and_extend(transformed_input, constants_dict)
     if args.output == "reify":
-        sys.stdout.write(reified + "\n")
+        sys.stdout.write(replace_internal_prefix(reified) + "\n")
         exit(0)
     if args.output == "ui":
         print("Running in user interface mode. Use Ctrl+C to exit.")

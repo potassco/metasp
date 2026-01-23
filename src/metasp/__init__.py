@@ -24,6 +24,17 @@ from metasp.preprocess import preprocess
 log = logging.getLogger(__name__)
 
 
+def replace_internal_prefix(prg: str) -> str:
+    """
+    Replaces the __ prefix by & in the program.
+    Used to show the output to the user.
+
+    Args:
+        prg (str): The program string to process.
+    """
+    return prg.replace("__", "&")
+
+
 def replace_prefix(files: List[str], prg: str) -> str:
     """
     Replaces the & prefix by __ in the files and program.
@@ -145,11 +156,12 @@ class MetaspProcessor:
         )
         simple_reified_prg = "\n".join([f"{str(s)}." for s in rsymbols])
         log.debug("---------- Classic reification \n" + simple_reified_prg + "\n-------------------")
-        reified_prg = "\n%%%%%%%%%% REIFIED INPUT %%%%%%%%%%%%\n"
+
+        reified_prg = self.grammar.asp_str
+
+        reified_prg += "\n%%%%%%%%%% REIFIED INPUT %%%%%%%%%%%%\n"
         reified_prg += meta_tools.extend_reification(
             reified_out_prg=simple_reified_prg, extensions=self.extensions, clean_output=True
         )
-
-        reified_prg += self.grammar.asp_str
 
         return reified_prg

@@ -78,15 +78,16 @@ class MetaSystem:
         Returns:
             MetaSystem: An instance of the MetaSystem class.
         """
+        log.debug(f"Creating MetaSystem from config: {config}")
         return cls(
-            name=config["name"],
-            control_name=config["control-name"],
-            syntax_encoding=config["syntax-encoding"],
-            semantics_encoding=config["semantics-encoding"],
-            ui_encoding=config.get("ui-encoding", []),
+            name=config.get("name", "metasp"),
+            control_name=config.get("control_name", "clingo"),
+            syntax_encoding=config.get("syntax_encoding", []),
+            semantics_encoding=config.get("semantics_encoding", []),
+            ui_encoding=config.get("ui_encoding", []),
             print_model=config.get("printer", None),
-            constants=config.get("constants", []),
-            python_scripts=config.get("python-scripts", []),
+            constants=config.get("required_constants", []),
+            python_scripts=config.get("python_scripts", []),
         )
 
     def _replace_package_includes(self, file: str) -> str:
@@ -154,10 +155,9 @@ class MetaSystem:
         """
         for const in self.required_constants:
             if const not in constants:
-                log.error(f"You must provide the constant {const} to run the system.")
-                raise ValueError(f"You must provide the constant {const} to run the system.")
-            # Create a new attribute in the class with this constant
-            self.constants[const] = constants[const]
+                log.error(f"You must provide the constant {const}  to run the system, using -c {const}=<val>.")
+                raise ValueError(f"You must provide the constant  {const} to run the system, using -c {const}=<val>.")
+        self.constants = constants.copy()
 
     def get_out_dir(self) -> str:
         """Get the output directory for the system output files.
@@ -170,6 +170,7 @@ class MetaSystem:
             str: The output directory path.
         """
         if not self.semantics_encoding:
+            log.error("No semantics encoding files specified.")
             raise ValueError("No semantics encoding files specified.")
         out_dir = os.path.join(os.path.dirname(os.path.abspath(self.semantics_encoding[0])), "out")
         os.makedirs(out_dir, exist_ok=True)

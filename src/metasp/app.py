@@ -1,3 +1,4 @@
+import json
 import sys
 import logging
 import textwrap
@@ -7,6 +8,8 @@ from clingo import Model
 from clingo.application import Application, ApplicationOptions
 from clingcon.__main__ import ClingconApp
 from fclingo.__main__ import FclingoApp
+
+from metasp.utils.parser import load_config
 
 from .utils.logging import configure_logging
 from .system import MetaSystem
@@ -20,6 +23,10 @@ log = logging.getLogger(__name__)
 class ClingoApp(Application):
     def __init__(self, name):
         self.program_name = name
+
+    def print_model(self, model: Model, printer) -> None:
+        model_symbols = " ".join([str(s).replace("__", "&") for s in model.symbols(shown=True)])
+        sys.stdout.write(model_symbols + "\n")
 
     def main(self, ctl, files):
         for f in files:
@@ -53,8 +60,9 @@ def get_app_by_name(app_name: str) -> Optional[Application]:
         Optional[ClingoControl]: The application wrapper or None if not found.
     """
     if app_name not in APPS_BY_NAME:
-        log.error("Application '%s' not found. Available applications: %s", app_name, list(APPS_BY_NAME.keys()))
-        raise ValueError(f"Application '{app_name}' not found.")
+        msg = f"Control name '{app_name}' not found. Available options: {list(APPS_BY_NAME.keys())}"
+        log.error(msg)
+        raise ValueError(msg)
     return APPS_BY_NAME.get(app_name, None)
 
 
@@ -63,7 +71,7 @@ def make_app(app_name: str) -> Application:
     base_class = get_app_by_name(app_name)
 
     class MetaspApp(base_class):
-        def __init__(self, config: dict, constants=None):
+        def __init__(self, constants=None):
             """
             Create application
 
@@ -72,8 +80,9 @@ def make_app(app_name: str) -> Application:
                 constants (Optional[dict], optional): The constants required by the system that will become attributes. Defaults to None.
             """
             super().__init__(f"Metasp ({base_class})")
-            self.metasp_config = config
             self.constants = constants or {}
+            self.metasp_config = {}
+            self.metasp_config_file = None
             self._log_level = "warning"
             enable_python()
 
@@ -96,6 +105,32 @@ def make_app(app_name: str) -> Application:
 
             return True
 
+        def parse_system_config(self, name, type="str") -> callable:
+            def parse_option(value):
+                if type == "list":
+                    if name not in self.metasp_config:
+                        self.metasp_config[name] = []
+                    self.metasp_config[name].append(value)
+                else:
+                    self.metasp_config[name] = value
+                return True
+
+            return parse_option
+
+        def parse_config(self, config_file):
+            """
+            Parse configuration file
+
+            Args:
+                config_file (str): The path to the configuration file.
+            Returns:
+                bool: True if the configuration file is valid, False otherwise.
+            """
+            if config_file is not None:
+                self.metasp_config_file = config_file
+                return True
+            return False
+
         def register_options(self, options: ApplicationOptions) -> None:
             """
             Add custom options
@@ -109,12 +144,95 @@ def make_app(app_name: str) -> Application:
                 "log",
                 textwrap.dedent(
                     """\
-                    Provide logging level.
+                    Logging level.
                                                 <level> ={debug|info|error|warning}
-                                                (default: warning)\033[0m"""
+                                                (default: warning)"""
                 ),
                 self.parse_log_level,
                 argument="<level>",
+            )
+            options.add(
+                group,
+                "syntax-encoding",
+                textwrap.dedent(
+                    """\
+                    Path to syntax encoding files with the grammar.
+                                                (default: None)"""
+                ),
+                self.parse_system_config("syntax_encoding", "list"),
+                multi=True,
+                argument="<file>",
+            )
+            options.add(
+                group,
+                "semantics-encoding",
+                textwrap.dedent(
+                    """\
+                    Path to semantics encoding defining the semantic extension.
+                                                (default: None)"""
+                ),
+                self.parse_system_config("semantics_encoding", "list"),
+                multi=True,
+                argument="<file>",
+            )
+            options.add(
+                group,
+                "required-constants",
+                textwrap.dedent(
+                    """\
+                    Constants required to run the system.
+                                                (default: None)"""
+                ),
+                self.parse_system_config("required_constants", "list"),
+                multi=True,
+                argument="<file>",
+            )
+            options.add(
+                group,
+                "ui-encoding",
+                textwrap.dedent(
+                    """\
+                    Path to ui encoding files extending basic encoding for interactivity.
+                                                (default: None)"""
+                ),
+                self.parse_system_config("ui_encoding", "list"),
+                multi=True,
+                argument="<file>",
+            )
+            options.add(
+                group,
+                "printer",
+                textwrap.dedent(
+                    """\
+                    Name for the printing function to use for models. By defaults uses clingo print
+                                                (default: None)"""
+                ),
+                # TODO add list of available ones
+                self.parse_system_config("printer", "str"),
+                argument="<file>",
+            )
+            options.add(
+                group,
+                "python-scripts",
+                textwrap.dedent(
+                    """\
+                    Path to python scripts to load before running the system. These files can contain custom printing functions.
+                                                (default: None)"""
+                ),
+                self.parse_system_config("python_scripts", "list"),
+                multi=True,
+                argument="<file>",
+            )
+            options.add(
+                group,
+                "meta-config",
+                textwrap.dedent(
+                    """\
+                    Optional path to metasp yaml configuration file, setting the arguments for the system (Use to avoid long command lines).
+                                                (default: None)\033[0m"""
+                ),
+                self.parse_config,
+                argument="<file>",
             )
             super().register_options(options)
 
@@ -125,11 +243,13 @@ def make_app(app_name: str) -> Application:
             Args:
                 model (Model): The model to print.
             """
+            log.debug(
+                "\n".join([str(s).replace("__", "&") for s in model.symbols(atoms=True, shown=True, theory=True)])
+            )
             if self.meta_system.print_model is not None:
                 self.meta_system.print_model(model)
             else:
                 super().print_model(model, printer)
-            log.debug("\n".join([str(s) for s in model.symbols(atoms=True, shown=True, theory=True)]))
 
         def main(self, control, files):
             """
@@ -139,10 +259,23 @@ def make_app(app_name: str) -> Application:
             configure_logging(sys.stdout, log_level_num, use_color=True)
             log = logging.getLogger("metasp")
 
-            log.info(f"=== Running meta system: '{self.name}' ===")
-            log.debug(f"Config: {self.metasp_config}")
-            log.debug(f"Constants: {self.constants}")
-            log.debug(f"Input files: {files}")
+            metasp_system_final_config = {}
+            if self.metasp_config_file is not None:
+                metasp_system_final_config = load_config(self.metasp_config_file)
+                log.debug("Loaded config from file: %s %s", self.metasp_config_file, metasp_system_final_config)
+            # Update self.metasp_config with values from metasp_system_final_config
+
+            metasp_system_final_config.update(self.metasp_config)
+
+            self.metasp_config = metasp_system_final_config
+
+            if "control_name" in self.metasp_config and self.metasp_config["control_name"] != app_name:
+                msg = f"Control name '{self.metasp_config['control_name']}' in configuration does not match the used control name '{app_name}'"
+                log.error(msg)
+                raise ValueError(msg)
+            log.info(f"=== Running meta system: ===")
+            log.info(f"Config: {json.dumps(self.metasp_config, indent=12)}")
+            log.info(f"Input files: {files}")
 
             self.meta_system = MetaSystem.from_dict(self.metasp_config)
 
@@ -153,6 +286,7 @@ def make_app(app_name: str) -> Application:
             transformed_input = processor.fo_transform(files, "")
             reified = processor.reify_and_extend(transformed_input, self.constants)
             final_files = self.meta_system.get_files(reified)
+
             super().main(control, final_files)
 
     return MetaspApp

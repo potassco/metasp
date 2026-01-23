@@ -1,0 +1,12 @@
+syntax-encoding:
+  - "./syntax.lp"
+semantics-encoding:
+  - "./semantics.lp"
+printer: mel_printer
+python-scripts:
+  - "./print_functions.py"
+ui-encoding:
+  - "./ui.lp"
+required-constants:
+  - "n"
+control-name: clingcon
