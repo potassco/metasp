@@ -2,14 +2,34 @@ import os
 import re
 import logging
 import importlib.util
+import tempfile
 from collections.abc import Sequence
-from typing import Callable, Optional
-from clingo import Control
-from metasp.base_solver import get_base_solver_class
-from metasp.preprocess import preprocess, reify
+from typing import Optional
 from metasp.printing import __dict__ as metasp_printing_dict
 
 log = logging.getLogger(__name__)
+
+ENCODINGS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "encodings")
+
+
+def get_clinguin_backend_control(control_name: str) -> str:
+    """
+    Get the Clinguin backend control for the given name.
+
+    Args:
+        control_name (str): The name of the control.
+    Returns:
+        str: The clinguin backend name
+    """
+    if control_name == "clingcon":
+        return "ClingconBackend"
+    elif control_name == "clingo":
+        return "ClingoBackend"
+    elif control_name == "fclingo":
+        return "FclingoBackend"
+    else:
+        log.error("Control '%s' has no backend for clinguin.", control_name)
+        raise ValueError(f"Control '{control_name}' is not a valid backend for clinguin.")
 
 
 class MetaSystem:
@@ -20,27 +40,31 @@ class MetaSystem:
     def __init__(
         self,
         name: str,
-        solver: str,
+        control_name: str,
         syntax_encoding: Sequence[str],
         semantics_encoding: Sequence[str],
-        print_model: str = "default_print_model",
+        ui_encoding: Optional[Sequence[str]] = None,
+        print_model: Optional[str] = None,
         constants: Optional[Sequence[str]] = None,
         python_scripts: Optional[Sequence[str]] = None,
     ):
         """
-        Initialize the System with its name, solver, and encodings.
+        Initialize the System with its name, control_name, and encodings.
 
         Args:
             name (str): The name of the system.
-            solver (str): The solver to be used.
+            control_name (str): The control wrapper to be used.
             syntax_encoding (Sequence[str]): The encoding for the syntax.
             semantics_encoding (Sequence[str]): The encoding for the semantics.
+            ui_encoding (Sequence[str]): The additional encodings for the clinguin UI.
         """
         self.name = name
-        self.solver_name = solver
+        self.control_name = control_name
         self.syntax_encoding = syntax_encoding
         self.semantics_encoding = semantics_encoding
-        self.constants = constants or []
+        self.ui_encoding = ui_encoding or []
+        self.required_constants = constants or []
+        self.constants = {}
         self.python_scripts = python_scripts or []
         self._set_printing_function(print_model)
 
@@ -54,14 +78,16 @@ class MetaSystem:
         Returns:
             MetaSystem: An instance of the MetaSystem class.
         """
+        log.debug(f"Creating MetaSystem from config: {config}")
         return cls(
-            name=config["name"],
-            solver=config["solver"],
-            syntax_encoding=config["syntax-encoding"],
-            semantics_encoding=config["semantics-encoding"],
-            print_model=config.get("print-model", "default_print_model"),
-            constants=config.get("constants", []),
-            python_scripts=config.get("python-scripts", []),
+            name=config.get("name", "metasp"),
+            control_name=config.get("control_name", "clingo"),
+            syntax_encoding=config.get("syntax_encoding", []),
+            semantics_encoding=config.get("semantics_encoding", []),
+            ui_encoding=config.get("ui_encoding", []),
+            print_model=config.get("printer", None),
+            constants=config.get("required_constants", []),
+            python_scripts=config.get("python_scripts", []),
         )
 
     def _replace_package_includes(self, file: str) -> str:
@@ -73,13 +99,12 @@ class MetaSystem:
         Returns:
             str: The processed file name with package includes.
         """
-        metasp_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "encodings")
         log.debug(f"Processing file: {file}")
         with open(file, "r") as f:
             file_content = f.read()
             file_content = re.sub(
                 r'#include\s+"metasp\.([^"]+)"',
-                lambda m: f'#include "{os.path.join(metasp_path, m.group(1))}"',
+                lambda m: f'#include "{os.path.join(ENCODINGS_PATH, m.group(1))}"',
                 file_content,
             )
         title = "\n\n%%%%%% File: {} %%%%%%\n\n".format(file)
@@ -92,6 +117,9 @@ class MetaSystem:
         Raises:
             ValueError: If the printing function is not found.
         """
+        if print_model_name is None:
+            self.print_model = None
+            return
         script_functions = {}
         for script_path in self.python_scripts:
             log.debug(f"Loading python script: {script_path}")
@@ -116,59 +144,84 @@ class MetaSystem:
 
         self.print_model = lambda model: printing_func(model, self)
 
-    def _set_constants(self, constants: Sequence[str]) -> None:
+    def set_constants(self, constants: dict[str, str]) -> None:
         """
         Parse the constants and add them to the system.
 
         Args:
-            constants (Sequence[str]): The constants to be added to the system.
+            constants (dict[str, str]): The constants to be added to the system.
         Raises:
             ValueError: If a required constant is not provided.
         """
-        input_consts = {c.split("=")[0]: c.split("=")[1] for c in constants}
-        for const in self.constants:
-            if const not in input_consts:
-                log.error(f"You must provide the constant {const} to run the system.")
-                raise ValueError(f"You must provide the constant {const} to run the system.")
-            # Create a new attribute in the class with this constant
-            setattr(self, const, input_consts[const])
+        for const in self.required_constants:
+            if const not in constants:
+                log.error(f"You must provide the constant {const}  to run the system, using -c {const}=<val>.")
+                raise ValueError(f"You must provide the constant  {const} to run the system, using -c {const}=<val>.")
+        self.constants = constants.copy()
 
-    def meta_solve(self, control: Control, reified_input: str, on_model: Optional[Callable] = None) -> None:
+    def get_out_dir(self) -> str:
+        """Get the output directory for the system output files.
+
+        TODO: This generates issues when we want to have include statements in the semantics encoding because we must consider the nesting.
+        Raises:
+            ValueError: If no semantics encoding files are specified.
+
+        Returns:
+            str: The output directory path.
         """
-        Last step where using the control object from the application class
-        it will solve the reified input with the program semantics.
-        The semantics are transformed to allow the include statements for metasp files.
+        if not self.semantics_encoding:
+            log.error("No semantics encoding files specified.")
+            raise ValueError("No semantics encoding files specified.")
+        out_dir = os.path.join(os.path.dirname(os.path.abspath(self.semantics_encoding[0])), "out")
+        os.makedirs(out_dir, exist_ok=True)
+        return out_dir
+
+    def get_files(self, reified_input: str) -> Sequence[str]:
+        """
+        Get the list of files to be used for the system.
 
         Args:
-            control (Control): The clingo control object with the command line options from the application class.
-            reified_input (str): The reified input data to be solved.
-            on_model (Optional[Callable]): Optional callback function to be called on each model found. Useful for testing and custom API usage.
+            reified_input (str): The reified input to be included in the files.
+
+        Returns:
+            Sequence[str]: The list of file paths to be used.
         """
-
-        # Program to avoid warnings
-        reify_defined_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "encodings", "reify-defined.lp")
-
         semantics_with_includes = "\n".join([self._replace_package_includes(f) for f in self.semantics_encoding])
-        self.base_solver.load(reified_input + semantics_with_includes, self.syntax_encoding + [reify_defined_file])
-        self.base_solver.ground()
-        self.base_solver.solve(on_model=self.base_solver.create_on_model(on_model=on_model))
 
-    def main(self, control: Control, constants: Sequence[str], files: Sequence[str]) -> None:
+        out_dir = self.get_out_dir()
+        tmp_file_path = os.path.join(out_dir, f"{self.name}_combined.lp")
+        with open(tmp_file_path, "w") as tmp_file:
+            tmp_file.write(semantics_with_includes)
+            tmp_file.write("\n")
+            tmp_file.write(reified_input)
+
+        log.info(f"Saved combined input to temporary file: {tmp_file_path}")
+
+        return [tmp_file_path] + list(self.syntax_encoding)
+
+    def clinguin_command(self, reified_input: str) -> Sequence[str]:
         """
-        Run the system. It will create the base solver, preprocess the input files,
-        reify the input and call the meta_solve method to solve the reified input
-        using the semantics encoding.
+        Generate the clinguin command for the system. With the given reified input.
 
         Args:
-            control: The  clingo control object with the command line options from the application class.
-            Will be used in the last step to solve given the reified program.
-            constants: The list of constants to be, tho they might have been added to the control already,
-            we need them explicitly to use them in the reification.
-            files: The list of files to process.
+            reified_input (str): The reified input data to be solved.
+        Returns:
+            str: The clinguin command to be executed.
         """
-        self._set_constants(constants)
-        log.info("Running system with base solver %s", self.solver_name)
-        self.base_solver = get_base_solver_class(self.solver_name)(control, constants)
-        processed_input = preprocess(files, constants, self.syntax_encoding)
-        reified_input = reify(processed_input, constants)
-        self.meta_solve(control, reified_input)
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".lp", delete=False) as tmp_file:
+            tmp_file.write("#external shown_type(T): type(T).\n")
+            tmp_file.write("shown_type(atom).\n")
+            tmp_file.write(f"metasp_system({self.name}).\n")
+
+        files = list(self.get_files(reified_input))
+        files.append(tmp_file.name)
+        files.append(os.path.join(ENCODINGS_PATH, "ui-show.lp"))
+        command = ["clinguin", "client-server", "--domain-files"] + files
+        command += ["--ui-files", os.path.join(ENCODINGS_PATH, "ui.lp")]
+        command += self.ui_encoding
+        command += [f"-c {k}={v}" for k, v in self.constants.items()]
+        backend_name = get_clinguin_backend_control(self.control_name)
+        command += ["--backend", backend_name]
+        command += ["--explicit-show"]
+        # command += ["--server-log-level", "DEBUG"]
+        return command

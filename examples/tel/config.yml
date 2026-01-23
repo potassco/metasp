@@ -1,0 +1,9 @@
+syntax-encoding:
+  - "./syntax.lp"
+semantics-encoding:
+  - "./semantics.lp"
+printer: temporal_printer
+ui-encoding:
+  - "./ui.lp"
+required-constants:
+  - "n"

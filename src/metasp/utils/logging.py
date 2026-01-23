@@ -25,6 +25,17 @@ COLORS = {
 }
 
 
+def _print_done_decorator(func):
+    def wrapper(self, *args, **kwargs):
+        try:
+            log.debug("*" * 30)
+            return func(self, *args, **kwargs)
+        finally:
+            log.debug("*" * 30 + "\n")
+
+    return wrapper
+
+
 class SingleLevelFilter(logging.Filter):
     """
     Filter levels.
@@ -52,8 +63,8 @@ def configure_logging(stream: TextIO, level: int, use_color: bool) -> None:
 
     def format_str(color: str) -> str:
         if use_color:
-            return f"{COLORS[color]}%(levelname)s:{COLORS['GREY']}  - %(message)s{COLORS['NORMAL']}"
-        return "%(levelname)s:  - %(message)s"  # nocoverage
+            return f"{COLORS[color]}%(levelname)-5s:{COLORS['GREY']}  - %(message)s{COLORS['NORMAL']}"
+        return f"%(levelname)s:  - %(message)s {COLORS['NORMAL']}"  # nocoverage
 
     def make_handler(level: int, color: str) -> "logging.StreamHandler[TextIO]":
         handler = logging.StreamHandler(stream)

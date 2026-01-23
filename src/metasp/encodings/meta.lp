@@ -45,7 +45,7 @@ Args:
 true(O)
 ............
 The output `O` is true. It is equivalent to `hold/1`, but this predicate uses the atom and not the literal number.
-Therefor it can be used and derived in the semantics encoding to define truth of formulas that use modalities.
+Therefor it can be used and derived in the semantics encoding to define truth of formulas that use types in the grammar.
 
 Args:
     O (atom): Value to be output.

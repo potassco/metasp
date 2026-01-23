@@ -42,14 +42,14 @@ Notice that one file might define multiple systems or versions of a system that 
 metasp-systems:
   - name: <system_name>
     description: "<Brief description of the meta-system>"
-    solver: <solver_name>
+    control-name: <solver_name>
     syntax-encoding:
       - "<path/to/syntax.lp>"
     semantics-encoding:
       - "<path/to/semantics.lp>"
     python-scripts:
       - "<path/to/script.py>"
-    print-model: <python_function_to_print_model>
+    printer: <python_function_to_print_model>
     constants:
       - "<constant_name>"
 ```
@@ -58,11 +58,11 @@ metasp-systems:
 
 - `name`: Unique identifier for the meta-system. It will be made available in the command line as  `metasp <system_name>`
 - `description`: Short summary of the system's purpose for rendering help.
-- `solver`: Backend solver to use (e.g., `clingcon`, `clingo`), see [Solvers](reference/solver.md).
+- `controls`: Backend controls to use (e.g., `clingcon`, `clingo`), see [Controls](reference/controls.md).
 - `syntax-encoding`: List of relative paths to ASP files encoding the input language syntax, see [Syntax](reference/syntax.md).
 - `semantics-encoding`: List of relative paths to ASP files encoding the system's semantics, see [Semantics](reference/semantics.md).
 - `python-scripts`: Optional Python scripts for custom processing or printing, see [Printing](reference/print.md).
-- `print-model`: Python function (from scripts) to format output models, see [Printing](reference/print.md).
+- `printer`: Python function (from scripts) to format output models, see [Printing](reference/print.md).
 - `constants`: List of constant parameters required by the system, each constant in this list will generate a corresponding attribute in the system. This attribute can be used in the printing of the model. In case the constant is not provided, an error will be raised.
 
 You can define multiple systems by adding more entries to the `metasp-systems` list. Adjust paths and options as needed for your use case.
@@ -77,7 +77,18 @@ metasp -h
 
 This will list the available systems based on the configuration, where each system can be selected for execution using their name.
 
-When running a system with `metasp <system_name>` will be an extension of the command line options provided by the underlying solver, such as `clingo` or `clingcon`. The system will automatically handle the reification of the input and semantics encoding, while making available the command line options for the solver.
+Once a system is selected, the next command is the type of output.
+
+**Available output options for meta-systems:**
+
+- `solve`: Solve the processed and reified input files using the meta encoding for semantics.
+- `extend`: Output the extended input and perform syntactic checks.
+- `reify`: Output the reified input.
+- `ui`: Launch the user interface using [clinguin](https://clinguin.readthedocs.io/en/latest/).
+
+Choose one of these options after selecting a system to specify the desired output or interaction mode.
+
+When running a system with `metasp <system_name> solve` the command line will be an extension of the command line options provided by the underlying solver, such as `clingo` or `clingcon`. The system will automatically handle the reification of the input and semantics encoding, while making available the command line options for the solver.
 
 !!! example
 
@@ -96,7 +107,7 @@ When running a system with `metasp <system_name>` will be an extension of the co
     Run a specific system
 
     ```console
-    metasp telingo telingo/lights-encoding-preprocessed.lp -c horizon=4
+    metasp telingo solve telingo/lights-encoding-preprocessed.lp -c n=4
     ```
 
     For more examples visit the [Examples](examples/index.md) section.

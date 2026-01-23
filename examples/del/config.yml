@@ -1,0 +1,12 @@
+syntax-encoding:
+  - "./syntax.lp"
+  - "../tel/syntax.lp"
+semantics-encoding:
+  - "./semantics.lp"
+  - "../tel/semantics.lp"
+printer: temporal_printer
+ui-encoding:
+  - "./ui.lp"
+  - "../tel/ui.lp"
+required-constants:
+  - "n"
