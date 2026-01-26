@@ -6,7 +6,7 @@ Custom printing functions can be provided by adding the script in the configurat
 import logging
 from typing import Callable, Optional
 from clingo import Model, Symbol, SymbolType, Function, Number
-from metasp.utils.log import COLORS
+from metasp.utils.logging_utils import COLORS
 import sys
 
 log = logging.getLogger(__name__)

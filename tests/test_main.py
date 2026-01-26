@@ -5,8 +5,8 @@ Test cases for main application functionality.
 from io import StringIO
 from unittest import TestCase
 
-from metasp.utils import log
-from metasp.utils.log import configure_logging, get_logger
+from metasp.utils import logging_utils
+from metasp.utils.logging_utils import configure_logging, get_logger
 from metasp.utils.parser import get_parser
 
 
@@ -20,7 +20,7 @@ class TestMain(TestCase):
         Test the logger.
         """
         sio = StringIO()
-        configure_logging(sio, logging.INFO, True)
+        configure_logging(sio, logging_utils.INFO, True)
         log = get_logger("main")
         log.info("test123")
         self.assertRegex(sio.getvalue(), "test123")
@@ -31,4 +31,4 @@ class TestMain(TestCase):
         """
         parser = get_parser()
         ret = parser.parse_args(["--log", "info"])
-        self.assertEqual(ret.log, logging.INFO)
+        self.assertEqual(ret.log, logging_utils.INFO)

@@ -11,7 +11,7 @@ from fclingo.__main__ import FclingoApp
 
 from metasp.utils.parser import load_config
 
-from .utils.log import configure_logging
+from .utils.logging_utils import configure_logging
 from .system import MetaSystem
 from metasp.grammar import Grammar
 from metasp import MetaspProcessor

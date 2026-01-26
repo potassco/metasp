@@ -6,7 +6,7 @@ from clingo import Control, Symbol
 from collections.abc import Callable, Sequence
 from metasp.grammar import Grammar, Type
 from clingo import SymbolType, Function
-from metasp.utils.log import COLORS
+from metasp.utils.logging_utils import COLORS
 from meta_tools import classic_reify, extend_reification, transform
 from meta_tools.extensions import ShowExtension
 from meta_tools.extensions.base_extension import ReifyExtension

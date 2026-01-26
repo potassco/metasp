@@ -12,7 +12,7 @@ import yaml
 from rich_argparse import ArgumentDefaultsRichHelpFormatter
 from rich.text import Text
 
-from . import logging
+from metasp.utils import logging_utils
 
 __all__ = ["get_parser"]
 
@@ -32,10 +32,10 @@ ascii_art_metasp = Text(
 )
 
 levels = [
-    ("error", logging.ERROR),
-    ("warning", logging.WARNING),
-    ("info", logging.INFO),
-    ("debug", logging.DEBUG),
+    ("error", logging_utils.ERROR),
+    ("warning", logging_utils.WARNING),
+    ("info", logging_utils.INFO),
+    ("debug", logging_utils.DEBUG),
 ]
 
 
