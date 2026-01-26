@@ -64,7 +64,7 @@ aspen(exception(node(ExpDef),
 % from an extended root node through metasp function nodes
 
 root_metasp_symbol(N) :- type(N, "metasp_symbolic_atom").
-root_metasp_symbol(N) :- macro_root_symbol(N).
+root_metasp_symbol((Head;Body)) :- macro(_,Head,Body).
 root_metasp_symbol(N)
   :- type(S,"show_term"),
 		 child(S,N),

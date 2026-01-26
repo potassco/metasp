@@ -67,10 +67,10 @@ macro(TypeName, MacroHead, MacroBody)
 		 child(Macros, MacroDef),
 		 type(MacroDef, "metasp_macro_definition"),
 		 child(MacroDef, MacroHead),
-		 type(MacroHead, "metasp_function"),
+		 type(MacroHead, ("metasp_function";"identifier")),
 		 child_index(MacroHead, 0),
 		 child(MacroDef, MacroBody),
-		 type(MacroBody, "metasp_function"),
+		 type(MacroBody, ("metasp_function";"identifier")),
 		 child_index(MacroBody, 2).
 
 % var
