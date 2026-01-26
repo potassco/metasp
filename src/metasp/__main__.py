@@ -110,6 +110,7 @@ def main() -> None:
     # system_config = meta_systems_configs[args.system]
     meta_system = MetaSystem.from_dict(args_dict)
     meta_system.set_constants(constants_dict)
+    transformed_input = meta_system.fo_transform(args.files, "")
     try:
         grammar = Grammar.from_asp_files(meta_system.syntax_encoding)
     except Exception as e:
@@ -122,7 +123,6 @@ def main() -> None:
     processor = MetaspProcessor(grammar)
     if len(args.files) == 0:
         log.warning("No input files provided.")
-    transformed_input = processor.fo_transform(args.files, "")
     if args.output == "transform":
         sys.stdout.write(replace_internal_prefix(transformed_input) + "\n")
         exit(0)

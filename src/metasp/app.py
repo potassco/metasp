@@ -263,11 +263,10 @@ def make_app(app_name: str) -> Application:
 
             self.meta_system = MetaSystem.from_dict(self.metasp_config)
 
-            grammar = Grammar.from_asp_files(self.meta_system.syntax_encoding)
             self.meta_system.set_constants(self.constants)
-            # processed_input = preprocess(files, self.constants, grammar)
+            transformed_input = self.meta_system.fo_transform(files, "")
+            grammar = Grammar.from_asp_files(self.meta_system.syntax_encoding)
             processor = MetaspProcessor(grammar)
-            transformed_input = processor.fo_transform(files, "")
             reified = processor.reify_and_extend(transformed_input, self.constants)
             final_files = self.meta_system.get_files(reified)
 

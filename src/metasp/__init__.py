@@ -122,21 +122,7 @@ class MetaspProcessor:
 
     def __init__(self, grammar: Grammar) -> None:
         self.grammar = grammar
-        self.extensions = [ShowExtension(), MetaspExtension(grammar=grammar)]
-
-    def fo_transform(self, files: List[str], prg: str) -> str:
-        """
-        Transforms a list of files and a program string and returns a string with the transformation.
-        The input program should not contain &-prefixed atoms.
-
-        Runs the extensions defined in the processor for Show statements, introduction of externals, safety checks and occurrence checks.
-
-        Args:
-            files (List[str]): The list of file paths to process.
-            prg (str): The program string to process.
-        """
-        program_str = meta_tools.transform(files, prg, self.extensions)
-        return program_str
+        self.extensions = [MetaspExtension(grammar=grammar)]
 
     def reify_and_extend(self, prg: str, constants: dict[str, str]) -> str:
         """
