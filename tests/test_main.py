@@ -5,8 +5,8 @@ Test cases for main application functionality.
 from io import StringIO
 from unittest import TestCase
 
-from metasp.utils import logging
-from metasp.utils.logging import configure_logging, get_logger
+from metasp.utils import log
+from metasp.utils.log import configure_logging, get_logger
 from metasp.utils.parser import get_parser
 
 

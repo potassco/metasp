@@ -12,7 +12,7 @@ import argparse
 from clingo.application import clingo_main
 from metasp.utils.parser import get_parser, load_config
 from metasp.system import MetaSystem
-from metasp.utils.logging import configure_logging
+from metasp.utils.log import configure_logging
 from metasp.app import make_app
 from metasp.grammar import Grammar
 from metasp import MetaspProcessor, replace_internal_prefix

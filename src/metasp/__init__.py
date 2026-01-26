@@ -11,7 +11,7 @@ from clingo import Control, Symbol
 from collections.abc import Callable, Sequence
 from metasp.grammar import Grammar, Type
 from clingo import SymbolType, Function
-from metasp.utils.logging import COLORS
+from metasp.utils.log import COLORS
 import meta_tools
 from meta_tools.extensions import ShowExtension
 from meta_tools.extensions.base_extension import ReifyExtension
