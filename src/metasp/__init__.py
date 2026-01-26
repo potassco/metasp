@@ -19,8 +19,6 @@ from metasp.formula_processing import FormulaRegistery
 import logging
 from importlib.resources import path
 
-from metasp.preprocess import preprocess
-
 log = logging.getLogger(__name__)
 
 
@@ -72,23 +70,6 @@ class MetaspExtension(ReifyExtension):
         super().__init__()
         self._grammar = grammar
         self._formula_registery = FormulaRegistery(grammar)
-
-    def transform(self, file_paths: List[str], program_string: str) -> str:
-        """
-        Transforms a list of files and a program string and returns a string with the transformation
-
-        Note: I have it as a general function so that it can use something other than a transformer, like ASPEN
-        Note: Having it like this implies multiple passes over the program
-
-        Args:
-            file_paths (List[str]): The list of file paths to process.
-            program_string (str): The program string to process.
-
-        Returns:
-            str: The transformed program string.
-        """
-        prg = preprocess(file_paths, program_string, self._grammar)
-        return prg
 
     def add_extension_encoding(self, ctl: Control) -> None:
         """ """
