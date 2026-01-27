@@ -28,7 +28,7 @@
         };
         &always/2: {
             type: interval, safety: unsafe;
-            type: mel, safety: safe;
+            type: mel, safety: unsafe;
         };
     };
     subtypes: {

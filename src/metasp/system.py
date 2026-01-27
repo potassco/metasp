@@ -78,11 +78,8 @@ class MetaSystem:
         self.python_scripts = python_scripts or []
         self._set_printing_function(print_model)
 
-        if not self.semantics_encoding:
-            log.error("No semantics encoding files specified.")
-            raise ValueError("No semantics encoding files specified.")
-        out_dir = os.path.join(os.path.dirname(os.path.abspath(self.semantics_encoding[0])), "out")
-        os.makedirs(out_dir, exist_ok=True)
+        out_dir = Path.cwd() / "out"
+        out_dir.mkdir(exist_ok=True)
         self.out_dir = out_dir
 
     @classmethod
