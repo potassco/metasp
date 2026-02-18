@@ -2,7 +2,6 @@
 The main entry point for the application.
 """
 
-from logging import log
 import sys
 from typing import Optional
 import os
@@ -12,7 +11,7 @@ import argparse
 from clingo.application import clingo_main
 from metasp.utils.parser import get_parser, load_config
 from metasp.system import MetaSystem
-from metasp.utils.logging import configure_logging
+from metasp.utils.logging_utils import configure_logging
 from metasp.app import make_app
 from metasp.grammar import Grammar
 from metasp import MetaspProcessor, replace_internal_prefix
@@ -111,6 +110,7 @@ def main() -> None:
     # system_config = meta_systems_configs[args.system]
     meta_system = MetaSystem.from_dict(args_dict)
     meta_system.set_constants(constants_dict)
+    transformed_input = meta_system.fo_transform(args.files, "")
     try:
         grammar = Grammar.from_asp_files(meta_system.syntax_encoding)
     except Exception as e:
@@ -123,7 +123,6 @@ def main() -> None:
     processor = MetaspProcessor(grammar)
     if len(args.files) == 0:
         log.warning("No input files provided.")
-    transformed_input = processor.fo_transform(args.files, "")
     if args.output == "transform":
         sys.stdout.write(replace_internal_prefix(transformed_input) + "\n")
         exit(0)

@@ -7,11 +7,11 @@ from typing import Optional
 from clingo import Model
 from clingo.application import Application, ApplicationOptions
 from clingcon.__main__ import ClingconApp
-from fclingo.__main__ import FclingoApp
+from flingo.__main__ import flingoApp
 
 from metasp.utils.parser import load_config
 
-from .utils.logging import configure_logging
+from .utils.logging_utils import configure_logging
 from .system import MetaSystem
 from metasp.grammar import Grammar
 from metasp import MetaspProcessor
@@ -37,7 +37,7 @@ class ClingoApp(Application):
         ctl.solve()
 
 
-class MyFclingoApp(FclingoApp):
+class MyFlingoApp(flingoApp):
     def __init__(self, name):
         super().__init__()
         self.program_name = name
@@ -46,7 +46,7 @@ class MyFclingoApp(FclingoApp):
 APPS_BY_NAME = {
     "clingo": ClingoApp,
     "clingcon": ClingconApp,
-    "fclingo": MyFclingoApp,
+    "flingo": MyFlingoApp,
 }
 
 
@@ -142,23 +142,19 @@ def make_app(app_name: str) -> Application:
             options.add(
                 group,
                 "log",
-                textwrap.dedent(
-                    """\
+                textwrap.dedent("""\
                     Logging level.
                                                 <level> ={debug|info|error|warning}
-                                                (default: warning)"""
-                ),
+                                                (default: warning)"""),
                 self.parse_log_level,
                 argument="<level>",
             )
             options.add(
                 group,
                 "syntax-encoding",
-                textwrap.dedent(
-                    """\
+                textwrap.dedent("""\
                     Path to syntax encoding files with the grammar.
-                                                (default: None)"""
-                ),
+                                                (default: None)"""),
                 self.parse_system_config("syntax_encoding", "list"),
                 multi=True,
                 argument="<file>",
@@ -166,11 +162,9 @@ def make_app(app_name: str) -> Application:
             options.add(
                 group,
                 "semantics-encoding",
-                textwrap.dedent(
-                    """\
+                textwrap.dedent("""\
                     Path to semantics encoding defining the semantic extension.
-                                                (default: None)"""
-                ),
+                                                (default: None)"""),
                 self.parse_system_config("semantics_encoding", "list"),
                 multi=True,
                 argument="<file>",
@@ -178,11 +172,9 @@ def make_app(app_name: str) -> Application:
             options.add(
                 group,
                 "required-constants",
-                textwrap.dedent(
-                    """\
+                textwrap.dedent("""\
                     Constants required to run the system.
-                                                (default: None)"""
-                ),
+                                                (default: None)"""),
                 self.parse_system_config("required_constants", "list"),
                 multi=True,
                 argument="<file>",
@@ -190,11 +182,9 @@ def make_app(app_name: str) -> Application:
             options.add(
                 group,
                 "ui-encoding",
-                textwrap.dedent(
-                    """\
+                textwrap.dedent("""\
                     Path to ui encoding files extending basic encoding for interactivity.
-                                                (default: None)"""
-                ),
+                                                (default: None)"""),
                 self.parse_system_config("ui_encoding", "list"),
                 multi=True,
                 argument="<file>",
@@ -202,11 +192,9 @@ def make_app(app_name: str) -> Application:
             options.add(
                 group,
                 "printer",
-                textwrap.dedent(
-                    """\
+                textwrap.dedent("""\
                     Name for the printing function to use for models. By defaults uses clingo print
-                                                (default: None)"""
-                ),
+                                                (default: None)"""),
                 # TODO add list of available ones
                 self.parse_system_config("printer", "str"),
                 argument="<file>",
@@ -214,11 +202,9 @@ def make_app(app_name: str) -> Application:
             options.add(
                 group,
                 "python-scripts",
-                textwrap.dedent(
-                    """\
+                textwrap.dedent("""\
                     Path to python scripts to load before running the system. These files can contain custom printing functions.
-                                                (default: None)"""
-                ),
+                                                (default: None)"""),
                 self.parse_system_config("python_scripts", "list"),
                 multi=True,
                 argument="<file>",
@@ -226,11 +212,9 @@ def make_app(app_name: str) -> Application:
             options.add(
                 group,
                 "meta-config",
-                textwrap.dedent(
-                    """\
+                textwrap.dedent("""\
                     Optional path to metasp yaml configuration file, setting the arguments for the system (Use to avoid long command lines).
-                                                (default: None)\033[0m"""
-                ),
+                                                (default: None)\033[0m"""),
                 self.parse_config,
                 argument="<file>",
             )
@@ -279,11 +263,10 @@ def make_app(app_name: str) -> Application:
 
             self.meta_system = MetaSystem.from_dict(self.metasp_config)
 
-            grammar = Grammar.from_asp_files(self.meta_system.syntax_encoding)
             self.meta_system.set_constants(self.constants)
-            # processed_input = preprocess(files, self.constants, grammar)
+            transformed_input = self.meta_system.fo_transform(files, "")
+            grammar = Grammar.from_asp_files(self.meta_system.syntax_encoding)
             processor = MetaspProcessor(grammar)
-            transformed_input = processor.fo_transform(files, "")
             reified = processor.reify_and_extend(transformed_input, self.constants)
             final_files = self.meta_system.get_files(reified)
 

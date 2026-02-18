@@ -19,7 +19,10 @@ dependencies = [
     "rich-argparse",
     "clingox",
     "clingcon",
+    "flingo",
     "meta-tools-clingo>=0.3.4",
+    "aspen-tree-5",
+    "tree-sitter-metasp"
 ]
 
 [project.urls]
@@ -31,7 +34,9 @@ lint_pylint = ["pylint"]
 typecheck = ["types-setuptools", "mypy"]
 test = ["coverage[toml]"]
 doc = ["mkdocs", "mkdocs-material", "mkdocstrings[python]", "mkdoclingo>=1.1.0"]
-dev = ["metasp[test,typecheck,lint_pylint]"]
+lsp = ["python-lsp-server", "rope", "pylsp-mypy", "pylsp-rope", "python-lsp-black"]
+dev = ["metasp[test,typecheck,lint_pylint,lsp]"]
+
 
 [project.scripts]
 metasp = "metasp.__main__:main"

@@ -11,15 +11,13 @@ from clingo import Control, Symbol
 from collections.abc import Callable, Sequence
 from metasp.grammar import Grammar, Type
 from clingo import SymbolType, Function
-from metasp.utils.logging import COLORS
+from metasp.utils.logging_utils import COLORS
 import meta_tools
 from meta_tools.extensions import ShowExtension
 from meta_tools.extensions.base_extension import ReifyExtension
 from metasp.formula_processing import FormulaRegistery
 import logging
 from importlib.resources import path
-
-from metasp.preprocess import preprocess
 
 log = logging.getLogger(__name__)
 
@@ -73,23 +71,6 @@ class MetaspExtension(ReifyExtension):
         self._grammar = grammar
         self._formula_registery = FormulaRegistery(grammar)
 
-    def transform(self, file_paths: List[str], program_string: str) -> str:
-        """
-        Transforms a list of files and a program string and returns a string with the transformation
-
-        Note: I have it as a general function so that it can use something other than a transformer, like ASPEN
-        Note: Having it like this implies multiple passes over the program
-
-        Args:
-            file_paths (List[str]): The list of file paths to process.
-            program_string (str): The program string to process.
-
-        Returns:
-            str: The transformed program string.
-        """
-        prg = preprocess(file_paths, program_string, self._grammar)
-        return prg
-
     def add_extension_encoding(self, ctl: Control) -> None:
         """ """
         with path("metasp.encodings", "reify-extension.lp") as base_encoding:
@@ -122,21 +103,7 @@ class MetaspProcessor:
 
     def __init__(self, grammar: Grammar) -> None:
         self.grammar = grammar
-        self.extensions = [ShowExtension(), MetaspExtension(grammar=grammar)]
-
-    def fo_transform(self, files: List[str], prg: str) -> str:
-        """
-        Transforms a list of files and a program string and returns a string with the transformation.
-        The input program should not contain &-prefixed atoms.
-
-        Runs the extensions defined in the processor for Show statements, introduction of externals, safety checks and occurrence checks.
-
-        Args:
-            files (List[str]): The list of file paths to process.
-            prg (str): The program string to process.
-        """
-        program_str = meta_tools.transform(files, prg, self.extensions)
-        return program_str
+        self.extensions = [MetaspExtension(grammar=grammar)]
 
     def reify_and_extend(self, prg: str, constants: dict[str, str]) -> str:
         """

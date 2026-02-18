@@ -4,12 +4,22 @@ import logging
 import importlib.util
 import tempfile
 from collections.abc import Sequence
-from typing import Optional
+from typing import Optional, List
+from pathlib import Path
+from io import StringIO
+
+from aspen.tree import AspenTree
+from tree_sitter import Language
+import tree_sitter_metasp as ts_metasp
+from clingo import Function
+
 from metasp.printing import __dict__ as metasp_printing_dict
 
 log = logging.getLogger(__name__)
 
 ENCODINGS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "encodings")
+
+clingo_lang = Language(ts_metasp.language())
 
 
 def get_clinguin_backend_control(control_name: str) -> str:
@@ -25,8 +35,8 @@ def get_clinguin_backend_control(control_name: str) -> str:
         return "ClingconBackend"
     elif control_name == "clingo":
         return "ClingoBackend"
-    elif control_name == "fclingo":
-        return "FclingoBackend"
+    elif control_name == "flingo":
+        return "FlingoBackend"
     else:
         log.error("Control '%s' has no backend for clinguin.", control_name)
         raise ValueError(f"Control '{control_name}' is not a valid backend for clinguin.")
@@ -68,6 +78,10 @@ class MetaSystem:
         self.python_scripts = python_scripts or []
         self._set_printing_function(print_model)
 
+        out_dir = Path.cwd() / "out"
+        out_dir.mkdir(exist_ok=True)
+        self.out_dir = out_dir
+
     @classmethod
     def from_dict(cls, config: dict) -> "MetaSystem":
         """
@@ -89,6 +103,68 @@ class MetaSystem:
             constants=config.get("required_constants", []),
             python_scripts=config.get("python_scripts", []),
         )
+
+    def fo_transform(self, files: List[str], prg: str) -> str:
+        """
+        Transforms a list of files and a program string and returns a string with the transformation.
+
+        Rewrites show statements, generates externals, and performs safety and occurrence checks.
+
+        Args:
+            files (List[str]): The list of file paths to process.
+            prg (str): The program string to process.
+        """
+        out_dir = Path(self.out_dir)
+        tree = AspenTree(default_language=clingo_lang)
+
+        syntax_enc_symbols = [tree.parse(Path(e)) for e in self.syntax_encoding]
+        input_file_symbols = [tree.parse(Path(i)) for i in files]
+        str_input_symb = tree.parse(prg)
+
+        syntax_fact_file = out_dir / "syntax_facts.lp"
+        with StringIO() as buf:
+            tree.textio_symbols[Function("fact_file", [])] = buf
+            tree.transform(
+                meta_files=[Path(ENCODINGS_PATH) / "aspen" / "all.lp"], initial_program=("metasp_preprocess", ())
+            )
+            facts_str = buf.getvalue().strip().replace("&", "__")
+        with open(syntax_fact_file, "w") as fact_file:
+            fact_file.write(facts_str)
+        self.syntax_encoding = [str(syntax_fact_file)]
+
+        rewritten_program_str = ""
+        for i in input_file_symbols:
+            source = tree.sources[i]
+            rewritten_program_str += str(source.source_bytes, encoding=source.encoding)
+
+        str_input_source = tree.sources[str_input_symb]
+        rewritten_program_str += str(str_input_source.source_bytes, encoding=str_input_source.encoding)
+
+        if len(files) > 0:
+            fname = "_".join([Path(f).stem for f in files]) + "_stdin.lp"
+        else:
+            fname = "stdin.lp"
+        with open(out_dir / fname, "w") as f:
+            f.write(rewritten_program_str)
+
+        tree = AspenTree(default_language=clingo_lang)
+        semantic_enc_symbols = [tree.parse(Path(e)) for e in self.semantics_encoding]
+        tree.transform(
+            meta_files=[Path(ENCODINGS_PATH) / "aspen" / "remove_ampersand.lp"],
+            initial_program=("metasp_remove_ampersand", ()),
+        )
+        semantics_encoding: list[str] = []
+        for s in semantic_enc_symbols:
+            source = tree.sources[s]
+            p = source.path
+            assert p is not None
+            stem = p.stem
+            out_file = out_dir / (stem + "_rewritten.lp")
+            with open(out_file, "w") as sem_file:
+                sem_file.write(str(source.source_bytes, encoding=source.encoding))
+            semantics_encoding.append(str(out_file))
+        self.semantics_encoding = semantics_encoding
+        return rewritten_program_str
 
     def _replace_package_includes(self, file: str) -> str:
         """
@@ -159,23 +235,6 @@ class MetaSystem:
                 raise ValueError(f"You must provide the constant  {const} to run the system, using -c {const}=<val>.")
         self.constants = constants.copy()
 
-    def get_out_dir(self) -> str:
-        """Get the output directory for the system output files.
-
-        TODO: This generates issues when we want to have include statements in the semantics encoding because we must consider the nesting.
-        Raises:
-            ValueError: If no semantics encoding files are specified.
-
-        Returns:
-            str: The output directory path.
-        """
-        if not self.semantics_encoding:
-            log.error("No semantics encoding files specified.")
-            raise ValueError("No semantics encoding files specified.")
-        out_dir = os.path.join(os.path.dirname(os.path.abspath(self.semantics_encoding[0])), "out")
-        os.makedirs(out_dir, exist_ok=True)
-        return out_dir
-
     def get_files(self, reified_input: str) -> Sequence[str]:
         """
         Get the list of files to be used for the system.
@@ -188,8 +247,7 @@ class MetaSystem:
         """
         semantics_with_includes = "\n".join([self._replace_package_includes(f) for f in self.semantics_encoding])
 
-        out_dir = self.get_out_dir()
-        tmp_file_path = os.path.join(out_dir, f"{self.name}_combined.lp")
+        tmp_file_path = os.path.join(self.out_dir, f"{self.name}_combined.lp")
         with open(tmp_file_path, "w") as tmp_file:
             tmp_file.write(semantics_with_includes)
             tmp_file.write("\n")
