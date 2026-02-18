@@ -8,7 +8,7 @@ authors = [
     { name = "Susana Hahn and Amade Nemes", email = "hahnmartinlu@uni-potsdam.de" },
 ]
 description = "Framework for meta-programming in ASP"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 license = { file = "LICENSE" }
 dynamic = ["version"]
 readme = "README.md"
@@ -22,7 +22,7 @@ dependencies = [
     "flingo",
     "meta-tools-clingo>=0.3.4",
     "aspen-tree-5",
-    "tree-sitter-metasp"
+    "tree-sitter-metasp",
 ]
 
 [project.urls]
@@ -34,7 +34,13 @@ lint_pylint = ["pylint"]
 typecheck = ["types-setuptools", "mypy"]
 test = ["coverage[toml]"]
 doc = ["mkdocs", "mkdocs-material", "mkdocstrings[python]", "mkdoclingo>=1.1.0"]
-lsp = ["python-lsp-server", "rope", "pylsp-mypy", "pylsp-rope", "python-lsp-black"]
+lsp = [
+    "python-lsp-server",
+    "rope",
+    "pylsp-mypy",
+    "pylsp-rope",
+    "python-lsp-black",
+]
 dev = ["metasp[test,typecheck,lint_pylint,lsp]"]
 
 

@@ -4,6 +4,6 @@ red(L) :- not green(L), light(L).
 
 &next(&eventually(green(L))):- push(L).
 
-#show &next/1.
-#show green(L):green(L).
-#show.
+% #show &next/1.
+% #show green(L):green(L).
+% #show.
