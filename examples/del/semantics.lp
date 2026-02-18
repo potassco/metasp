@@ -1,3 +1,8 @@
+#include "metasp.meta-time.lp".
+#include "metasp.show-time.lp".
+#include "metasp.reify-defined.lp".
+#include "metasp.reify-defined-metasp.lp".
+
 %% ------- Fischer Ladner closure --------- %%
 formula(del, &eventually(P,&eventually(&star(P),F))) :- formula(del, &eventually(&star(P),F)).
 formula(del, &eventually(P1,F)) :- formula(del, &eventually(&choice(P1,P2),F)).
@@ -66,3 +71,5 @@ true(&always(&seq(P1,P2),F),K):- true(&always(P1,&always(P2,F)),K), formula(del,
 true(F,K):-  true(&always(&star(P),F),K).
 true(&always(P,&always(&star(P),F)),K):-  true(&always(&star(P),F),K).
 true(&always(&star(P),F),K):-  formula(del, &always(&star(P),F)), true(F,K), true(&always(P,&always(&star(P),F)),K).
+
+
