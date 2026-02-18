@@ -10,7 +10,7 @@ from io import StringIO
 
 from aspen.tree import AspenTree
 from tree_sitter import Language
-import tree_sitter_clingo as ts_clingo
+import tree_sitter_metasp as ts_metasp
 from clingo import Function
 
 from metasp.printing import __dict__ as metasp_printing_dict
@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 
 ENCODINGS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "encodings")
 
-clingo_lang = Language(ts_clingo.language())
+clingo_lang = Language(ts_metasp.language())
 
 
 def get_clinguin_backend_control(control_name: str) -> str:
@@ -35,8 +35,8 @@ def get_clinguin_backend_control(control_name: str) -> str:
         return "ClingconBackend"
     elif control_name == "clingo":
         return "ClingoBackend"
-    elif control_name == "fclingo":
-        return "FclingoBackend"
+    elif control_name == "flingo":
+        return "FlingoBackend"
     else:
         log.error("Control '%s' has no backend for clinguin.", control_name)
         raise ValueError(f"Control '{control_name}' is not a valid backend for clinguin.")

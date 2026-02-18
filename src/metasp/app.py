@@ -7,7 +7,7 @@ from typing import Optional
 from clingo import Model
 from clingo.application import Application, ApplicationOptions
 from clingcon.__main__ import ClingconApp
-from fclingo.__main__ import FclingoApp
+from flingo.__main__ import flingoApp
 
 from metasp.utils.parser import load_config
 
@@ -37,7 +37,7 @@ class ClingoApp(Application):
         ctl.solve()
 
 
-class MyFclingoApp(FclingoApp):
+class MyFlingoApp(flingoApp):
     def __init__(self, name):
         super().__init__()
         self.program_name = name
@@ -46,7 +46,7 @@ class MyFclingoApp(FclingoApp):
 APPS_BY_NAME = {
     "clingo": ClingoApp,
     "clingcon": ClingconApp,
-    "fclingo": MyFclingoApp,
+    "flingo": MyFlingoApp,
 }
 
 
