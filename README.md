@@ -5,7 +5,7 @@
 To install the project you must have Python 3.12 or higher, and run
 
 ```bash
-pip install .
+pip install metasp
 ```
 
 ## Usage
@@ -104,5 +104,3 @@ The `required-constants` field helps ensure all necessary constants are provided
 To launch the user interface, provide your system configuration using the `--meta-config config.yml` argument.
 The configuration file can optionally include a `ui-encoding` field to add extra encodings for UI generation.
 The `ui-encoding` field is optional and can be used to enhance the UI generation with additional logic or features.
-
-
