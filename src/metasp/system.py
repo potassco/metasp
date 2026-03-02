@@ -14,6 +14,7 @@ import tree_sitter_metasp as ts_metasp
 from clingo import Function
 
 from metasp.printing import __dict__ as metasp_printing_dict
+import shutil
 
 log = logging.getLogger(__name__)
 
@@ -79,7 +80,14 @@ class MetaSystem:
         self._set_printing_function(print_model)
 
         out_dir = Path.cwd() / "out"
-        out_dir.mkdir(exist_ok=True)
+        if out_dir.exists():
+            for item in out_dir.iterdir():
+                if item.is_file() or item.is_symlink():
+                    item.unlink()
+                elif item.is_dir():
+                    shutil.rmtree(item)
+        else:
+            out_dir.mkdir(exist_ok=True)
         self.out_dir = out_dir
 
     @classmethod
@@ -115,6 +123,7 @@ class MetaSystem:
             prg (str): The program string to process.
         """
         out_dir = Path(self.out_dir)
+
         tree = AspenTree(default_language=clingo_lang)
 
         syntax_enc_symbols = [tree.parse(Path(e)) for e in self.syntax_encoding]
@@ -153,17 +162,15 @@ class MetaSystem:
             meta_files=[Path(ENCODINGS_PATH) / "aspen" / "remove_ampersand.lp"],
             initial_program=("metasp_remove_ampersand", ()),
         )
-        semantics_encoding: list[str] = []
         for s in semantic_enc_symbols:
             source = tree.sources[s]
             p = source.path
             assert p is not None
-            stem = p.stem
-            out_file = out_dir / (stem + "_rewritten.lp")
-            with open(out_file, "w") as sem_file:
+            out_file = out_dir / ("semantics_rewritten.lp")
+            # TODO: Fix this better, because at the moment if you have different paths it uses a single file name and replaces things
+            with open(out_file, "a") as sem_file:
                 sem_file.write(str(source.source_bytes, encoding=source.encoding))
-            semantics_encoding.append(str(out_file))
-        self.semantics_encoding = semantics_encoding
+        self.semantics_encoding = [out_dir / ("semantics_rewritten.lp")]
         return rewritten_program_str
 
     def _replace_package_includes(self, file: str) -> str:

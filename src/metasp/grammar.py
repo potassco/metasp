@@ -70,6 +70,16 @@ class Grammar:
         self._prefix_sugar = "&"
         self.add_base_types()
 
+    def all_types(self, type: Type) -> List[str]:
+        all_types_str = set(type.all_types)
+        all_types_extended = set([])
+        for st in all_types_str:
+            if st == str(type.name):
+                all_types_extended.add(st)
+            else:
+                all_types_extended.update(self.all_types(self.types[st]))
+        return list([str(s) for s in all_types_extended])
+
     @classmethod
     def from_grammar(cls, asp_files: Sequence[str]) -> "Grammar":
         # TODO AMADE
@@ -255,8 +265,12 @@ class Grammar:
         # return None
         for type_def in self.types.values():
             for sugar in type_def.macros:
-                if as_type is not None and sugar.type != as_type:
-                    continue
+                # if as_type is not None and sugar.type != as_type:
+                if as_type is not None:
+                    valid_types = self.types[as_type].sub_types + [as_type]
+                    log.debug(f"Looking for sugar in type {as_type} and its subtypes {valid_types}")
+                    if sugar.type not in valid_types:
+                        continue
                 if self.match_sugar_pattern(type_def, sugar.pattern.symbol, s, match_variables):
                     return sugar
         return None
@@ -280,7 +294,7 @@ class Grammar:
             # TODO here I should make it softer to include possible sugar
             symbol_type = self.get_fl_type(symbol, check_sugar=True)
 
-            valid_type = "any" in var_types or any(v in symbol_type.all_types for v in var_types)
+            valid_type = "any" in var_types or any(v in self.all_types(symbol_type) for v in var_types)
             if not valid_type:
                 # print(f"  ->Variable {pattern_symbol.name} type mismatch, {var.type.name} != {symbol_type.name}")
                 return False
