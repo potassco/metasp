@@ -180,7 +180,9 @@ class FormulaRegistery:
                 log.debug(f"No syntactic sugar removed for {p(s)}")
                 raise e
             log.debug(f"Syntactic sugar removed for {p(s)}, matching new symbol {p(new_symbol)}")
-            return self.match(new_symbol, as_type=as_type)
+            new_formula = self.match(new_symbol, as_type=as_type)
+            new_formula.set_original_symbol(s)
+            return new_formula
 
         if formula_type.is_base_type:
             log.debug(f"✅ Symbol {p(s)} is base type {t(formula_type.name)}, returning directly")

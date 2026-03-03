@@ -11,7 +11,6 @@ def match(s, p,a):
 #show .
 
 % Show signature #show p/n.
-#show true(S,T) : show_signature(P,A), true(S,T), @match(S,P,A)=1.
 #show true(OG,T) : show_signature(P,A), true(S,T), @match(OG,P,A)=1, original_formula(S,OG).
 
 % Show term #show a: b.
