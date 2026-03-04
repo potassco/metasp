@@ -126,7 +126,7 @@ class FormulaRegistery:
                 errors.append((possible_type, e))
                 log.debug("Not possible to match with top-level type %s", t(possible_type))
 
-        log.info(f"Matched {p(s)} as types: {matched_formulas.keys()}")
+        log.info(f"Matched {p(s)} as types: {list(matched_formulas.keys())}")
         if len(matched_formulas) != 0:
             found_formulas = set([str(f) for f in matched_formulas.values()])
             if len(found_formulas) > 1:
@@ -153,7 +153,7 @@ class FormulaRegistery:
             )  # Just to raise error if not valid
             if formula_type is None:
                 log.debug(f"No syntactic sugar found for {p(s)} as type {t(as_type)}.")
-                raise ValueError(f"No expression or syntactic sugar found for symbol {s}.")
+                raise ValueError(f"No expression or syntactic sugar found for symbol {p(s)}.")
             new_symbol = self.remove_syntactic_sugar(s, as_type=as_type)
             same_symbol = new_symbol == s
             if same_symbol:
@@ -162,7 +162,7 @@ class FormulaRegistery:
             new_formula = self.match(new_symbol, as_type=as_type)
             return self.add_formula(new_formula)
         try:
-            self.assert_type_in(as_type, formula_type.all_types, s)
+            self.assert_type_in(as_type, self.grammar.all_types(formula_type), s)
         except ValueError as e:
             log.debug(f"No match of symbol {p(s)} as type {t(as_type)}: {e}. Will try to remove sugar.")
             new_symbol = self.remove_syntactic_sugar(s, as_type=as_type)

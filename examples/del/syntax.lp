@@ -1,9 +1,6 @@
 
 #type del{
   expressions: {
-    &initial/0;
-    &true/0;
-    &false/0;
     &always/2: {
       type: path, safety: unsafe;
       type: del, safety: unsafe;
@@ -13,8 +10,7 @@
       type: del, safety: safe;
     };
   };
-  subtypes:   { atom; };
-  macros:     { &final: &eventually(&step,&false); };
+  subtypes:  { tel; };
   occurrence: any;
 }.
 

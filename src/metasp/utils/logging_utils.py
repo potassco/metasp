@@ -25,17 +25,6 @@ COLORS = {
 }
 
 
-def _print_done_decorator(func):
-    def wrapper(self, *args, **kwargs):
-        try:
-            log.debug("*" * 30)
-            return func(self, *args, **kwargs)
-        finally:
-            log.debug("*" * 30 + "\n")
-
-    return wrapper
-
-
 class SingleLevelFilter(logging.Filter):
     """
     Filter levels.
@@ -60,6 +49,7 @@ def configure_logging(stream: TextIO, level: int, use_color: bool) -> None:
     """
     Configure application logging.
     """
+    logging.getLogger("aspen").setLevel(logging.WARNING)
 
     def format_str(color: str) -> str:
         if use_color:
