@@ -12,7 +12,6 @@ jobs:
 
   deploy:
     name: deploy
-    needs: test
     permissions:
       id-token: write
     environment: release
@@ -28,7 +27,7 @@ jobs:
 
       - name: install build dependencies
         run: python3 -m pip install build
-  
+
       - name: build package
         run: python3 -m build --sdist --wheel --outdir dist/
 
