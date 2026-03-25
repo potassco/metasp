@@ -1,0 +1,220 @@
+------ nfloors=5  horizon=8 ------
+--- With control 
+Models       : 2
+Choices      : 29      
+Conflicts    : 26       (Analyzed: 26)
+Constraints  : 1617     (Binary:  71.9% Ternary:  23.7% Other:   4.4%)
+--- No control 
+Models       : 2
+Choices      : 78      
+Conflicts    : 72       (Analyzed: 68)
+Constraints  : 1621     (Binary:  71.7% Ternary:  23.9% Other:   4.4%)
+------ nfloors=5  horizon=9 ------
+--- With control 
+Models       : 2
+Choices      : 54      
+Conflicts    : 48       (Analyzed: 43)
+Constraints  : 1850     (Binary:  71.8% Ternary:  23.8% Other:   4.4%)
+--- No control 
+Models       : 34
+Choices      : 245     
+Conflicts    : 184      (Analyzed: 172)
+Constraints  : 1854     (Binary:  71.7% Ternary:  23.9% Other:   4.4%)
+------ nfloors=5  horizon=10 ------
+--- With control 
+Models       : 2
+Choices      : 105     
+Conflicts    : 90       (Analyzed: 83)
+Constraints  : 2083     (Binary:  71.8% Ternary:  23.8% Other:   4.4%)
+--- No control 
+Models       : 340
+Choices      : 774     
+Conflicts    : 388      (Analyzed: 349)
+Constraints  : 2087     (Binary:  71.7% Ternary:  23.9% Other:   4.4%)
+------ nfloors=5  horizon=11 ------
+--- With control 
+Models       : 2
+Choices      : 85      
+Conflicts    : 69       (Analyzed: 60)
+Constraints  : 2316     (Binary:  71.8% Ternary:  23.8% Other:   4.4%)
+--- No control 
+Models       : 2618
+Choices      : 3747    
+Conflicts    : 999      (Analyzed: 778)
+Constraints  : 2320     (Binary:  71.7% Ternary:  23.9% Other:   4.4%)
+------ nfloors=5  horizon=12 ------
+--- With control 
+Models       : 2
+Choices      : 79      
+Conflicts    : 75       (Analyzed: 59)
+Constraints  : 2549     (Binary:  71.8% Ternary:  23.9% Other:   4.4%)
+--- No control 
+Models       : 17204
+Choices      : 20201   
+Conflicts    : 2745     (Analyzed: 1760)
+Constraints  : 2553     (Binary:  71.7% Ternary:  23.9% Other:   4.3%)
+------ nfloors=7  horizon=11 ------
+--- With control 
+Models       : 2
+Choices      : 101     
+Conflicts    : 73       (Analyzed: 73)
+Constraints  : 2526     (Binary:  72.0% Ternary:  23.4% Other:   4.6%)
+--- No control 
+Models       : 2
+Choices      : 474     
+Conflicts    : 400      (Analyzed: 397)
+Constraints  : 2530     (Binary:  71.9% Ternary:  23.5% Other:   4.6%)
+------ nfloors=7  horizon=12 ------
+--- With control 
+Models       : 2
+Choices      : 96      
+Conflicts    : 83       (Analyzed: 78)
+Constraints  : 2789     (Binary:  72.0% Ternary:  23.4% Other:   4.6%)
+--- No control 
+Models       : 46
+Choices      : 439     
+Conflicts    : 326      (Analyzed: 311)
+Constraints  : 2793     (Binary:  71.9% Ternary:  23.5% Other:   4.6%)
+------ nfloors=7  horizon=13 ------
+--- With control 
+Models       : 2
+Choices      : 80      
+Conflicts    : 72       (Analyzed: 65)
+Constraints  : 3052     (Binary:  72.0% Ternary:  23.5% Other:   4.6%)
+--- No control 
+Models       : 598
+Choices      : 1908    
+Conflicts    : 1114     (Analyzed: 1036)
+Constraints  : 3056     (Binary:  71.9% Ternary:  23.5% Other:   4.6%)
+------ nfloors=7  horizon=14 ------
+--- With control 
+Models       : 2
+Choices      : 114     
+Conflicts    : 97       (Analyzed: 85)
+Constraints  : 3315     (Binary:  71.9% Ternary:  23.5% Other:   4.6%)
+--- No control 
+Models       : 5796
+Choices      : 8583    
+Conflicts    : 2425     (Analyzed: 2107)
+Constraints  : 3319     (Binary:  71.9% Ternary:  23.5% Other:   4.6%)
+------ nfloors=7  horizon=15 ------
+--- With control 
+Models       : 2
+Choices      : 151     
+Conflicts    : 125      (Analyzed: 119)
+Constraints  : 3578     (Binary:  71.9% Ternary:  23.5% Other:   4.6%)
+--- No control 
+Models       : 46690
+Choices      : 51499   
+Conflicts    : 4192     (Analyzed: 3064)
+Constraints  : 3582     (Binary:  71.9% Ternary:  23.5% Other:   4.6%)
+------ nfloors=9  horizon=14 ------
+--- With control 
+Models       : 2
+Choices      : 68      
+Conflicts    : 59       (Analyzed: 58)
+Constraints  : 3585     (Binary:  72.1% Ternary:  23.2% Other:   4.8%)
+--- No control 
+Models       : 2
+Choices      : 958     
+Conflicts    : 764      (Analyzed: 762)
+Constraints  : 3589     (Binary:  72.0% Ternary:  23.2% Other:   4.8%)
+------ nfloors=9  horizon=15 ------
+--- With control 
+Models       : 2
+Choices      : 250     
+Conflicts    : 157      (Analyzed: 149)
+Constraints  : 3878     (Binary:  72.1% Ternary:  23.2% Other:   4.8%)
+--- No control 
+Models       : 58
+Choices      : 2293    
+Conflicts    : 1829     (Analyzed: 1816)
+Constraints  : 3882     (Binary:  72.0% Ternary:  23.2% Other:   4.8%)
+------ nfloors=9  horizon=16 ------
+--- With control 
+Models       : 2
+Choices      : 132     
+Conflicts    : 116      (Analyzed: 108)
+Constraints  : 4171     (Binary:  72.1% Ternary:  23.2% Other:   4.8%)
+--- No control 
+Models       : 928
+Choices      : 3711    
+Conflicts    : 2322     (Analyzed: 2212)
+Constraints  : 4175     (Binary:  72.0% Ternary:  23.2% Other:   4.8%)
+------ nfloors=9  horizon=17 ------
+--- With control 
+Models       : 2
+Choices      : 232     
+Conflicts    : 172      (Analyzed: 159)
+Constraints  : 4464     (Binary:  72.1% Ternary:  23.2% Other:   4.8%)
+--- No control 
+Models       : 10846
+Choices      : 15075   
+Conflicts    : 3721     (Analyzed: 3139)
+Constraints  : 4468     (Binary:  72.0% Ternary:  23.2% Other:   4.8%)
+------ nfloors=9  horizon=18 ------
+--- With control 
+Models       : 2
+Choices      : 264     
+Conflicts    : 202      (Analyzed: 188)
+Constraints  : 4757     (Binary:  72.1% Ternary:  23.2% Other:   4.8%)
+--- No control 
+Models       : 103530
+Choices      : 112942  
+Conflicts    : 8377     (Analyzed: 5167)
+Constraints  : 4761     (Binary:  72.0% Ternary:  23.2% Other:   4.8%)
+------ nfloors=11  horizon=17 ------
+--- With control 
+Models       : 2
+Choices      : 132     
+Conflicts    : 105      (Analyzed: 104)
+Constraints  : 4794     (Binary:  72.2% Ternary:  22.9% Other:   4.9%)
+--- No control 
+Models       : 2
+Choices      : 3196    
+Conflicts    : 2573     (Analyzed: 2570)
+Constraints  : 4798     (Binary:  72.1% Ternary:  22.9% Other:   4.9%)
+------ nfloors=11  horizon=18 ------
+--- With control 
+Models       : 2
+Choices      : 160     
+Conflicts    : 128      (Analyzed: 121)
+Constraints  : 5117     (Binary:  72.2% Ternary:  22.9% Other:   4.9%)
+--- No control 
+Models       : 70
+Choices      : 4479    
+Conflicts    : 3512     (Analyzed: 3496)
+Constraints  : 5121     (Binary:  72.1% Ternary:  22.9% Other:   4.9%)
+------ nfloors=11  horizon=19 ------
+--- With control 
+Models       : 2
+Choices      : 186     
+Conflicts    : 152      (Analyzed: 143)
+Constraints  : 5440     (Binary:  72.2% Ternary:  22.9% Other:   4.9%)
+--- No control 
+Models       : 1330
+Choices      : 8131    
+Conflicts    : 5433     (Analyzed: 5298)
+Constraints  : 5444     (Binary:  72.1% Ternary:  22.9% Other:   4.9%)
+------ nfloors=11  horizon=20 ------
+--- With control 
+Models       : 2
+Choices      : 175     
+Conflicts    : 131      (Analyzed: 120)
+Constraints  : 5763     (Binary:  72.2% Ternary:  22.9% Other:   4.9%)
+--- No control 
+Models       : 18200
+Choices      : 27157   
+Conflicts    : 7305     (Analyzed: 6385)
+Constraints  : 5767     (Binary:  72.1% Ternary:  22.9% Other:   4.9%)
+------ nfloors=11  horizon=21 ------
+--- With control 
+Models       : 2
+Choices      : 192     
+Conflicts    : 149      (Analyzed: 129)
+Constraints  : 6086     (Binary:  72.2% Ternary:  22.9% Other:   4.9%)
+--- No control 
+Models       : 200900
+Choices      : 228819  
+Conflicts    : 24917    (Analyzed: 16012)
+Constraints  : 6090     (Binary:  72.1% Ternary:  22.9% Other:   4.9%)
