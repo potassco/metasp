@@ -5,7 +5,7 @@ Used benchmark from Implementing Dynamic Answer Set Programming over finite trac
 Generated with script benchmarks/del/benchmarks.sh to imitate the original benchmakrs.
 The tables below are generated with an LLM from the results in the output of the script which can be found in benchmarks/del/results_elevator_out.txt.
 
-```
+
 
 ## Our results
 
