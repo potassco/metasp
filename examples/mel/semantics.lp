@@ -20,13 +20,27 @@ true(F,J):-witness(eventually(I,F),(T,J)),
 witness(eventually(I,F),(T,J)):- formula(mel,&eventually(I,F)), true(F,J), not outside(I,(T,J)),
                                  time(T), time(J), T<=J.
 
-:- true(&final,K), time(K), K!=n.
+
+true(&always(I,F),T) :- witness(&always(I,F),(T,J)) : time(J), T<=J;
+                       formula(mel, &always(I,F)), time(T).
+witness(&always(I,F),(T,J)) :- true(&always(I,F),T),
+                              time(T), time(J), T<=J.
+witness(&always(I,F),(T,J)) :- outside(I,(T,J)), formula(mel, &always(I,F)),
+                              time(T), time(J), T<=J.
+witness(&always(I,F),(T,J)) :- true(F,J), formula(mel, &always(I,F)),
+                              time(T), time(J), T<=J.
+true(F,J) :- witness(&always(I,F),(T,J)), not outside(I,(T,J)),
+             time(T), time(J), T<=J.
+
+
+
+:- true(&final,T), time(T), T!=n.
 true(&final,n).
 
-% &top/0
-true(&top,K) :- formula(mel,&top), time(K).
-% &bot/0
-:- formula(mel,&bot), time(K), true(&bot,K).
+% &true/0
+true(&true,T) :- formula(mel,&true), time(T).
+% &false/0
+:- formula(mel,&false), time(T), true(&false,T).
 
 
 
@@ -36,7 +50,7 @@ true(&top,K) :- formula(mel,&top), time(K).
 
 &sum{t(0)} = 0 :- time(0).
 
-&sum{t(K) ; -t(K+1)} <= -1:- time(K), time(K+1).
+&sum{t(T) ; -t(T+1)} <= -1:- time(T), time(T+1).
 
 %================================================
 % Intervals
@@ -45,8 +59,8 @@ i((M,N)) :- formula(mel, &eventually(&i(M,N),V)).
 i((M,N)) :- formula(mel, &always(&i(M,N),V)).
 i((M,N)) :- formula(mel, &next(&i(M,N),V)).
 
-outside(&i(M,N),(K,K')):-
-    i((M,N)), time(K), time(K'), K<=K', &sum{t(K); -t(K')} > -M.
-outside(&i(M,N),(K,K')):-
-    i((M,N)), time(K), time(K'), K<=K', &sum{t(K'); -t(K)} > N-1, N!=#sup.
+outside(&i(M,N),(T,T')):-
+    i((M,N)), time(T), time(T'), T<=T', &sum{t(T); -t(T')} > -M.
+outside(&i(M,N),(T,T')):-
+    i((M,N)), time(T), time(T'), T<=T', &sum{t(T'); -t(T)} > N-1, N!=#sup.
 
