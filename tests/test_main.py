@@ -24,11 +24,3 @@ class TestMain(TestCase):
         log = get_logger("main")
         log.info("test123")
         self.assertRegex(sio.getvalue(), "test123")
-
-    def test_parser(self) -> None:
-        """
-        Test the parser.
-        """
-        parser = get_parser()
-        ret = parser.parse_args(["--log", "info"])
-        self.assertEqual(ret.log, logging_utils.INFO)

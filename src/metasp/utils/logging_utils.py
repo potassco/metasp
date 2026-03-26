@@ -49,7 +49,7 @@ def configure_logging(stream: TextIO, level: int, use_color: bool) -> None:
     """
     Configure application logging.
     """
-    logging.getLogger("aspen").setLevel(logging.WARNING)
+    logging.getLogger("aspen").setLevel(logging.INFO)
 
     def format_str(color: str) -> str:
         if use_color:

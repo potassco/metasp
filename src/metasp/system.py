@@ -58,6 +58,7 @@ class MetaSystem:
         print_model: Optional[str] = None,
         constants: Optional[Sequence[str]] = None,
         python_scripts: Optional[Sequence[str]] = None,
+        out_dir: Path = Path.cwd() / "out",
     ):
         """
         Initialize the System with its name, control_name, and encodings.
@@ -79,7 +80,6 @@ class MetaSystem:
         self.python_scripts = python_scripts or []
         self._set_printing_function(print_model)
 
-        out_dir = Path.cwd() / "out"
         if out_dir.exists():
             for item in out_dir.iterdir():
                 if item.is_file() or item.is_symlink():
@@ -122,6 +122,7 @@ class MetaSystem:
             files (List[str]): The list of file paths to process.
             prg (str): The program string to process.
         """
+        print(f"input files: {files}")
         out_dir = Path(self.out_dir)
 
         tree = AspenTree(default_language=clingo_lang)
@@ -134,7 +135,8 @@ class MetaSystem:
         with StringIO() as buf:
             tree.textio_symbols[Function("fact_file", [])] = buf
             tree.transform(
-                meta_files=[Path(ENCODINGS_PATH) / "aspen" / "all.lp"], initial_program=("metasp_preprocess", ())
+                meta_files=[Path(ENCODINGS_PATH) / "aspen" / "all.lp"],
+                initial_program=("metasp_preprocess", ()),
             )
             facts_str = buf.getvalue().strip().replace("&", "__")
         with open(syntax_fact_file, "w") as fact_file:
@@ -144,54 +146,40 @@ class MetaSystem:
         rewritten_program_str = ""
         for i in input_file_symbols:
             source = tree.sources[i]
-            rewritten_program_str += str(source.source_bytes, encoding=source.encoding)
+            text = str(source.source_bytes, encoding=source.encoding)
+            rewritten_program_str += text
+            assert source.path is not None
+            stem = source.path.stem
+            out_file = out_dir / (stem + "_rewritten.lp")
+            with open(out_file, "w") as input_file:
+                input_file.write(text)
 
         str_input_source = tree.sources[str_input_symb]
-        rewritten_program_str += str(str_input_source.source_bytes, encoding=str_input_source.encoding)
-
-        if len(files) > 0:
-            fname = "_".join([Path(f).stem for f in files]) + "_stdin.lp"
-        else:
-            fname = "stdin.lp"
-        with open(out_dir / fname, "w") as f:
-            f.write(rewritten_program_str)
+        str_input_text = str(str_input_source.source_bytes, encoding=str_input_source.encoding)
+        rewritten_program_str += str_input_text
 
         tree = AspenTree(default_language=clingo_lang)
         semantic_enc_symbols = [tree.parse(Path(e)) for e in self.semantics_encoding]
         tree.transform(
-            meta_files=[Path(ENCODINGS_PATH) / "aspen" / "remove_ampersand.lp"],
+            meta_files=[
+                Path(ENCODINGS_PATH) / "aspen" / "remove_ampersand.lp",
+                Path(ENCODINGS_PATH) / "aspen" / "replace_metasp_includes.lp",
+            ],
             initial_program=("metasp_remove_ampersand", ()),
+            control_options=["-c", f'metasp_enc_path="{ENCODINGS_PATH}"'],
         )
+        rewritten_semantics_encoding: list[str] = []
         for s in semantic_enc_symbols:
             source = tree.sources[s]
+            text = str(source.source_bytes, encoding=source.encoding)
             p = source.path
             assert p is not None
-            out_file = out_dir / ("semantics_rewritten.lp")
-            # TODO: Fix this better, because at the moment if you have different paths it uses a single file name and replaces things
-            with open(out_file, "a") as sem_file:
-                sem_file.write(str(source.source_bytes, encoding=source.encoding))
-        self.semantics_encoding = [out_dir / ("semantics_rewritten.lp")]
+            out_file = out_dir / (p.stem + "_rewritten.lp")
+            with open(out_file, "w") as sem_file:
+                sem_file.write(text)
+            rewritten_semantics_encoding.append(str(out_dir / ("semantics_rewritten.lp")))
+        self.semantics_encoding = rewritten_semantics_encoding
         return rewritten_program_str
-
-    def _replace_package_includes(self, file: str) -> str:
-        """
-        Replace #include statements using metasp.file_name with the path of the metasp implementation.
-
-        Args:
-            file (str): The file name to be processed.
-        Returns:
-            str: The processed file name with package includes.
-        """
-        log.debug(f"Processing file: {file}")
-        with open(file, "r") as f:
-            file_content = f.read()
-            file_content = re.sub(
-                r'#include\s+"metasp\.([^"]+)"',
-                lambda m: f'#include "{os.path.join(ENCODINGS_PATH, m.group(1))}"',
-                file_content,
-            )
-        title = "\n\n%%%%%% File: {} %%%%%%\n\n".format(file)
-        return title + file_content
 
     def _set_printing_function(self, print_model_name: str) -> None:
         """
@@ -252,11 +240,15 @@ class MetaSystem:
         Returns:
             Sequence[str]: The list of file paths to be used.
         """
-        semantics_with_includes = "\n".join([self._replace_package_includes(f) for f in self.semantics_encoding])
+        semantics_str = ""
+        for fstr in self.semantics_encoding:
+            semantics_str += "\n\n%%%%%% File: {} %%%%%%\n\n".format(fstr)
+            with open(fstr, "r") as f:
+                semantics_str += f.read()
 
         tmp_file_path = os.path.join(self.out_dir, f"{self.name}_combined.lp")
         with open(tmp_file_path, "w") as tmp_file:
-            tmp_file.write(semantics_with_includes)
+            tmp_file.write(semantics_str)
             tmp_file.write("\n")
             tmp_file.write(reified_input)
 
