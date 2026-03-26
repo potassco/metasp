@@ -46,14 +46,27 @@ Constraints  : 794721   (Binary:  17.9% Ternary:  80.2% Other:   2.0%)
 ### Memelingo system
 
 ```
+memelingo mlp-tplp-htc 1 examples/job-shop/job-shop.lp examples/job-shop/instances/ft06.lp  -c lambda=20  -c v=110 --stats                                      ─╯
+Memelingo (<class 'clingcon.__main__.ClingconApp'>) mlp-tplp-htc version 5.2.1
+Reading from examples/job-shop/job-shop.lp ...
+Reifing...
+Saving refication...
+Running application... with files  ['/Users/susana/Developer/anaconda3/envs/memelingotest/lib/python3.12/site-packages/memelingo/encodings/mlp-tplp-htc.lp', '/var/folders/wc/l5bhs7f96zj95mprv40my6kw0000gn/T/tmpk8duyqz1.lp']
+Solving...
+Answer: 1
+true(start_run(0),7) true(start_run(1),9) true(start_run(2),13) true(start_run(3),14) true(start_run(4),16) true(start_run(5),18) true(start_run(6),4) true(start_run(7),8) true(start_run(8),13) true(start_run(9),14) true(start_run(10),15) true(start_run(11),18) true(start_run(12),4) true(start_run(13),6) true(start_run(14),10) true(start_run(15),13) true(start_run(16),14) true(start_run(17),15) true(start_run(18),3) true(start_run(19),5) true(start_run(20),12) true(start_run(21),13) true(start_run(22),14) true(start_run(23),17) true(start_run(24),0) true(start_run(25),9) true(start_run(26),11) true(start_run(27),15) true(start_run(28),16) true(start_run(29),17) true(start_run(30),0) true(start_run(31),4) true(start_run(32),13) true(start_run(33),14) true(start_run(34),16) true(start_run(35),18)
+Assignment:
+t(0)=0 t(1)=1 t(2)=2 t(3)=3 t(4)=18 t(5)=22 t(6)=24 t(7)=25 t(8)=26 t(9)=27 t(10)=29 t(11)=30 t(12)=31 t(13)=37 t(14)=72 t(15)=82 t(16)=92 t(17)=95 t(18)=96 t(19)=104
+SATISFIABLE
+
 Models       : 1+
 Calls        : 1
-Time         : 2.122s (Solving: 1.15s 1st Model: 1.15s Unsat: 0.00s)
-CPU Time     : 1.959s
+Time         : 0.936s (Solving: 0.59s 1st Model: 0.59s Unsat: 0.00s)
+CPU Time     : 0.925s
 
 Choices      : 15320
 Conflicts    : 2482     (Analyzed: 2482)
-Restarts     : 14       (Average: 177.29 Last: 294 Blocked: 0)
+Restarts     : 14       (Average: 177.29 Last: 294)
 Model-Level  : 275.0
 Problems     : 1        (Average Length: 1.00 Splits: 0)
 Lemmas       : 8598     (Deleted: 2879)
