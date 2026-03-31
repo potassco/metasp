@@ -6,6 +6,9 @@
     &next/1: {
       type: tel, safety: safe;
     };
+    &prev/1: {
+      type: tel, safety: safe;
+    };
     &eventually/1: {
       type: tel, safety: safe;
     };

@@ -12,6 +12,9 @@ true(&initial,0) :- formula(tel,&initial).
 true(F,K+1) : time(K+1) :- formula(tel,&next(F)), true(&next(F),K).
 true(&next(F),K) :- formula(tel,&next(F)), true(F,K+1), time(K).
 
+true(F,K-1) : time(K-1) :- formula(tel,&prev(F)), true(&prev(F),K).
+true(&prev(F),K) :- formula(tel,&prev(F)), true(F,K-1), time(K).
+
 true(F,J) : time(J), K<=J :- true(&eventually(F),K).
 true(&eventually(F),K) :- formula(tel,&eventually(F)), true(F,J), K<=J, time(K), time(J).
 
