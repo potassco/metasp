@@ -1,0 +1,7 @@
+syntax-encoding:
+  - "../../examples/tel/syntax.lp"
+semantics-encoding:
+  - "../../examples/tel/semantics.lp"
+printer: temporal_printer
+required-constants:
+  - "n"
