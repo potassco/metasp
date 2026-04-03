@@ -11,6 +11,12 @@ for domain in "${DOMAINS[@]}"; do
     encoding="$SCRIPT_DIR/encodings/${domain}-telingo.lp"
     for instance in "$SCRIPT_DIR/instances/${domain}"/*.asp; do
         instance_name="$(basename "$instance")"
+	horizon_file="$SCRIPT_DIR/horizons/${instance_name}"
+        n=$(grep -oP '#const n = \K[0-9]+' "$horizon_file")
+        if [ -z "$n" ]; then
+            echo "ERROR: could not read horizon for $instance_name, skipping"
+            continue
+        fi
         echo "Running: telingo 1 -q $instance $encoding"
         output=$(timeout "$TIMEOUT" telingo 1 -q --stats "$instance" "$encoding" 2>&1)
         status=$?

@@ -1,0 +1,8 @@
+* Benchmarking results for metasp vs telingo
+
+This directory contains benchmarking results comparing the performance of the metasp with the TEL encoding and telingo, a highly tuned extension of the clingo system to solve TEL programs.
+We evaluate these systems on the suite of planning problems used to evaluate the telingo in the paper telingo = ASP + Time.
+
+** Benchmarking setup
+
+We run the
