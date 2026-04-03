@@ -1,8 +1,22 @@
 * Benchmarking results for metasp vs telingo
 
-This directory contains benchmarking results comparing the performance of the metasp with the TEL encoding and telingo, a highly tuned extension of the clingo system to solve TEL programs.
-We evaluate these systems on the suite of planning problems used to evaluate the telingo in the paper telingo = ASP + Time.
+This directory contains benchmarking results comparing the performance of the =metasp= with the TEL encoding and =telingo=, a highly tuned extension of the =clingo= system to solve TEL programs.
+We evaluate these systems on the suite of planning problems used to evaluate the =telingo= in the paper =telingo= = ASP + Time. These instances contain planning problems from domains =hanoi-tower=, =labyrinth=, =no-mystery=, =ricochet-robots=, =sokoban=, and =visit-all=, all of which originated from ASP competitions.
 
 ** Benchmarking setup
 
-We run the
+We run the benchmark on the same subset of 69 instances from the =telingo= = ASP + Time paper for which =telingo/clingo= could solve the problem within 24 hours. For these instances, the directory =horizons= contains a constant declaration for the instance, giving the horizon at which the first solution can be found. Each instance was run until the first solution was found, with a timeout of 10 minutes, on a machine with 32GB RAM and an AMD Ryzen 5 9600X 6x 3.90GHz processor.
+
+We compare 3 systems in our experiments: =metasp=, =telingo= and =telingo-lambda=, where =telingo-lambda= is a custom-modified version of the =telingo= system, allowing it to be run with a fixed predetermined horizon, similarly to =metasp=. This is to allow a more fair comparison of =metasp= to =telingo=, since =telingo= does not by default support fixed horizon solving, and we found in preliminary experiments that =telingo= spent a significant amount of its runtime determining unsatisfiability for smaller horizons than the first one at which a solution can be found.
+
+The scripts to run the systems on our benchmarks are =run_metasp.sh=, =run_telingo.sh= and =run_telingo_lambda.sh=, and their results can be found in the corresponding =.csv= file.
+
+** Benchmark results summary
+
+*** =metasp= vs =telingo=
+
+W.r.t. runtime, we can see that the =metasp= system considerably outperforms =telingo= on more difficult instances, but incurs a slight penalty on easier instances. We hypothesize that this may be due to added preprocessing overhead of the system, and a larger ground instantiation, but further investigation is needed. As a general trend, we also see a decrease in choices and conflicts, and an increase in constraints in the =metasp= system, indicating a more efficient solving process. The difference in these metrics is particularly marked in the =visit-all= domain, which should prompt further investigation
+
+*** =metasp= vs =telingo-lambda=
+
+When comparing =metasp= to =telingo-lambda=, a fixed-horizon variant of =telingo=, the differences are less stark. As a general trend, we see that =telingo-lambda= outperforms =metasp=, with =metasp= nonetheless achieving comparable results in most cases. This trend is broken in some cases, with either =metasp= or =telingo= performing significantly better than the other. The =visit-all= domain remains an outlier, with =metasp= still performing significantly better, warranting further investigation. With regard to choices and conflicts, we see in general a decreas in the =metasp= system, with some notable exceptions in the =richochetrobots= domain. The number of constraints are in general quite similar between the runs of the two systems.

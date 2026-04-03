@@ -3,7 +3,7 @@
 TIMEOUT=600
 DOMAINS=(labyrinth hanoi nomystery ricochetrobot sokoban visitall)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CSV="$SCRIPT_DIR/telingo_results_fixed_horizon.csv"
+CSV="$SCRIPT_DIR/telingo_lambda_results.csv"
 
 echo "domain,instance,choices,conflicts,constraints,time_s,status" > "$CSV"
 
