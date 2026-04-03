@@ -116,6 +116,7 @@ class MetaspProcessor:
         Returns:
             str: The reified input data.
         """
+        log.debug("Reifying program...")
         rsymbols = meta_tools.classic_reify(
             ["--preserve-facts=symtab"] + [f"-c {k}={v}" for k, v in constants.items()],
             prg,

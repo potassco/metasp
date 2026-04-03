@@ -14,8 +14,8 @@
 }.
 #type mel {
   expressions: {
-    &top/0;
-    &bottom/0;
+    &true/0;
+    &false/0;
     &initial/0;
     &final/0;
     &next/2: {
