@@ -14,6 +14,7 @@ import logging
 from importlib.resources import path
 
 log = logging.getLogger(__name__)
+PREFIX = "__"
 
 
 @dataclass
@@ -23,6 +24,7 @@ class Formula:
     type: Type
     arguments: List["Formula"] = None
     super_types: List[str] = None
+    original_symbol: Symbol = None
 
     @property
     def signature(self) -> tuple[str, int]:
@@ -33,18 +35,25 @@ class Formula:
         types = set([self.type.name] + (self.super_types or []))
         return list(types)
 
-    def symbol_with_prefix(self) -> Symbol:
+    def symbol_with_prefix(self, apply_sugar: bool = True) -> Symbol:
         is_tuple = self.type is None
+        if not apply_sugar and self.original_symbol is not None:
+            return self.original_symbol
         if is_tuple:
             name = ""
         else:
             if self.type.is_base_type:
                 return self.symbol
-            name = f"__{self.symbol.name}"
-        return Function(name, [a.symbol_with_prefix() for a in self.arguments], self.symbol.positive)
+            name = f"{PREFIX}{self.symbol.name}"
+        return Function(
+            name, [a.symbol_with_prefix(apply_sugar=apply_sugar) for a in self.arguments], self.symbol.positive
+        )
 
     def __str__(self) -> str:
         return str(self.symbol)
+
+    def set_original_symbol(self, original_symbol: Symbol):
+        self.original_symbol = original_symbol
 
 
 def _print_done_decorator(func):
@@ -160,6 +169,7 @@ class FormulaRegistery:
                 m = f"Symbol {p(s)} was not changed by syntactic sugar removal. This would lead to infinite recursion."
                 raise ValueError(m)
             new_formula = self.match(new_symbol, as_type=as_type)
+            new_formula.set_original_symbol(s)
             return self.add_formula(new_formula)
         try:
             self.assert_type_in(as_type, self.grammar.all_types(formula_type), s)
@@ -170,7 +180,9 @@ class FormulaRegistery:
                 log.debug(f"No syntactic sugar removed for {p(s)}")
                 raise e
             log.debug(f"Syntactic sugar removed for {p(s)}, matching new symbol {p(new_symbol)}")
-            return self.match(new_symbol, as_type=as_type)
+            new_formula = self.match(new_symbol, as_type=as_type)
+            new_formula.set_original_symbol(s)
+            return new_formula
 
         if formula_type.is_base_type:
             log.debug(f"✅ Symbol {p(s)} is base type {t(formula_type.name)}, returning directly")
