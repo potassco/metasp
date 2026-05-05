@@ -2,6 +2,7 @@ import os
 import re
 import logging
 import importlib.util
+import sys
 import tempfile
 from collections.abc import Sequence
 from typing import Optional, List
@@ -133,9 +134,13 @@ class MetaSystem:
         syntax_fact_file = out_dir / "syntax_facts.lp"
         with StringIO() as buf:
             tree.textio_symbols[Function("fact_file", [])] = buf
-            tree.transform(
-                meta_files=[Path(ENCODINGS_PATH) / "aspen" / "all.lp"], initial_program=("metasp_preprocess", ())
-            )
+            try:
+                tree.transform(
+                    meta_files=[Path(ENCODINGS_PATH) / "aspen" / "all.lp"], initial_program=("metasp_preprocess", ())
+                )
+            except Exception as e:
+                log.error(f"Error transforming input.\n Error: %s", e)
+                sys.exit(1)
             facts_str = buf.getvalue().strip().replace("&", "__")
         with open(syntax_fact_file, "w") as fact_file:
             fact_file.write(facts_str)
