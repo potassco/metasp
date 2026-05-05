@@ -12,6 +12,18 @@ import sys
 log = logging.getLogger(__name__)
 
 
+def pretty_printer(model: Model, system) -> None:
+    """
+    Print the model with color highlighting the internal symbols (those starting with &) in yellow.
+
+    Args:
+        model (Model): The clingo model to be printed.
+        system (MetaSystem): The metasp system.
+    """
+    sys.stdout.write("\n".join([print_symbol_str(sym) for sym in model.symbols(shown=True)]))
+    sys.stdout.write("\n")
+
+
 def default_print_model(model: Model, system) -> None:
     """
     Print the model.
