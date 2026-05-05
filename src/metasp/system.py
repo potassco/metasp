@@ -185,6 +185,13 @@ class MetaSystem:
         log.debug(f"Processing file: {file}")
         with open(file, "r") as f:
             file_content = f.read()
+            has_other_includes = re.search(r'#include\s+"(?!metasp\.)[^"]+"', file_content) is not None
+            if has_other_includes:
+                log.warning(
+                    f"File {file} contains #include statements that do not use the 'metasp.' prefix. "
+                    f"The use of & in these files will not be properly handled. "
+                    f"Add the file to the semantics_encoding instead for the system to properly handle them. "
+                )
             file_content = re.sub(
                 r'#include\s+"metasp\.([^"]+)"',
                 lambda m: f'#include "{os.path.join(ENCODINGS_PATH, m.group(1))}"',

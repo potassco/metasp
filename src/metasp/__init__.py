@@ -117,11 +117,15 @@ class MetaspProcessor:
             str: The reified input data.
         """
         log.debug("Reifying program...")
-        rsymbols = meta_tools.classic_reify(
-            ["--preserve-facts=symtab"] + [f"-c {k}={v}" for k, v in constants.items()],
-            prg,
-            programs=[("base", [])],
-        )
+        try:
+            rsymbols = meta_tools.classic_reify(
+                ["--preserve-facts=symtab"] + [f"-c {k}={v}" for k, v in constants.items()],
+                prg,
+                programs=[("base", [])],
+            )
+        except RuntimeError as e:
+            log.error("Error during grounding of the transformed input:\n%s", prg)
+            raise e
         simple_reified_prg = "\n".join([f"{str(s)}." for s in rsymbols])
         log.debug("---------- Classic reification \n" + simple_reified_prg + "\n-------------------")
 
