@@ -1,0 +1,5 @@
+syntax-encoding:
+  - "./syntax.lp"
+semantics-encoding:
+  - "./semantics.lp"
+printer: pretty_printer
