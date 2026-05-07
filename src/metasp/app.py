@@ -9,6 +9,7 @@ from clingo.application import Application, ApplicationOptions
 from clingcon.__main__ import ClingconApp
 from flingo.__main__ import flingoApp
 
+from metasp.printing import print_logs
 from metasp.utils.parser import load_config
 
 from .utils.logging_utils import configure_logging
@@ -230,6 +231,7 @@ def make_app(app_name: str) -> Application:
             Args:
                 model (Model): The model to print.
             """
+            print_logs(model)
             if self.on_model is not None:
                 self.on_model(model)
             log.debug(
@@ -252,7 +254,6 @@ def make_app(app_name: str) -> Application:
             if self.metasp_config_file is not None:
                 metasp_system_final_config = load_config(self.metasp_config_file, root_dir=self.root_dir)
                 log.debug("Loaded config from file: %s %s", self.metasp_config_file, metasp_system_final_config)
-            # Update self.metasp_config with values from metasp_system_final_config
 
             metasp_system_final_config.update(self.metasp_config)
 

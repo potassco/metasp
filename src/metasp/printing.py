@@ -12,6 +12,20 @@ import sys
 log = logging.getLogger(__name__)
 
 
+def print_logs(model: Model) -> None:
+    """
+    Auxiliary function to print log messages from the model.
+    It looks for symbols of the form _log(Level, Message) and prints the message with the corresponding log level.
+    """
+    for sym in model.symbols(atoms=True):
+        if sym.match("_log", 2):
+            level = str(sym.arguments[0]).strip('"').lower()
+            if level not in ["debug", "info", "warning", "error", "critical"]:
+                log.warning("Invalid log level: {}. Skipping log message.".format(level))
+                continue
+            getattr(log, level)(sym.arguments[1])
+
+
 def print_symbol_str(s: Symbol) -> str:
     """
     Auxiliary function to print a symbol with color if it is an internal symbol (those starting with &).
