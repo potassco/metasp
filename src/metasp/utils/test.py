@@ -212,10 +212,15 @@ class TestMetasp:
 ✗ Test {self.name} failed.\n
     Reason:          {self.status.message}
     Arguments:       {self.command_line_args}
+    Command:         {self.command}
     Expected models: {expected_models}
     Obtained models: {obtained_models}
             """
             print(color(textwrap.dedent(error_message), "red"))
+
+    @property
+    def command(self) -> str:
+        return f"cd {self.root_dir}; metasp solve {self.system} {' '.join(self.command_line_args)} {self.name} 0"
 
 
 def run_tests(command_line: list[str], current_path: str = None) -> None:

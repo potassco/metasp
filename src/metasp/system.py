@@ -136,8 +136,6 @@ class MetaSystem:
         syntax_enc_symbols = [tree.parse(Path(e)) for e in self.syntax_encoding]
         input_file_symbols = [tree.parse(Path(i)) for i in files]
         str_input_symb = tree.parse(prg)
-        print("_____ symbols")
-        print(str_input_symb)
 
         syntax_fact_file = out_dir / "syntax_facts.lp"
         with StringIO() as buf:
@@ -163,8 +161,6 @@ class MetaSystem:
 
         str_input_source = tree.sources[str_input_symb]
         rewritten_program_str += str(str_input_source.source_bytes, encoding=str_input_source.encoding)
-        print(str_input_source)
-        print(rewritten_program_str)
         if len(files) > 0:
             fname = "_".join([Path(f).stem for f in files]) + "_stdin.lp"
         else:

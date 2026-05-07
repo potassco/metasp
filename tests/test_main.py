@@ -48,19 +48,21 @@ class TestUtils(TestCase):
 
         dic = BOOL_DIC
         const = {}
-        # prg = ":- &and(a,b).\n"  # Gets an error I can't understand
-        prg = ":- a."  # Gets an error I can't understand
+        prg = "{a}.{b}.:- &and(a,b).\n"  # Gets an error I can't understand
 
         meta_system = MetaSystem.from_dict(dic)
         meta_system.set_constants(const)
-        # transformed_input = meta_system.fo_transform(["examples/bool/instances/simple.lp"], prg)
         transformed_input = meta_system.fo_transform([], prg)
         grammar = Grammar.from_asp_files(meta_system.syntax_encoding)
         processor = MetaspProcessor(grammar)
 
         # replace_internal_prefix(transformed_input)
         reified = processor.reify_and_extend(transformed_input, const)
-        final_files = meta_system.get_files(reified)
+        self.assertIn("formula(bool,a).", reified)
+        self.assertIn("formula(bool,b).", reified)
+        self.assertIn("formula(atom,a).", reified)
+        self.assertIn("formula(atom,b).", reified)
+        self.assertIn("formula(bool,__and(a,b)).", reified)
 
     def test_required_constant(self) -> None:
         """
