@@ -26,6 +26,9 @@ icon: material/help-circle
 !!! tip
     "Error during grounding" Might be that you are using {} instead of ()
 
+!!! tip
+    external unsafe
+
 
 ## Further help
 

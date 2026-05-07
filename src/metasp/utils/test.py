@@ -96,19 +96,31 @@ class TestMetasp:
                 log.error("No test files found in the current directory and its subdirectories.")
                 raise ValueError("No test files found in the current directory and its subdirectories.")
 
-        return [cls.from_test_file(file) for file in test_files]
+        tests = []
+        for file in test_files:
+            tests.extend(cls.from_test_file(file))
+        return tests
 
     @classmethod
-    def from_test_file(cls, file_path: str) -> "TestMetasp":
+    def from_test_file(cls, file_path: str) -> list["TestMetasp"]:
         args = ""
         expected_models = []
         reading_test = False
         reading_command = False
         system = None
+        tests = []
         with open(file_path, "r", encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
+                if line == "":
+                    continue
                 if line.startswith("% #TEST"):
+                    if reading_test:
+                        tests.append(
+                            cls(file=file_path, system=system, command_line_args=args, expected_models=expected_models)
+                        )
+                        expected_models = []
+                        system = None
                     reading_test = True
                     reading_command = True
                     reading_test = True
@@ -142,12 +154,13 @@ class TestMetasp:
                     log.error("Invalid test format in file %s", file_path)
                     log.error(FORMAT)
                     raise ValueError(f"Unexpected format in test file: {line}")
+
         if not reading_test:
-            log.error(f"No test comments found in the test file. {file_path}")
-            log.error(FORMAT)
-            raise ValueError("No test case found in the test file.")
-        log.info(f"Parsed test case from file {file_path}: args={args}, expected_models={expected_models}")
-        return cls(file=file_path, system=system, command_line_args=args, expected_models=expected_models)
+            log.warning(f"No test comments found in the test file. {file_path}")
+            log.warning(FORMAT)
+        else:
+            tests.append(cls(file=file_path, system=system, command_line_args=args, expected_models=expected_models))
+        return tests
 
     def print_fail(self, s: str) -> None:
         sys.stdout.write(s + "\n")
