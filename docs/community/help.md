@@ -20,6 +20,13 @@ icon: material/help-circle
     the potassco tools. You can also [subscribe] to this list to get updates and
     join the community.
 
+
+## First steps
+
+!!! tip
+    "Error during grounding" Might be that you are using {} instead of ()
+
+
 ## Further help
 
 !!! question "Open an Issue"

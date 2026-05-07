@@ -45,6 +45,19 @@ class SingleLevelFilter(logging.Filter):
         return record.levelno == self.passlevel
 
 
+def color(s: str, color: str) -> str:
+    """
+    Color a string.
+
+    Args:
+        s (str): The string to color.
+        color (str): The color to use. Must be one of the keys in the COLORS dictionary.
+    Returns:
+        str: The colored string.
+    """
+    return f"{COLORS[color.upper()]}{s}{COLORS['NORMAL']}"
+
+
 def configure_logging(stream: TextIO, level: int, use_color: bool) -> None:
     """
     Configure application logging.
@@ -71,10 +84,3 @@ def configure_logging(stream: TextIO, level: int, use_color: bool) -> None:
         make_handler(logging.ERROR, "RED"),
     ]
     logging.basicConfig(handlers=handlers, level=level)
-
-
-def get_logger(name: str) -> logging.Logger:
-    """
-    Get a logger with the given name.
-    """
-    return logging.getLogger(name)

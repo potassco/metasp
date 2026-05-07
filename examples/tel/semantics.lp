@@ -2,7 +2,6 @@
 #include "metasp.show-time.lp".
 #include "metasp.reify-defined.lp".
 #include "metasp.reify-defined-metasp.lp".
-#include "metasp.check-occur.lp".
 
 true(&true,K) :- formula(tel,&true), time(K).
 

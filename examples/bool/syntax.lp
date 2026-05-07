@@ -3,8 +3,8 @@
         &not/1 : {
             type: bool, safety: unsafe;};
         &and/2 : {
-            type: bool, safety: unsafe;
-            type: bool, safety: unsafe;};
+            type: bool, safety: safe;
+            type: bool, safety: safe;};
         &or/2 : {
             type: bool, safety: unsafe;
             type: bool, safety: unsafe;};

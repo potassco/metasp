@@ -5,6 +5,7 @@ The metasp project.
 from ast import AST
 from dataclasses import dataclass
 from re import match
+import sys
 from typing import Dict, List
 from clingox.reify import Reifier
 from clingo import Control, Symbol
@@ -17,7 +18,7 @@ from meta_tools.extensions import ShowExtension
 from meta_tools.extensions.base_extension import ReifyExtension
 from metasp.formula_processing import FormulaRegistery
 import logging
-from importlib.resources import path
+from importlib.resources import files
 
 log = logging.getLogger(__name__)
 
@@ -33,35 +34,27 @@ def replace_internal_prefix(prg: str) -> str:
     return prg.replace("__", "&")
 
 
-def replace_prefix(files: List[str], prg: str) -> str:
-    """
-    Replaces the & prefix by __ in the files and program.
-
-    Args:
-        files (List[str]): The list of file paths to process.
-        prg (str): The program string to process.
-    Returns:
-        str: The program string with the replaced prefixes.
-    """
-    # TODO AMADE call aspen make sure all include statements are considered
-
-    # Placeholder code:
-    program_str = ""
-    for file_path in files:
-        with open(file_path, "r", encoding="utf-8") as f:
-            program_str += f.read() + "\n"
-    program_str += prg
-    return program_str
-
-
 RESERVED_PREDICATES = [("_show", 0), ("_show_term", 1), ("_show_atom", 1)]
 
 
 def is_reserved_predicate(symbol: Symbol) -> bool:
+    """
+    Checks if a symbol is a reserved predicate.
+
+    Args:
+        symbol (Symbol): The symbol to check.
+
+    Returns:
+        bool: True if the symbol is a reserved predicate, False otherwise.
+    """
     return any(symbol.match(p[0], p[1]) for p in RESERVED_PREDICATES)
 
 
 class MetaspExtension(ReifyExtension):
+    """
+    Metasp Extension for the reification process.
+    It uses ASPEN to transform the input program and then reifies it with the help of the FormulaRegistery to keep track of the formulas and their types.
+    """
 
     def __init__(
         self,
@@ -72,23 +65,39 @@ class MetaspExtension(ReifyExtension):
         self._formula_registery = FormulaRegistery(grammar)
 
     def add_extension_encoding(self, ctl: Control) -> None:
-        """ """
-        with path("metasp.encodings", "reify-extension.lp") as base_encoding:
-            log.debug("Loading encoding: %s", base_encoding)
-            ctl.load(str(base_encoding))
+        """
+        Adds the extension encoding to the control object.
+        Args:
+            ctl (Control): The clingo control object to which the encoding will be added.
+        """
+        base_encoding = files("metasp.encodings").joinpath("reify-extension.lp")
+        log.debug("Loading encoding: %s", base_encoding)
+        ctl.load(str(base_encoding))
 
     def update_context(self, context: object) -> None:
+        """
+        Updates the context object with the necessary functions for the extension.
+
+        Args:
+            context (object): The clingo context object to be updated.
+        """
+
         def match_output(symbol: Symbol) -> Symbol:
             if is_reserved_predicate(symbol):
                 return symbol
             formula = self._formula_registery.match_top_level(symbol)
             if formula is not None:
                 return formula.symbol_with_prefix()
-            return symbol
+            return symbol  # nocoverage
 
         setattr(context, "match_output", match_output)
 
     def additional_symbols(self) -> Sequence[Symbol]:
+        """
+        Provides additional symbols to be added to the reified program.
+        In this case, it provides the symbols for the formulas in the formula registery.
+        """
+
         formula_symbols = []
         for f in self._formula_registery.formulas.values():
             used_types = f.used_types
@@ -125,6 +134,7 @@ class MetaspProcessor:
             )
         except RuntimeError as e:
             log.error("Error during grounding of the transformed input:\n%s", prg)
+            log.error("Error: %s", e)
             raise e
         simple_reified_prg = "\n".join([f"{str(s)}." for s in rsymbols])
         log.debug("---------- Classic reification \n" + simple_reified_prg + "\n-------------------")

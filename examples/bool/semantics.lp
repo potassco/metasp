@@ -28,4 +28,3 @@ true(&to(F1,F2)) :- formula(bool, &to(F1,F2)), true(F2): true(F1).
 true(F2) :- true(&to(F1,F2)), true(F1).
 % ???
 % true(F); true(F' ) :- theory_term_tree(F,("<-",F',F'')),   not not true(F'').
-

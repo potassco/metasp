@@ -3,7 +3,9 @@ The command line parser for the project.
 """
 
 from argparse import ArgumentParser
+import argparse
 from importlib import metadata
+import os
 from textwrap import dedent
 from typing import Any, Optional, cast
 from pathlib import Path
@@ -39,17 +41,57 @@ levels = [
 ]
 
 
-def get(levels: list[tuple[str, int]], name: str) -> Optional[int]:
+def get(levels: list[tuple[str, int]], name: str) -> Optional[int]:  # nocoverage
     for key, val in levels:
         if key == name:
             return val
-    return None  # nocoverage
+    return None
 
 
-def load_config(path):
-    with open(path) as f:
-        config = yaml.safe_load(f) or {}
+def load_config(path, root_dir=None):
+    if root_dir is not None:
+        full_path = Path(root_dir) / path
+    else:
+        full_path = Path(path)
+
+    config_dir = full_path.resolve().parent
+    try:
+        with open(full_path) as f:
+            config = yaml.safe_load(f) or {}
+    except Exception as e:
+        print(f"Error loading config file {path} from config path {config_dir}")
+        raise
+
+    for k, values in config.items():
+        if isinstance(values, list):
+            config[k] = [
+                str((config_dir / v).resolve()) if v.endswith(".lp") or v.endswith(".py") else v for v in values
+            ]
     return {k.replace("-", "_"): v for k, v in config.items()}
+
+
+def parse_constants(arguments: list[str]) -> dict[str, str]:
+    """
+    Parse constants from the command line arguments.
+    We need these constrants in both steps and since we can't fork the control object,
+    we parse them here.
+
+    Args:
+        arguments (list): The command line arguments.
+    Returns:
+        list: A list of constants in the form <id>=<term>.
+    """
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument(
+        "-c",
+        "--const",
+        action="append",
+        help="Replace term occurrences of <id> with <term> (must have form <id>=<term>)",
+        type=lambda s: s if "=" in s else parser.error("Constants must have form <id>=<term>"),
+    )
+    args, _ = parser.parse_known_args(arguments)
+    input_consts = {c.split("=")[0]: c.split("=")[1] for c in args.const} if args.const else {}
+    return input_consts
 
 
 def get_parser() -> ArgumentParser:
@@ -63,17 +105,6 @@ def get_parser() -> ArgumentParser:
     )
     parser.add_argument("--version", "-v", action="version", version=f"%(prog)s {VERSION}")
 
-    # subparsers = parser.add_subparsers(
-    # dest="operation",
-    # required=True,
-    # help="Available systems defined in configuration file metasp.yml. Each system is a separate subcommand using clingo's Application class.",
-    # )
-    # for systems_config in config.get("metasp-systems", []):
-    # system_parser = subparsers.add_parser(
-    # systems_config["name"],
-    # help=systems_config.get("description", ""),
-    # formatter_class=ArgumentDefaultsRichHelpFormatter,
-    # )
     system_parser_output = parser.add_subparsers(
         dest="output",
         required=True,
@@ -81,6 +112,7 @@ def get_parser() -> ArgumentParser:
     )
     output_options = {
         "solve": "Solve the processed and reified input files with the meta encoding for the semantics.",
+        "test": "Run the test cases defined in the test file. If specific tests file is provided, all test files .test.lp in current directory will be ran.",
         "transform": "Output the transformed first order program and run syntactic checks.",
         "reify": "Output the reification with extensions.",
         "ui": "User interface mode.",

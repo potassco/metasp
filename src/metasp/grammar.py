@@ -81,11 +81,6 @@ class Grammar:
         return list([str(s) for s in all_types_extended])
 
     @classmethod
-    def from_grammar(cls, asp_files: Sequence[str]) -> "Grammar":
-        # TODO AMADE
-        pass
-
-    @classmethod
     def from_asp_files(cls, asp_files: Sequence[str]) -> "Grammar":
         log.debug("Loading grammar from ASP files: %s", asp_files)
         if len(asp_files) == 0:

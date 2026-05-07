@@ -71,17 +71,20 @@ def make_app(app_name: str) -> Application:
     base_class = get_app_by_name(app_name)
 
     class MetaspApp(base_class):
-        def __init__(self, constants=None):
+        def __init__(self, constants=None, on_model=None, root_dir=None):
             """
             Create application
 
             Args:
                 config (dict): The configuration dictionary.
                 constants (Optional[dict], optional): The constants required by the system that will become attributes. Defaults to None.
+                on_model (Optional[callable], optional): A callback function to handle models. Defaults to None.
             """
             super().__init__(f"Metasp ({base_class})")
             self.constants = constants or {}
+            self.root_dir = root_dir or "."
             self.metasp_config = {}
+            self.on_model = on_model
             self.metasp_config_file = None
             self._log_level = "warning"
             enable_python()
@@ -227,6 +230,8 @@ def make_app(app_name: str) -> Application:
             Args:
                 model (Model): The model to print.
             """
+            if self.on_model is not None:
+                self.on_model(model)
             log.debug(
                 "\n".join([str(s).replace("__", "&") for s in model.symbols(atoms=True, shown=True, theory=True)])
             )
@@ -245,7 +250,7 @@ def make_app(app_name: str) -> Application:
 
             metasp_system_final_config = {}
             if self.metasp_config_file is not None:
-                metasp_system_final_config = load_config(self.metasp_config_file)
+                metasp_system_final_config = load_config(self.metasp_config_file, root_dir=self.root_dir)
                 log.debug("Loaded config from file: %s %s", self.metasp_config_file, metasp_system_final_config)
             # Update self.metasp_config with values from metasp_system_final_config
 
