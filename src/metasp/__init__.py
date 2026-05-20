@@ -54,7 +54,7 @@ def replace_prefix(files: List[str], prg: str) -> str:
     return program_str
 
 
-RESERVED_PREDICATES = [("_show", 0), ("_show_term", 1), ("_show_atom", 1)]
+RESERVED_PREDICATES = [("_show", 0), ("_show_term", 1), ("_show_signature", 2)]
 
 
 def is_reserved_predicate(symbol: Symbol) -> bool:
@@ -93,8 +93,13 @@ class MetaspExtension(ReifyExtension):
         for f in self._formula_registery.formulas.values():
             used_types = f.used_types
             for s in used_types:
+                type_symbol = Function(s, [], True)
+                formula_symbol = f.symbol_with_prefix()
                 formula_symbols.append(
-                    Function("formula", [Function(s, [], True), f.symbol_with_prefix()]),
+                    Function("formula", [type_symbol, formula_symbol]),
+                )
+                formula_symbols.append(
+                    Function("original_formula", [formula_symbol, f.symbol_with_prefix(apply_sugar=False)]),
                 )
         return formula_symbols
 

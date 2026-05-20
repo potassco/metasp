@@ -1,8 +1,6 @@
 % New predicates
-show_atom(X,B):-
-    rule(disjunction(H),normal(B)),
-    atom_tuple(H,L),
-    symbol_literal(_show_atom(X),L).
+show_signature(P,A):-
+    symbol_literal(_show_signature(P,A),_).
 
 show_term(X,B):-
     rule(disjunction(H),normal(B)),
@@ -11,7 +9,7 @@ show_term(X,B):-
 
 show :- output(_show, _).
 
-#show show_atom/2.
+#show show_signature/2.
 #show show_term/2.
 #show show/0.
 
@@ -21,7 +19,7 @@ symbol_literal(S,L):- output(S,B), literal_tuple(B,L).
 #show symbol_literal(S,L):symbol_literal(S,L), not reserved(_,S).
 
 
-reserved(show,_show_atom(X)):- output(_show_atom(X), _).
+reserved(show,_show_signature(P,A)):- output(_show_signature(P,A), _).
 reserved(show,_show_term(X)):- output(_show_term(X), _).
 reserved(show,_show):- output(_show, _).
 

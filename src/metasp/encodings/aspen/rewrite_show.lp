@@ -58,8 +58,9 @@ signature_id_prefix(Sig,"&") :- type(Sig, "metasp_signature").
 arity_var_cons(A, @upper_alphabet_cons(A))
   :- signature_arity(_,A).
 
-aspen(edit(node(ShowSig), format("_show_atom({0}{1}{2}({3})) :- {0}{1}{2}({3}).",
-																 (Sign, (Pre, (node(Id), (join(", ", Cons), ())))))))
+
+aspen(edit(node(ShowSig), format("_show_signature({0}{1}{2},{3}).",
+																(Sign, (Pre, (node(Id), (Arity, ())))))))
   :- type(ShowSig, "show_signature"),
 		 child(ShowSig, Sig),
 		 extended_signature(Sig),
