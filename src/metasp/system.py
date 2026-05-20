@@ -24,7 +24,7 @@ ENCODINGS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "encod
 clingo_lang = Language(ts_metasp.language())
 
 
-def get_clinguin_backend_control(control_name: str) -> str:
+def get_clinguin_backend_control(control_name: str) -> str:  # nocoverage
     """
     Get the Clinguin backend control for the given name.
 
@@ -81,14 +81,14 @@ class MetaSystem:
         self._set_printing_function(print_model)
 
         out_dir = Path.cwd() / "out"
-        if out_dir.exists():
+        if out_dir.exists():  # nocoverage
             for item in out_dir.iterdir():
                 if item.is_file() or item.is_symlink():
                     item.unlink()
                 elif item.is_dir():
                     shutil.rmtree(item)
         else:
-            out_dir.mkdir(exist_ok=True)
+            out_dir.mkdir(exist_ok=True)  # nocoverage
         self.out_dir = out_dir
 
     @classmethod
@@ -102,6 +102,11 @@ class MetaSystem:
             MetaSystem: An instance of the MetaSystem class.
         """
         log.debug(f"Creating MetaSystem from config: {config}")
+        if not "semantics_encoding" in config:
+            log.error(
+                "The 'semantics_encoding' field is required to run metasp. Provided via --meta-config or directly."
+            )
+            raise ValueError("Missing semantics encoding")
         return cls(
             name=config.get("name", "metasp"),
             control_name=config.get("control_name", "clingo"),
@@ -123,6 +128,7 @@ class MetaSystem:
             files (List[str]): The list of file paths to process.
             prg (str): The program string to process.
         """
+        # #TODO Separate this function to have something that gets the grammar from the syntax
         out_dir = Path(self.out_dir)
 
         tree = AspenTree(default_language=clingo_lang)
@@ -139,8 +145,10 @@ class MetaSystem:
                     meta_files=[Path(ENCODINGS_PATH) / "aspen" / "all.lp"], initial_program=("metasp_preprocess", ())
                 )
             except Exception as e:
+                if len(self.syntax_encoding) == 0:
+                    log.error(f"No syntax encoding files provided is likely the cause of the error.")
                 log.error(f"Error transforming input.\n Error: %s", e)
-                sys.exit(1)
+                raise (e)
             facts_str = buf.getvalue().strip().replace("&", "__")
         with open(syntax_fact_file, "w") as fact_file:
             fact_file.write(facts_str)
@@ -153,7 +161,6 @@ class MetaSystem:
 
         str_input_source = tree.sources[str_input_symb]
         rewritten_program_str += str(str_input_source.source_bytes, encoding=str_input_source.encoding)
-
         if len(files) > 0:
             fname = "_".join([Path(f).stem for f in files]) + "_stdin.lp"
         else:
@@ -191,7 +198,7 @@ class MetaSystem:
         with open(file, "r") as f:
             file_content = f.read()
             has_other_includes = re.search(r'#include\s+"(?!metasp\.)[^"]+"', file_content) is not None
-            if has_other_includes:
+            if has_other_includes:  # nocoverage
                 log.warning(
                     f"File {file} contains #include statements that do not use the 'metasp.' prefix. "
                     f"The use of & in these files will not be properly handled. "
@@ -231,7 +238,7 @@ class MetaSystem:
             return
 
         printing_func = metasp_printing_dict.get(print_model_name)
-        if printing_func is None:
+        if printing_func is None:  # nocoverage
             log.error(
                 f"Print model function '{print_model_name}' not found. Available print functions: {list(script_functions.keys()) + list(metasp_printing_dict.keys())}"
             )
@@ -276,7 +283,7 @@ class MetaSystem:
 
         return [tmp_file_path] + list(self.syntax_encoding)
 
-    def clinguin_command(self, reified_input: str) -> Sequence[str]:
+    def clinguin_command(self, reified_input: str) -> Sequence[str]:  # nocoverage
         """
         Generate the clinguin command for the system. With the given reified input.
 

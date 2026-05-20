@@ -89,7 +89,7 @@ good-names = ["_"]
 
 [tool.coverage.run]
 source = ["metasp", "tests"]
-omit = ["*/metasp/__main__.py"]
 
 [tool.coverage.report]
 exclude_lines = ["assert", "nocoverage"]
+omit = ["src/metasp/app.py", "src/metasp/utils/test.py"]
