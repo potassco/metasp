@@ -1,0 +1,35 @@
+telingo version 2.1.2
+Reading from ...tances/hanoi/0032-hanoi_tower-60-0.asp ...
+Solving...
+SATISFIABLE
+
+Models       : 1+
+Calls        : 1
+Time         : 3.486s (Solving: 3.31s 1st Model: 3.31s Unsat: 0.00s)
+CPU Time     : 3.485s
+
+Choices      : 71866   
+Conflicts    : 53966    (Analyzed: 53966)
+Restarts     : 189      (Average: 285.53 Last: 365 Blocked: 0)
+Model-Level  : 19.0    
+Problems     : 1        (Average Length: 2.00 Splits: 0)
+Lemmas       : 53966    (Deleted: 38003)
+  Binary     : 981      (Ratio:   1.82%)
+  Ternary    : 1234     (Ratio:   2.29%)
+  Conflict   : 53966    (Average Length:   62.3 Ratio: 100.00%) 
+  Loop       : 0        (Average Length:    0.0 Ratio:   0.00%) 
+  Other      : 0        (Average Length:    0.0 Ratio:   0.00%) 
+Backjumps    : 53966    (Average:  1.30 Max:  95 Sum:  70308)
+  Executed   : 53902    (Average:  1.30 Max:  95 Sum:  70180 Ratio:  99.82%)
+  Bounded    : 64       (Average:  2.00 Max:   2 Sum:    128 Ratio:   0.18%)
+
+Rules        : 62890    (Original: 61657)
+  Choice     : 105     
+Atoms        : 17330   
+Bodies       : 54489    (Original: 53256)
+  Count      : 68       (Original: 139)
+Equivalences : 3457     (Atom=Atom: 84 Body=Body: 113 Other: 3260)
+Tight        : Yes
+Variables    : 21984    (Eliminated:    0 Frozen: 8485)
+Constraints  : 71199    (Binary:  74.9% Ternary:  24.9% Other:   0.2%)
+

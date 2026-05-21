@@ -1,0 +1,35 @@
+telingo version 2.1.2
+Reading from ...cochetrobot/040-ricochetrobot-14-0.asp ...
+Solving...
+SATISFIABLE
+
+Models       : 1+
+Calls        : 1
+Time         : 38.299s (Solving: 38.15s 1st Model: 38.15s Unsat: 0.00s)
+CPU Time     : 38.298s
+
+Choices      : 242469  
+Conflicts    : 135050   (Analyzed: 135050)
+Restarts     : 443      (Average: 304.85 Last: 465 Blocked: 0)
+Model-Level  : 11.0    
+Problems     : 1        (Average Length: 2.00 Splits: 0)
+Lemmas       : 135050   (Deleted: 100845)
+  Binary     : 4970     (Ratio:   3.68%)
+  Ternary    : 4089     (Ratio:   3.03%)
+  Conflict   : 135050   (Average Length:  261.9 Ratio: 100.00%) 
+  Loop       : 0        (Average Length:    0.0 Ratio:   0.00%) 
+  Other      : 0        (Average Length:    0.0 Ratio:   0.00%) 
+Backjumps    : 135050   (Average:  1.78 Max: 131 Sum: 240812)
+  Executed   : 134460   (Average:  1.77 Max: 131 Sum: 239632 Ratio:  99.51%)
+  Bounded    : 590      (Average:  2.00 Max:   2 Sum:   1180 Ratio:   0.49%)
+
+Rules        : 42612    (Original: 42388)
+  Choice     : 42      
+Atoms        : 11422   
+Bodies       : 38991    (Original: 38767)
+  Count      : 0        (Original: 56)
+Equivalences : 4397     (Atom=Atom: 477 Body=Body: 194 Other: 3726)
+Tight        : Yes
+Variables    : 38943    (Eliminated:    0 Frozen: 8929)
+Constraints  : 144404   (Binary:  71.4% Ternary:  19.2% Other:   9.4%)
+

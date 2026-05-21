@@ -1,0 +1,35 @@
+telingo version 2.1.2
+Reading from .../../instances/del/instances/f11-n21.lp ...
+Solving...
+SATISFIABLE
+
+Models       : 200900
+Calls        : 1
+Time         : 1.246s (Solving: 1.22s 1st Model: 0.00s Unsat: 0.00s)
+CPU Time     : 1.245s
+
+Choices      : 216908  
+Conflicts    : 13547    (Analyzed: 10656)
+Restarts     : 235      (Average: 45.34 Last: 130 Blocked: 0)
+Model-Level  : 15.7    
+Problems     : 1        (Average Length: 2.00 Splits: 0)
+Lemmas       : 10656    (Deleted: 943)
+  Binary     : 127      (Ratio:   1.19%)
+  Ternary    : 300      (Ratio:   2.82%)
+  Conflict   : 10656    (Average Length:   25.8 Ratio: 100.00%) 
+  Loop       : 0        (Average Length:    0.0 Ratio:   0.00%) 
+  Other      : 0        (Average Length:    0.0 Ratio:   0.00%) 
+Backjumps    : 10656    (Average:  1.21 Max:  11 Sum:  12907)
+  Executed   : 10643    (Average:  1.21 Max:  11 Sum:  12888 Ratio:  99.85%)
+  Bounded    : 13       (Average:  1.46 Max:   3 Sum:     19 Ratio:   0.15%)
+
+Rules        : 2601     (Original: 2425)
+  Choice     : 22      
+Atoms        : 1082    
+Bodies       : 1856     (Original: 1679)
+  Count      : 0        (Original: 44)
+Equivalences : 653      (Atom=Atom: 24 Body=Body: 45 Other: 584)
+Tight        : Yes
+Variables    : 1167     (Eliminated:    0 Frozen:  443)
+Constraints  : 3221     (Binary:  71.7% Ternary:  16.4% Other:  11.9%)
+

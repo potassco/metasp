@@ -1,0 +1,43 @@
+[runlim] version:		2.0.0rc12
+[runlim] host:			kr-node2
+[runlim] time limit:		311040000 seconds
+[runlim] real time limit:	1200 seconds
+[runlim] space limit:		20000 MB
+[runlim] argv[0]:		../../../../../../../../../../programs/telingo-1
+[runlim] argv[1]:		--stats
+[runlim] argv[2]:		1
+[runlim] argv[3]:		-q
+[runlim] argv[4]:		--lambd=36
+[runlim] argv[5]:		../../../../../../../../../../instances/tel/instances/hanoi/0004-hanoi_tower-60-0.asp
+[runlim] argv[6]:		../../../../../../../../../../instances/tel/encodings/hanoi-telingo.lp
+[runlim] start:			Thu May 21 00:00:09 2026
+[runlim] child:			22137
+[runlim] sample:		9.83 time, 10.01 real, 48 MB, 1.05 load
+[runlim] sample:		19.83 time, 20.01 real, 52 MB, 1.04 load
+[runlim] sample:		29.83 time, 30.01 real, 54 MB, 1.03 load
+[runlim] sample:		39.83 time, 40.01 real, 57 MB, 1.03 load
+[runlim] sample:		49.83 time, 50.01 real, 57 MB, 1.02 load
+[runlim] sample:		59.83 time, 60.01 real, 58 MB, 1.02 load
+[runlim] sample:		69.83 time, 70.01 real, 59 MB, 1.02 load
+[runlim] sample:		79.83 time, 80.01 real, 60 MB, 1.01 load
+[runlim] sample:		89.83 time, 90.01 real, 63 MB, 1.01 load
+[runlim] sample:		99.83 time, 100.01 real, 63 MB, 1.01 load
+[runlim] sample:		109.83 time, 110.01 real, 64 MB, 1.01 load
+[runlim] sample:		119.83 time, 120.01 real, 67 MB, 1.00 load
+[runlim] sample:		129.83 time, 130.01 real, 67 MB, 1.00 load
+[runlim] sample:		139.83 time, 140.01 real, 68 MB, 1.00 load
+[runlim] sample:		149.83 time, 150.01 real, 71 MB, 1.00 load
+[runlim] sample:		159.82 time, 160.01 real, 72 MB, 1.00 load
+[runlim] sample:		169.82 time, 170.01 real, 72 MB, 1.00 load
+[runlim] sample:		179.81 time, 180.01 real, 72 MB, 1.00 load
+[runlim] sample:		189.81 time, 190.01 real, 72 MB, 1.00 load
+[runlim] end:			Thu May 21 00:03:23 2026
+[runlim] status:		ok
+[runlim] result:		10
+[runlim] children:		1
+[runlim] processes:		2
+[runlim] real:			193.64 seconds
+[runlim] time:			193.41 seconds
+[runlim] space:			72 MB
+[runlim] load:			1.06 maximum
+[runlim] samples:		1937

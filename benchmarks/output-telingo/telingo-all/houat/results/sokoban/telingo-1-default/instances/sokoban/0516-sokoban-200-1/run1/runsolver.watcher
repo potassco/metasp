@@ -1,0 +1,24 @@
+[runlim] version:		2.0.0rc12
+[runlim] host:			kr-node2
+[runlim] time limit:		311040000 seconds
+[runlim] real time limit:	1200 seconds
+[runlim] space limit:		20000 MB
+[runlim] argv[0]:		../../../../../../../../../../programs/telingo-1
+[runlim] argv[1]:		--stats
+[runlim] argv[2]:		1
+[runlim] argv[3]:		-q
+[runlim] argv[4]:		--lambd=28
+[runlim] argv[5]:		../../../../../../../../../../instances/tel/instances/sokoban/0516-sokoban-200-1.asp
+[runlim] argv[6]:		../../../../../../../../../../instances/tel/encodings/sokoban-telingo.lp
+[runlim] start:			Wed May 20 23:23:35 2026
+[runlim] child:			17953
+[runlim] end:			Wed May 20 23:23:37 2026
+[runlim] status:		ok
+[runlim] result:		10
+[runlim] children:		1
+[runlim] processes:		2
+[runlim] real:			1.70 seconds
+[runlim] time:			1.40 seconds
+[runlim] space:			32 MB
+[runlim] load:			2.10 maximum
+[runlim] samples:		17

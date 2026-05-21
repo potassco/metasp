@@ -1,0 +1,35 @@
+Metasp (<class 'metasp.app.ClingoApp'>) version 5.8.0
+Reading from ...tances/hanoi/0022-hanoi_tower-60-0.asp ...
+Solving...
+SATISFIABLE
+
+Models       : 1+
+Calls        : 1
+Time         : 6.591s (Solving: 2.63s 1st Model: 2.63s Unsat: 0.00s)
+CPU Time     : 6.555s
+
+Choices      : 55675   
+Conflicts    : 45172    (Analyzed: 45172)
+Restarts     : 172      (Average: 262.63 Last: 393 Blocked: 0)
+Model-Level  : 13.0    
+Problems     : 1        (Average Length: 1.00 Splits: 0)
+Lemmas       : 45172    (Deleted: 33800)
+  Binary     : 607      (Ratio:   1.34%)
+  Ternary    : 1108     (Ratio:   2.45%)
+  Conflict   : 45172    (Average Length:   28.4 Ratio: 100.00%) 
+  Loop       : 0        (Average Length:    0.0 Ratio:   0.00%) 
+  Other      : 0        (Average Length:    0.0 Ratio:   0.00%) 
+Backjumps    : 45172    (Average:  1.22 Max: 123 Sum:  55007)
+  Executed   : 45099    (Average:  1.22 Max: 123 Sum:  54934 Ratio:  99.87%)
+  Bounded    : 73       (Average:  1.00 Max:   1 Sum:     73 Ratio:   0.13%)
+
+Rules        : 449092   (Original: 448126)
+  Choice     : 1035    
+Atoms        : 362613  
+Bodies       : 336240   (Original: 335274)
+  Count      : 46       (Original: 92)
+Equivalences : 456887   (Atom=Atom: 116834 Body=Body: 49494 Other: 290559)
+Tight        : Yes
+Variables    : 21750    (Eliminated:    0 Frozen: 21750)
+Constraints  : 55688    (Binary:  79.1% Ternary:  20.8% Other:   0.2%)
+

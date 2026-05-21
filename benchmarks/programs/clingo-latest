@@ -1,0 +1,1 @@
+exec clingo "$@" 2> solver.err

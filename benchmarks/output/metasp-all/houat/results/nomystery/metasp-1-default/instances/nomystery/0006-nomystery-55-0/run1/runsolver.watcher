@@ -1,0 +1,29 @@
+[runlim] version:		2.0.0rc12
+[runlim] host:			kr-node1
+[runlim] time limit:		311040000 seconds
+[runlim] real time limit:	1200 seconds
+[runlim] space limit:		20000 MB
+[runlim] argv[0]:		../../../../../../../../../../programs/metasp-1
+[runlim] argv[1]:		clingo
+[runlim] argv[2]:		--stats
+[runlim] argv[3]:		1
+[runlim] argv[4]:		-q
+[runlim] argv[5]:		--meta-config
+[runlim] argv[6]:		../../../../../../../../../../../examples/tel/config.yml
+[runlim] argv[7]:		-c
+[runlim] argv[8]:		n=16
+[runlim] argv[9]:		../../../../../../../../../../instances/tel/instances/nomystery/0006-nomystery-55-0.asp
+[runlim] argv[10]:		../../../../../../../../../../instances/tel/encodings/nomystery-metasp.lp
+[runlim] start:			Thu May 21 00:16:25 2026
+[runlim] child:			746
+[runlim] sample:		9.80 time, 10.01 real, 159 MB, 1.00 load
+[runlim] end:			Thu May 21 00:16:35 2026
+[runlim] status:		ok
+[runlim] result:		10
+[runlim] children:		1
+[runlim] processes:		2
+[runlim] real:			10.15 seconds
+[runlim] time:			9.90 seconds
+[runlim] space:			159 MB
+[runlim] load:			1.00 maximum
+[runlim] samples:		102

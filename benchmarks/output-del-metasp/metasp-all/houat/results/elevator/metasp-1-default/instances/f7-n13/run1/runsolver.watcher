@@ -1,0 +1,29 @@
+[runlim] version:		2.0.0rc12
+[runlim] host:			kr-node1
+[runlim] time limit:		311040000 seconds
+[runlim] real time limit:	1200 seconds
+[runlim] space limit:		20000 MB
+[runlim] argv[0]:		../../../../../../../../../programs/metasp-1
+[runlim] argv[1]:		clingo
+[runlim] argv[2]:		--stats
+[runlim] argv[3]:		0
+[runlim] argv[4]:		-q
+[runlim] argv[5]:		--meta-config
+[runlim] argv[6]:		../../../../../../../../../../examples/del/config.yml
+[runlim] argv[7]:		-c
+[runlim] argv[8]:		n=13
+[runlim] argv[9]:		../../../../../../../../../instances/del/instances/f7-n13.lp
+[runlim] argv[10]:		../../../../../../../../../instances/del/elevator-metasp-control.lp
+[runlim] argv[11]:		../../../../../../../../../instances/del/elevator-metasp.lp
+[runlim] start:			Wed May 20 23:58:04 2026
+[runlim] child:			29372
+[runlim] end:			Wed May 20 23:58:07 2026
+[runlim] status:		ok
+[runlim] result:		30
+[runlim] children:		1
+[runlim] processes:		2
+[runlim] real:			3.51 seconds
+[runlim] time:			2.90 seconds
+[runlim] space:			74 MB
+[runlim] load:			1.08 maximum
+[runlim] samples:		35

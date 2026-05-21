@@ -1,0 +1,129 @@
+<runscript output="output">
+
+	<machine name="houat" cpu="8xE5520@2.27GHz" memory="24GB"/>
+
+	<config name="seq-generic" template="templates/seq-generic.sh"/>
+	<system name="metasp" version="1" measures="rp_tmp" config="seq-generic" cmdline="clingo --stats 1 -q">
+		<setting name="default"  cmdline="--meta-config ../../../../../../../../../../../examples/tel/config.yml" tag="tel"/>
+	</system>
+
+
+	<distjob name="dist-generic" timeout="1200s" runs="1" template_options="--single"
+		script_mode="timeout" walltime="23h 59m 59s" cpt="4" />
+
+
+	<benchmark name="hanoi">
+		<files path="instances/tel">
+			<encoding file="instances/tel/encodings/hanoi-metasp.lp"/>
+			<add file="instances/hanoi/0004-hanoi_tower-60-0.asp" cmdline="-c n=36"/>
+			<add file="instances/hanoi/0005-hanoi_tower-60-0.asp" cmdline="-c n=47"/>
+			<add file="instances/hanoi/0007-hanoi_tower-60-0.asp" cmdline="-c n=50"/>
+			<add file="instances/hanoi/0008-hanoi_tower-60-0.asp" cmdline="-c n=58"/>
+			<add file="instances/hanoi/0013-hanoi_tower-32-0.asp" cmdline="-c n=32"/>
+			<add file="instances/hanoi/0021-hanoi_tower-40-0.asp" cmdline="-c n=32"/>
+			<add file="instances/hanoi/0022-hanoi_tower-60-0.asp" cmdline="-c n=23"/>
+			<add file="instances/hanoi/0023-hanoi_tower-60-0.asp" cmdline="-c n=25"/>
+			<add file="instances/hanoi/0025-hanoi_tower-60-0.asp" cmdline="-c n=27"/>
+			<add file="instances/hanoi/0032-hanoi_tower-60-0.asp" cmdline="-c n=35"/>
+			<add file="instances/hanoi/0036-hanoi_tower-80-0.asp" cmdline="-c n=30"/>
+			<add file="instances/hanoi/0039-hanoi_tower-80-0.asp" cmdline="-c n=34"/>
+			<add file="instances/hanoi/0040-hanoi_tower-80-0.asp" cmdline="-c n=35"/>
+			<add file="instances/hanoi/0046-hanoi_tower-100-0.asp" cmdline="-c n=34"/>
+			<add file="instances/hanoi/0047-hanoi_tower-120-0.asp" cmdline="-c n=23"/>
+			<add file="instances/hanoi/0048-hanoi_tower-120-0.asp" cmdline="-c n=25"/>
+			<add file="instances/hanoi/0050-hanoi_tower-120-0.asp" cmdline="-c n=28"/>
+			<add file="instances/hanoi/0056-hanoi_tower-120-0.asp" cmdline="-c n=38"/>
+			<add file="instances/hanoi/0059-hanoi_tower-120-0.asp" cmdline="-c n=43"/>
+			<add file="instances/hanoi/0060-hanoi_tower-120-0.asp" cmdline="-c n=44"/>
+		</files>
+	</benchmark>
+
+	<benchmark name="labyrinth">
+		<files path="instances/tel">
+			<encoding file="instances/tel/encodings/labyrinth-metasp.lp"/>
+			<add file="instances/labyrinth/0025-labyrinth-14-0.asp" cmdline="-c n=4"/>
+			<add file="instances/labyrinth/0045-labyrinth-11-0.asp" cmdline="-c n=5"/>
+			<add file="instances/labyrinth/0060-labyrinth-13-0.asp" cmdline="-c n=4"/>
+			<add file="instances/labyrinth/0075-labyrinth-13-0.asp" cmdline="-c n=5"/>
+			<add file="instances/labyrinth/0082-labyrinth-14-0.asp" cmdline="-c n=5"/>
+			<add file="instances/labyrinth/0094-labyrinth-17-0.asp" cmdline="-c n=5"/>
+			<add file="instances/labyrinth/0130-labyrinth-14-0.asp" cmdline="-c n=6"/>
+		</files>
+	</benchmark>
+
+	<benchmark name="nomystery">
+		<files path="instances/tel">
+			<encoding file="instances/tel/encodings/nomystery-metasp.lp"/>
+			<add file="instances/nomystery/0006-nomystery-55-0.asp" cmdline="-c n=16"/>
+			<add file="instances/nomystery/0007-nomystery-57-0.asp" cmdline="-c n=14"/>
+			<add file="instances/nomystery/0009-nomystery-63-0.asp" cmdline="-c n=16"/>
+			<add file="instances/nomystery/0012-nomystery-84-0.asp" cmdline="-c n=20"/>
+			<add file="instances/nomystery/0014-nomystery-73-0.asp" cmdline="-c n=20"/>
+			<add file="instances/nomystery/0024-nomystery-86-0.asp" cmdline="-c n=26"/>
+			<add file="instances/nomystery/0025-nomystery-85-0.asp" cmdline="-c n=27"/>
+			<add file="instances/nomystery/0031-nomystery-52-0.asp" cmdline="-c n=13"/>
+			<add file="instances/nomystery/0033-nomystery-32-0.asp" cmdline="-c n=13"/>
+			<add file="instances/nomystery/0034-nomystery-64-0.asp" cmdline="-c n=12"/>
+			<add file="instances/nomystery/0037-nomystery-36-0.asp" cmdline="-c n=17"/>
+			<add file="instances/nomystery/0038-nomystery-63-0.asp" cmdline="-c n=16"/>
+			<add file="instances/nomystery/0039-nomystery-42-0.asp" cmdline="-c n=16"/>
+			<add file="instances/nomystery/0041-nomystery-88-0.asp" cmdline="-c n=20"/>
+			<add file="instances/nomystery/0042-nomystery-56-0.asp" cmdline="-c n=20"/>
+			<add file="instances/nomystery/0045-nomystery-44-0.asp" cmdline="-c n=19"/>
+		</files>
+	</benchmark>
+
+	<benchmark name="ricochetrobot">
+		<files path="instances/tel">
+			<encoding file="instances/tel/encodings/ricochetrobot-metasp.lp"/>
+			<add file="instances/ricochetrobot/018-ricochetrobot-14-0.asp" cmdline="-c n=14"/>
+			<add file="instances/ricochetrobot/025-ricochetrobot-14-0.asp" cmdline="-c n=14"/>
+			<add file="instances/ricochetrobot/030-ricochetrobot-16-0.asp" cmdline="-c n=16"/>
+			<add file="instances/ricochetrobot/038-ricochetrobot-13-0.asp" cmdline="-c n=13"/>
+			<add file="instances/ricochetrobot/040-ricochetrobot-14-0.asp" cmdline="-c n=14"/>
+			<add file="instances/ricochetrobot/046-ricochetrobot-13-0.asp" cmdline="-c n=13"/>
+			<add file="instances/ricochetrobot/059-ricochetrobot-15-0.asp" cmdline="-c n=15"/>
+			<add file="instances/ricochetrobot/060-ricochetrobot-14-0.asp" cmdline="-c n=14"/>
+			<add file="instances/ricochetrobot/061-ricochetrobot-14-0.asp" cmdline="-c n=14"/>
+			<add file="instances/ricochetrobot/084-ricochetrobot-15-0.asp" cmdline="-c n=15"/>
+			<add file="instances/ricochetrobot/230-ricochetrobot-17-0.asp" cmdline="-c n=17"/>
+		</files>
+	</benchmark>
+
+	<benchmark name="sokoban">
+		<files path="instances/tel">
+			<encoding file="instances/tel/encodings/sokoban-metasp.lp"/>
+			<add file="instances/sokoban/0096-sokoban-36-1.asp" cmdline="-c n=49"/>
+			<add file="instances/sokoban/0103-sokoban-110-1.asp" cmdline="-c n=17"/>
+			<add file="instances/sokoban/0119-sokoban-42-1.asp" cmdline="-c n=51"/>
+			<add file="instances/sokoban/0128-sokoban-131-1.asp" cmdline="-c n=22"/>
+			<add file="instances/sokoban/0272-sokoban-135-1.asp" cmdline="-c n=22"/>
+			<add file="instances/sokoban/0428-sokoban-120-1.asp" cmdline="-c n=44"/>
+			<add file="instances/sokoban/0516-sokoban-200-1.asp" cmdline="-c n=28"/>
+		</files>
+	</benchmark>
+
+	<benchmark name="visitall">
+		<files path="instances/tel">
+			<encoding file="instances/tel/encodings/visitall-metasp.lp"/>
+			<add file="instances/visitall/0009-visitall-36-1.asp" cmdline="-c n=34"/>
+			<add file="instances/visitall/0012-visitall-36-1.asp" cmdline="-c n=36"/>
+			<add file="instances/visitall/0029-visitall-39-1.asp" cmdline="-c n=35"/>
+			<add file="instances/visitall/0030-visitall-39-1.asp" cmdline="-c n=34"/>
+			<add file="instances/visitall/0031-visitall-39-1.asp" cmdline="-c n=35"/>
+			<add file="instances/visitall/0070-visitall-49-1.asp" cmdline="-c n=35"/>
+			<add file="instances/visitall/0071-visitall-49-1.asp" cmdline="-c n=36"/>
+			<add file="instances/visitall/0089-visitall-66-1.asp" cmdline="-c n=34"/>
+		</files>
+	</benchmark>
+
+	<project name="metasp-all" job="dist-generic">
+		<runtag machine="houat" benchmark="hanoi"/>
+		<runtag machine="houat" benchmark="labyrinth"/>
+		<runtag machine="houat" benchmark="nomystery"/>
+		<runtag machine="houat" benchmark="ricochetrobot"/>
+		<runtag machine="houat" benchmark="sokoban"/>
+		<runtag machine="houat" benchmark="visitall"/>
+	</project>
+
+</runscript>

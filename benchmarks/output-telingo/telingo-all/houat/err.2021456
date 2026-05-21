@@ -1,0 +1,93 @@
+*** Info : (telingo): Sending shutdown signal...
+Traceback (most recent call last):
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/application.py", line 377, in _pyclingo_application_main
+    app.main(Control(control), [_to_str(files[i]) for i in range(size)])
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/telingo/__init__.py", line 190, in main
+    imain(control, future_sigs, program_parts, self.__on_model, self.__imin, self.__imax, self.__lambd, self.__istop)
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/telingo/__init__.py", line 76, in imain
+    prg.solve(on_model=lambda m: on_model(m, step), assumptions=assumptions)
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/control.py", line 1081, in solve
+    ret = handle.get()
+          ^^^^^^^^^^^^
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/solving.py", line 583, in get
+    res = _c_call(
+          ^^^^^^^^
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/_internal.py", line 50, in _c_call
+    _handle_error(c_fun(*args, p_ret), handler)
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/_internal.py", line 81, in _handle_error
+    raise RuntimeError(msg)
+RuntimeError: solving stopped by signal
+*** ERROR: (telingo): solving stopped by signal
+*** Info : (telingo): Shutdown completed in 0.016 seconds
+*** Info : (telingo): Sending shutdown signal...
+Traceback (most recent call last):
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/application.py", line 377, in _pyclingo_application_main
+    app.main(Control(control), [_to_str(files[i]) for i in range(size)])
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/telingo/__init__.py", line 190, in main
+    imain(control, future_sigs, program_parts, self.__on_model, self.__imin, self.__imax, self.__lambd, self.__istop)
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/telingo/__init__.py", line 76, in imain
+    prg.solve(on_model=lambda m: on_model(m, step), assumptions=assumptions)
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/control.py", line 1081, in solve
+    ret = handle.get()
+          ^^^^^^^^^^^^
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/solving.py", line 583, in get
+    res = _c_call(
+          ^^^^^^^^
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/_internal.py", line 50, in _c_call
+    _handle_error(c_fun(*args, p_ret), handler)
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/_internal.py", line 81, in _handle_error
+    raise RuntimeError(msg)
+RuntimeError: solving stopped by signal
+*** ERROR: (telingo): solving stopped by signal
+*** Info : (telingo): Shutdown completed in 0.007 seconds
+*** Info : (telingo): Sending shutdown signal...
+Traceback (most recent call last):
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/application.py", line 377, in _pyclingo_application_main
+    app.main(Control(control), [_to_str(files[i]) for i in range(size)])
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/telingo/__init__.py", line 190, in main
+    imain(control, future_sigs, program_parts, self.__on_model, self.__imin, self.__imax, self.__lambd, self.__istop)
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/telingo/__init__.py", line 76, in imain
+    prg.solve(on_model=lambda m: on_model(m, step), assumptions=assumptions)
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/control.py", line 1081, in solve
+    ret = handle.get()
+          ^^^^^^^^^^^^
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/solving.py", line 583, in get
+    res = _c_call(
+          ^^^^^^^^
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/_internal.py", line 50, in _c_call
+    _handle_error(c_fun(*args, p_ret), handler)
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/_internal.py", line 81, in _handle_error
+    raise RuntimeError(msg)
+RuntimeError: solving stopped by signal
+*** ERROR: (telingo): solving stopped by signal
+*** Info : (telingo): Shutdown completed in 0.011 seconds
+*** Info : (telingo): Sending shutdown signal...
+Traceback (most recent call last):
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/application.py", line 377, in _pyclingo_application_main
+    app.main(Control(control), [_to_str(files[i]) for i in range(size)])
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/telingo/__init__.py", line 190, in main
+    imain(control, future_sigs, program_parts, self.__on_model, self.__imin, self.__imax, self.__lambd, self.__istop)
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/telingo/__init__.py", line 76, in imain
+    prg.solve(on_model=lambda m: on_model(m, step), assumptions=assumptions)
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/control.py", line 1081, in solve
+    ret = handle.get()
+          ^^^^^^^^^^^^
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/solving.py", line 583, in get
+    res = _c_call(
+          ^^^^^^^^
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/_internal.py", line 50, in _c_call
+    _handle_error(c_fun(*args, p_ret), handler)
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/_internal.py", line 81, in _handle_error
+    raise RuntimeError(msg)
+RuntimeError: solving stopped by signal
+*** ERROR: (telingo): solving stopped by signal
+*** Info : (telingo): Shutdown completed in 0.013 seconds
+<string>:286:8-19: info: atom does not occur in any rule head:
+  goalreached(#Inc0)
+
+<string>:286:8-19: info: atom does not occur in any rule head:
+  goalreached(#Inc0)
+
+<string>:286:8-19: info: atom does not occur in any rule head:
+  goalreached(#Inc0)
+

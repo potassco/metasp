@@ -1,0 +1,47 @@
+[runlim] version:		2.0.0rc12
+[runlim] host:			kr-node1
+[runlim] time limit:		311040000 seconds
+[runlim] real time limit:	1200 seconds
+[runlim] space limit:		20000 MB
+[runlim] argv[0]:		../../../../../../../../../../programs/metasp-1
+[runlim] argv[1]:		clingo
+[runlim] argv[2]:		--stats
+[runlim] argv[3]:		1
+[runlim] argv[4]:		-q
+[runlim] argv[5]:		--meta-config
+[runlim] argv[6]:		../../../../../../../../../../../examples/tel/config.yml
+[runlim] argv[7]:		-c
+[runlim] argv[8]:		n=34
+[runlim] argv[9]:		../../../../../../../../../../instances/tel/instances/visitall/0009-visitall-36-1.asp
+[runlim] argv[10]:		../../../../../../../../../../instances/tel/encodings/visitall-metasp.lp
+[runlim] start:			Wed May 20 23:08:20 2026
+[runlim] child:			21165
+[runlim] sample:		9.57 time, 10.01 real, 131 MB, 2.00 load
+[runlim] sample:		19.57 time, 20.01 real, 136 MB, 2.00 load
+[runlim] sample:		29.57 time, 30.01 real, 140 MB, 2.00 load
+[runlim] sample:		39.57 time, 40.01 real, 143 MB, 2.00 load
+[runlim] sample:		49.57 time, 50.01 real, 145 MB, 2.00 load
+[runlim] sample:		59.57 time, 60.01 real, 146 MB, 2.00 load
+[runlim] sample:		69.57 time, 70.01 real, 147 MB, 2.00 load
+[runlim] sample:		79.57 time, 80.01 real, 148 MB, 2.00 load
+[runlim] sample:		89.57 time, 90.01 real, 149 MB, 2.00 load
+[runlim] sample:		99.57 time, 100.01 real, 151 MB, 2.00 load
+[runlim] sample:		109.57 time, 110.01 real, 152 MB, 2.00 load
+[runlim] sample:		119.57 time, 120.01 real, 152 MB, 2.00 load
+[runlim] sample:		129.57 time, 130.01 real, 153 MB, 2.00 load
+[runlim] sample:		139.57 time, 140.01 real, 154 MB, 2.00 load
+[runlim] sample:		149.57 time, 150.01 real, 154 MB, 2.00 load
+[runlim] sample:		159.57 time, 160.01 real, 154 MB, 2.00 load
+[runlim] sample:		169.57 time, 170.01 real, 154 MB, 2.00 load
+[runlim] sample:		179.57 time, 180.01 real, 155 MB, 2.00 load
+[runlim] sample:		189.57 time, 190.01 real, 155 MB, 2.00 load
+[runlim] end:			Wed May 20 23:11:40 2026
+[runlim] status:		ok
+[runlim] result:		10
+[runlim] children:		1
+[runlim] processes:		2
+[runlim] real:			199.77 seconds
+[runlim] time:			199.27 seconds
+[runlim] space:			155 MB
+[runlim] load:			2.00 maximum
+[runlim] samples:		1998

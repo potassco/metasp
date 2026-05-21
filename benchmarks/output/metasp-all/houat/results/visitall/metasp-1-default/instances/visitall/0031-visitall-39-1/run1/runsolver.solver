@@ -1,0 +1,34 @@
+Metasp (<class 'metasp.app.ClingoApp'>) version 5.8.0
+Reading from ...tances/visitall/0031-visitall-39-1.asp ...
+Solving...
+SATISFIABLE
+
+Models       : 1+
+Calls        : 1
+Time         : 33.544s (Solving: 31.16s 1st Model: 31.16s Unsat: 0.00s)
+CPU Time     : 33.528s
+
+Choices      : 243681  
+Conflicts    : 181868   (Analyzed: 181868)
+Restarts     : 509      (Average: 357.30 Last: 11122 Blocked: 0)
+Model-Level  : 15.0    
+Problems     : 1        (Average Length: 1.00 Splits: 0)
+Lemmas       : 181868   (Deleted: 113789)
+  Binary     : 1204     (Ratio:   0.66%)
+  Ternary    : 2077     (Ratio:   1.14%)
+  Conflict   : 181868   (Average Length:   74.8 Ratio: 100.00%) 
+  Loop       : 0        (Average Length:    0.0 Ratio:   0.00%) 
+  Other      : 0        (Average Length:    0.0 Ratio:   0.00%) 
+Backjumps    : 181868   (Average:  1.31 Max:  47 Sum: 238369)
+  Executed   : 181615   (Average:  1.31 Max:  47 Sum: 238116 Ratio:  99.89%)
+  Bounded    : 253      (Average:  1.00 Max:   1 Sum:    253 Ratio:   0.11%)
+
+Rules        : 197849  
+  Choice     : 35      
+Atoms        : 136377  
+Bodies       : 112344  
+Equivalences : 358786   (Atom=Atom: 101285 Body=Body: 67893 Other: 189608)
+Tight        : Yes
+Variables    : 12073    (Eliminated:    0 Frozen: 12073)
+Constraints  : 73108    (Binary:  88.4% Ternary:   9.9% Other:   1.7%)
+

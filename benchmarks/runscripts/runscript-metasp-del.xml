@@ -1,0 +1,74 @@
+<runscript output="output-del-metasp">
+
+	<machine name="houat" cpu="8xE5520@2.27GHz" memory="24GB"/>
+
+	<config name="seq-generic" template="templates/seq-generic.sh"/>
+	<system name="metasp" version="1" measures="rp_tmp" config="seq-generic" cmdline="clingo --stats 0 -q">
+		<setting name="default"  cmdline="--meta-config ../../../../../../../../../../examples/del/config.yml" tag="del"/>
+	</system>
+
+
+	<distjob name="dist-generic" timeout="1200s" runs="1" template_options="--single"
+		script_mode="timeout" walltime="23h 59m 59s" cpt="4" />
+
+
+	<benchmark name="elevator">
+		<files path="instances/del">
+			<encoding file="instances/del/elevator-metasp.lp"/>
+			<encoding file="instances/del/elevator-metasp-control.lp"/>
+			<add file="instances/f5-n8.lp" cmdline="-c n=8"/>
+			<add file="instances/f5-n9.lp" cmdline="-c n=9"/>
+			<add file="instances/f5-n10.lp" cmdline="-c n=10"/>
+			<add file="instances/f5-n11.lp" cmdline="-c n=11"/>
+			<add file="instances/f5-n12.lp" cmdline="-c n=12"/>
+			<add file="instances/f7-n11.lp" cmdline="-c n=11"/>
+			<add file="instances/f7-n12.lp" cmdline="-c n=12"/>
+			<add file="instances/f7-n13.lp" cmdline="-c n=13"/>
+			<add file="instances/f7-n14.lp" cmdline="-c n=14"/>
+			<add file="instances/f7-n15.lp" cmdline="-c n=15"/>
+			<add file="instances/f9-n14.lp"	 cmdline="-c n=14"/>
+			<add file="instances/f9-n15.lp"  cmdline="-c n=15"/>
+			<add file="instances/f9-n16.lp"  cmdline="-c n=16"/>
+			<add file="instances/f9-n17.lp"  cmdline="-c n=17"/>
+			<add file="instances/f9-n18.lp"  cmdline="-c n=18"/>
+			<add file="instances/f11-n17.lp" cmdline="-c n=17"/>
+			<add file="instances/f11-n18.lp" cmdline="-c n=18"/>
+			<add file="instances/f11-n19.lp" cmdline="-c n=19"/>
+			<add file="instances/f11-n20.lp" cmdline="-c n=20"/>
+			<add file="instances/f11-n21.lp" cmdline="-c n=21"/>
+		</files>
+	</benchmark>
+
+
+	<benchmark name="elevator-no-control">
+		<files path="instances/del">
+			<encoding file="instances/del/elevator-metasp.lp"/>
+			<add file="instances/f5-n8.lp" cmdline="-c n=8"/>
+			<add file="instances/f5-n9.lp" cmdline="-c n=9"/>
+			<add file="instances/f5-n10.lp" cmdline="-c n=10"/>
+			<add file="instances/f5-n11.lp" cmdline="-c n=11"/>
+			<add file="instances/f5-n12.lp" cmdline="-c n=12"/>
+			<add file="instances/f7-n11.lp" cmdline="-c n=11"/>
+			<add file="instances/f7-n12.lp" cmdline="-c n=12"/>
+			<add file="instances/f7-n13.lp" cmdline="-c n=13"/>
+			<add file="instances/f7-n14.lp" cmdline="-c n=14"/>
+			<add file="instances/f7-n15.lp" cmdline="-c n=15"/>
+			<add file="instances/f9-n14.lp"	 cmdline="-c n=14"/>
+			<add file="instances/f9-n15.lp"  cmdline="-c n=15"/>
+			<add file="instances/f9-n16.lp"  cmdline="-c n=16"/>
+			<add file="instances/f9-n17.lp"  cmdline="-c n=17"/>
+			<add file="instances/f9-n18.lp"  cmdline="-c n=18"/>
+			<add file="instances/f11-n17.lp" cmdline="-c n=17"/>
+			<add file="instances/f11-n18.lp" cmdline="-c n=18"/>
+			<add file="instances/f11-n19.lp" cmdline="-c n=19"/>
+			<add file="instances/f11-n20.lp" cmdline="-c n=20"/>
+			<add file="instances/f11-n21.lp" cmdline="-c n=21"/>
+		</files>
+	</benchmark>
+
+	<project name="metasp-all" job="dist-generic">
+		<runtag machine="houat" benchmark="elevator"/>
+		<runtag machine="houat" benchmark="elevator-no-control"/>
+	</project>
+
+</runscript>
