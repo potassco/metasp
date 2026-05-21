@@ -73,11 +73,15 @@ def plot(metric: str, df: pd.DataFrame) -> None:
             zorder=3,
         )
 
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+
     # Diagonal reference line
     all_vals = pd.concat([df["metasp"], df["telingo"]])
-    lo, hi = all_vals.min(), all_vals.max()
-    pad = (hi - lo) * 0.05
-    lim = (lo - pad, hi + pad)
+    positive = all_vals[all_vals > 0]
+    lo = 10 ** np.floor(np.log10(positive.min()))
+    hi = 10 ** np.ceil(np.log10(positive.max()))
+    lim = (lo, hi)
     ax.plot(lim, lim, color="grey", linewidth=0.8, linestyle="--", zorder=2, label="_nolegend_")
     ax.set_xlim(lim)
     ax.set_ylim(lim)
