@@ -1,0 +1,35 @@
+Metasp (<class 'metasp.app.ClingoApp'>) version 5.8.0
+Reading from ...stances/sokoban/0428-sokoban-120-1.asp ...
+Solving...
+UNKNOWN
+
+INTERRUPTED  : 1
+Models       : 0+
+Calls        : 1
+Time         : 1199.371s (Solving: 1194.89s 1st Model: 0.00s Unsat: 0.00s)
+CPU Time     : 1199.337s
+
+Choices      : 4303433 
+Conflicts    : 3609569  (Analyzed: 3609569)
+Restarts     : 7164     (Average: 503.85 Last: 4641 Blocked: 0)
+Problems     : 1        (Average Length: 1.00 Splits: 0)
+Lemmas       : 3609569  (Deleted: 3358102)
+  Binary     : 8229     (Ratio:   0.23%)
+  Ternary    : 16512    (Ratio:   0.46%)
+  Conflict   : 3609569  (Average Length:  133.1 Ratio: 100.00%) 
+  Loop       : 0        (Average Length:    0.0 Ratio:   0.00%) 
+  Other      : 0        (Average Length:    0.0 Ratio:   0.00%) 
+Backjumps    : 3609569  (Average:  1.17 Max: 128 Sum: 4239127)
+  Executed   : 3609241  (Average:  1.17 Max: 128 Sum: 4238799 Ratio:  99.99%)
+  Bounded    : 328      (Average:  1.00 Max:   1 Sum:    328 Ratio:   0.01%)
+
+Rules        : 262052   (Original: 257388)
+  Choice     : 4752    
+Atoms        : 201368  
+Bodies       : 175787   (Original: 171123)
+  Count      : 44       (Original: 88)
+Equivalences : 507067   (Atom=Atom: 136893 Body=Body: 86370 Other: 283804)
+Tight        : Yes
+Variables    : 21481    (Eliminated:    0 Frozen: 21481)
+Constraints  : 54130    (Binary:  82.3% Ternary:   9.7% Other:   8.1%)
+

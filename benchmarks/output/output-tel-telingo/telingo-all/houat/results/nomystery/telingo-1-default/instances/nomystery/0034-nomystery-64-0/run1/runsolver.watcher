@@ -1,0 +1,24 @@
+[runlim] version:		2.0.0rc12
+[runlim] host:			kr-node2
+[runlim] time limit:		311040000 seconds
+[runlim] real time limit:	1200 seconds
+[runlim] space limit:		20000 MB
+[runlim] argv[0]:		../../../../../../../../../../programs/telingo-1
+[runlim] argv[1]:		--stats
+[runlim] argv[2]:		1
+[runlim] argv[3]:		-q
+[runlim] argv[4]:		--lambd=12
+[runlim] argv[5]:		../../../../../../../../../../instances/tel/instances/nomystery/0034-nomystery-64-0.asp
+[runlim] argv[6]:		../../../../../../../../../../instances/tel/encodings/nomystery-telingo.lp
+[runlim] start:			Thu May 21 00:36:21 2026
+[runlim] child:			24155
+[runlim] end:			Thu May 21 00:36:21 2026
+[runlim] status:		ok
+[runlim] result:		10
+[runlim] children:		1
+[runlim] processes:		2
+[runlim] real:			0.62 seconds
+[runlim] time:			0.44 seconds
+[runlim] space:			27 MB
+[runlim] load:			1.00 maximum
+[runlim] samples:		7

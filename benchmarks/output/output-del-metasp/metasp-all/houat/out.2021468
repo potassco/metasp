@@ -1,0 +1,44 @@
+running jobs@kr-node1...
+
+jobs: results/elevator/metasp-1-default/instances/f7-n13/run1/start.sh results/elevator/metasp-1-default/instances/f7-n11/run1/start.sh results/elevator/metasp-1-default/instances/f7-n12/run1/start.sh results/elevator/metasp-1-default/instances/f5-n12/run1/start.sh results/elevator/metasp-1-default/instances/f9-n15/run1/start.sh results/elevator/metasp-1-default/instances/f9-n18/run1/start.sh results/elevator/metasp-1-default/instances/f7-n15/run1/start.sh results/elevator/metasp-1-default/instances/f9-n14/run1/start.sh results/elevator/metasp-1-default/instances/f5-n9/run1/start.sh results/elevator/metasp-1-default/instances/f5-n11/run1/start.sh results/elevator/metasp-1-default/instances/f11-n18/run1/start.sh results/elevator/metasp-1-default/instances/f7-n14/run1/start.sh results/elevator/metasp-1-default/instances/f5-n8/run1/start.sh results/elevator/metasp-1-default/instances/f9-n17/run1/start.sh results/elevator/metasp-1-default/instances/f5-n10/run1/start.sh results/elevator/metasp-1-default/instances/f11-n21/run1/start.sh results/elevator/metasp-1-default/instances/f11-n20/run1/start.sh results/elevator/metasp-1-default/instances/f11-n19/run1/start.sh results/elevator/metasp-1-default/instances/f9-n16/run1/start.sh results/elevator/metasp-1-default/instances/f11-n17/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f7-n13/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f7-n11/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f7-n12/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f5-n12/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f9-n15/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f9-n18/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f7-n15/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f9-n14/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f5-n9/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f5-n11/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f11-n18/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f7-n14/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f5-n8/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f9-n17/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f5-n10/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f11-n21/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f11-n20/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f11-n19/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f9-n16/run1/start.sh results/elevator-no-control/metasp-1-default/instances/f11-n17/run1/start.sh
+
+running  results/elevator/metasp-1-default/instances/f7-n13/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f7-n11/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f7-n12/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f5-n12/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f9-n15/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f9-n18/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f7-n15/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f9-n14/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f5-n9/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f5-n11/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f11-n18/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f7-n14/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f5-n8/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f9-n17/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f5-n10/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f11-n21/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f11-n20/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f11-n19/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f9-n16/run1/start.sh
+running  results/elevator/metasp-1-default/instances/f11-n17/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f7-n13/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f7-n11/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f7-n12/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f5-n12/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f9-n15/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f9-n18/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f7-n15/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f9-n14/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f5-n9/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f5-n11/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f11-n18/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f7-n14/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f5-n8/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f9-n17/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f5-n10/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f11-n21/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f11-n20/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f11-n19/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f9-n16/run1/start.sh
+running  results/elevator-no-control/metasp-1-default/instances/f11-n17/run1/start.sh

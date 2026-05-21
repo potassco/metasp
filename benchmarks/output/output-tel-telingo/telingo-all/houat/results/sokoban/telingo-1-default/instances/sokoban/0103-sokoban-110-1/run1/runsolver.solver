@@ -1,0 +1,35 @@
+telingo version 2.1.2
+Reading from ...stances/sokoban/0103-sokoban-110-1.asp ...
+Solving...
+SATISFIABLE
+
+Models       : 1+
+Calls        : 1
+Time         : 0.202s (Solving: 0.01s 1st Model: 0.01s Unsat: 0.00s)
+CPU Time     : 0.202s
+
+Choices      : 734     
+Conflicts    : 363      (Analyzed: 363)
+Restarts     : 3        (Average: 121.00 Last: 40 Blocked: 0)
+Model-Level  : 8.0     
+Problems     : 1        (Average Length: 2.00 Splits: 0)
+Lemmas       : 363      (Deleted: 0)
+  Binary     : 30       (Ratio:   8.26%)
+  Ternary    : 24       (Ratio:   6.61%)
+  Conflict   : 363      (Average Length:   35.7 Ratio: 100.00%) 
+  Loop       : 0        (Average Length:    0.0 Ratio:   0.00%) 
+  Other      : 0        (Average Length:    0.0 Ratio:   0.00%) 
+Backjumps    : 363      (Average:  2.07 Max:  25 Sum:    753)
+  Executed   : 346      (Average:  1.98 Max:  25 Sum:    719 Ratio:  95.48%)
+  Bounded    : 17       (Average:  2.00 Max:   2 Sum:     34 Ratio:   4.52%)
+
+Rules        : 22790    (Original: 20802)
+  Choice     : 34      
+Atoms        : 7957    
+Bodies       : 8250     (Original: 8248)
+  Count      : 16       (Original: 34)
+Equivalences : 12149    (Atom=Atom: 132 Body=Body: 670 Other: 11347)
+Tight        : Yes
+Variables    : 6458     (Eliminated:    0 Frozen: 5529)
+Constraints  : 15642    (Binary:  80.6% Ternary:  11.0% Other:   8.5%)
+

@@ -1,0 +1,34 @@
+[runlim] version:		2.0.0rc12
+[runlim] host:			kr-node1
+[runlim] time limit:		311040000 seconds
+[runlim] real time limit:	1200 seconds
+[runlim] space limit:		20000 MB
+[runlim] argv[0]:		../../../../../../../../../../programs/metasp-1
+[runlim] argv[1]:		clingo
+[runlim] argv[2]:		--stats
+[runlim] argv[3]:		1
+[runlim] argv[4]:		-q
+[runlim] argv[5]:		--meta-config
+[runlim] argv[6]:		../../../../../../../../../../../examples/tel/config.yml
+[runlim] argv[7]:		-c
+[runlim] argv[8]:		n=14
+[runlim] argv[9]:		../../../../../../../../../../instances/tel/instances/ricochetrobot/061-ricochetrobot-14-0.asp
+[runlim] argv[10]:		../../../../../../../../../../instances/tel/encodings/ricochetrobot-metasp.lp
+[runlim] start:			Thu May 21 01:27:10 2026
+[runlim] child:			2253
+[runlim] sample:		9.80 time, 10.01 real, 286 MB, 1.00 load
+[runlim] sample:		19.80 time, 20.01 real, 287 MB, 1.00 load
+[runlim] sample:		29.80 time, 30.01 real, 288 MB, 1.00 load
+[runlim] sample:		39.80 time, 40.01 real, 288 MB, 1.00 load
+[runlim] sample:		49.80 time, 50.01 real, 288 MB, 1.00 load
+[runlim] sample:		59.79 time, 60.01 real, 288 MB, 1.00 load
+[runlim] end:			Thu May 21 01:28:12 2026
+[runlim] status:		ok
+[runlim] result:		10
+[runlim] children:		1
+[runlim] processes:		2
+[runlim] real:			62.49 seconds
+[runlim] time:			62.19 seconds
+[runlim] space:			294 MB
+[runlim] load:			1.00 maximum
+[runlim] samples:		625

@@ -1,0 +1,35 @@
+Metasp (<class 'metasp.app.ClingoApp'>) version 5.8.0
+Reading from ...nces/nomystery/0041-nomystery-88-0.asp ...
+Solving...
+SATISFIABLE
+
+Models       : 1+
+Calls        : 1
+Time         : 64.873s (Solving: 60.43s 1st Model: 60.43s Unsat: 0.00s)
+CPU Time     : 64.813s
+
+Choices      : 1145844 
+Conflicts    : 200045   (Analyzed: 200045)
+Restarts     : 510      (Average: 392.25 Last: 16193 Blocked: 0)
+Model-Level  : 75.0    
+Problems     : 1        (Average Length: 1.00 Splits: 0)
+Lemmas       : 200045   (Deleted: 170959)
+  Binary     : 5833     (Ratio:   2.92%)
+  Ternary    : 3019     (Ratio:   1.51%)
+  Conflict   : 200045   (Average Length:  363.1 Ratio: 100.00%) 
+  Loop       : 0        (Average Length:    0.0 Ratio:   0.00%) 
+  Other      : 0        (Average Length:    0.0 Ratio:   0.00%) 
+Backjumps    : 200045   (Average:  5.28 Max: 6500 Sum: 1056773)
+  Executed   : 199909   (Average:  5.28 Max: 6500 Sum: 1056637 Ratio:  99.99%)
+  Bounded    : 136      (Average:  1.00 Max:   1 Sum:    136 Ratio:   0.01%)
+
+Rules        : 423092   (Original: 421312)
+  Choice     : 1800    
+Atoms        : 320659  
+Bodies       : 281821   (Original: 280041)
+  Count      : 20       (Original: 40)
+Equivalences : 953054   (Atom=Atom: 227017 Body=Body: 146049 Other: 579988)
+Tight        : Yes
+Variables    : 49226    (Eliminated:    0 Frozen: 49226)
+Constraints  : 211483   (Binary:  78.7% Ternary:  19.5% Other:   1.8%)
+

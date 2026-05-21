@@ -1,0 +1,46 @@
+[runlim] version:		2.0.0rc12
+[runlim] host:			kr-node1
+[runlim] time limit:		311040000 seconds
+[runlim] real time limit:	1200 seconds
+[runlim] space limit:		20000 MB
+[runlim] argv[0]:		../../../../../../../../../../programs/metasp-1
+[runlim] argv[1]:		clingo
+[runlim] argv[2]:		--stats
+[runlim] argv[3]:		1
+[runlim] argv[4]:		-q
+[runlim] argv[5]:		--meta-config
+[runlim] argv[6]:		../../../../../../../../../../../examples/tel/config.yml
+[runlim] argv[7]:		-c
+[runlim] argv[8]:		n=20
+[runlim] argv[9]:		../../../../../../../../../../instances/tel/instances/nomystery/0014-nomystery-73-0.asp
+[runlim] argv[10]:		../../../../../../../../../../instances/tel/encodings/nomystery-metasp.lp
+[runlim] start:			Thu May 21 00:16:35 2026
+[runlim] child:			818
+[runlim] sample:		9.80 time, 10.01 real, 247 MB, 1.00 load
+[runlim] sample:		19.80 time, 20.01 real, 247 MB, 1.00 load
+[runlim] sample:		29.80 time, 30.01 real, 247 MB, 1.00 load
+[runlim] sample:		39.80 time, 40.01 real, 248 MB, 1.00 load
+[runlim] sample:		49.80 time, 50.01 real, 253 MB, 1.00 load
+[runlim] sample:		59.80 time, 60.01 real, 253 MB, 1.00 load
+[runlim] sample:		69.80 time, 70.01 real, 253 MB, 1.00 load
+[runlim] sample:		79.80 time, 80.01 real, 253 MB, 1.00 load
+[runlim] sample:		89.80 time, 90.01 real, 253 MB, 1.00 load
+[runlim] sample:		99.79 time, 100.01 real, 254 MB, 1.00 load
+[runlim] sample:		109.79 time, 110.01 real, 254 MB, 1.00 load
+[runlim] sample:		119.79 time, 120.01 real, 255 MB, 1.00 load
+[runlim] sample:		129.79 time, 130.01 real, 255 MB, 1.00 load
+[runlim] sample:		139.79 time, 140.01 real, 255 MB, 1.00 load
+[runlim] sample:		149.79 time, 150.01 real, 255 MB, 1.00 load
+[runlim] sample:		159.79 time, 160.01 real, 255 MB, 1.00 load
+[runlim] sample:		169.79 time, 170.01 real, 255 MB, 1.00 load
+[runlim] sample:		179.79 time, 180.01 real, 255 MB, 1.00 load
+[runlim] end:			Thu May 21 00:19:41 2026
+[runlim] status:		ok
+[runlim] result:		10
+[runlim] children:		1
+[runlim] processes:		2
+[runlim] real:			185.22 seconds
+[runlim] time:			184.99 seconds
+[runlim] space:			255 MB
+[runlim] load:			1.00 maximum
+[runlim] samples:		1853

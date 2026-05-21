@@ -1,0 +1,25 @@
+[runlim] version:		2.0.0rc12
+[runlim] host:			kr-node2
+[runlim] time limit:		311040000 seconds
+[runlim] real time limit:	1200 seconds
+[runlim] space limit:		20000 MB
+[runlim] argv[0]:		../../../../../../../../../../programs/telingo-1
+[runlim] argv[1]:		--stats
+[runlim] argv[2]:		1
+[runlim] argv[3]:		-q
+[runlim] argv[4]:		--lambd=14
+[runlim] argv[5]:		../../../../../../../../../../instances/tel/instances/ricochetrobot/061-ricochetrobot-14-0.asp
+[runlim] argv[6]:		../../../../../../../../../../instances/tel/encodings/ricochetrobot-telingo.lp
+[runlim] start:			Thu May 21 01:03:24 2026
+[runlim] child:			24703
+[runlim] sample:		9.80 time, 10.01 real, 45 MB, 1.00 load
+[runlim] end:			Thu May 21 01:03:40 2026
+[runlim] status:		ok
+[runlim] result:		10
+[runlim] children:		1
+[runlim] processes:		2
+[runlim] real:			15.68 seconds
+[runlim] time:			15.41 seconds
+[runlim] space:			51 MB
+[runlim] load:			1.00 maximum
+[runlim] samples:		157

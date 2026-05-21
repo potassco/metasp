@@ -1,0 +1,34 @@
+telingo version 2.1.2
+Reading from ...tances/visitall/0089-visitall-66-1.asp ...
+Solving...
+SATISFIABLE
+
+Models       : 1+
+Calls        : 1
+Time         : 69.377s (Solving: 69.24s 1st Model: 69.23s Unsat: 0.00s)
+CPU Time     : 69.376s
+
+Choices      : 483135  
+Conflicts    : 370546   (Analyzed: 370546)
+Restarts     : 1020     (Average: 363.28 Last: 4088 Blocked: 0)
+Model-Level  : 15.0    
+Problems     : 1        (Average Length: 2.00 Splits: 0)
+Lemmas       : 370546   (Deleted: 310479)
+  Binary     : 258      (Ratio:   0.07%)
+  Ternary    : 1192     (Ratio:   0.32%)
+  Conflict   : 370546   (Average Length:  111.9 Ratio: 100.00%) 
+  Loop       : 0        (Average Length:    0.0 Ratio:   0.00%) 
+  Other      : 0        (Average Length:    0.0 Ratio:   0.00%) 
+Backjumps    : 370546   (Average:  1.28 Max:  31 Sum: 474572)
+  Executed   : 370546   (Average:  1.28 Max:  31 Sum: 474572 Ratio: 100.00%)
+  Bounded    : 0        (Average:  0.00 Max:   0 Sum:      0 Ratio:   0.00%)
+
+Rules        : 135633  
+  Choice     : 34      
+Atoms        : 7285    
+Bodies       : 12913   
+Equivalences : 11798    (Atom=Atom: 38 Body=Body: 1194 Other: 10566)
+Tight        : Yes
+Variables    : 8223     (Eliminated:    0 Frozen: 7067)
+Constraints  : 63968    (Binary:  87.2% Ternary:  10.9% Other:   1.9%)
+

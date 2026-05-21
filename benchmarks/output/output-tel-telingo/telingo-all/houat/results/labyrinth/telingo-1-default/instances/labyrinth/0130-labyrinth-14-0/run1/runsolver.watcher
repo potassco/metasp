@@ -1,0 +1,27 @@
+[runlim] version:		2.0.0rc12
+[runlim] host:			kr-node2
+[runlim] time limit:		311040000 seconds
+[runlim] real time limit:	1200 seconds
+[runlim] space limit:		20000 MB
+[runlim] argv[0]:		../../../../../../../../../../programs/telingo-1
+[runlim] argv[1]:		--stats
+[runlim] argv[2]:		1
+[runlim] argv[3]:		-q
+[runlim] argv[4]:		--lambd=6
+[runlim] argv[5]:		../../../../../../../../../../instances/tel/instances/labyrinth/0130-labyrinth-14-0.asp
+[runlim] argv[6]:		../../../../../../../../../../instances/tel/encodings/labyrinth-telingo.lp
+[runlim] start:			Thu May 21 00:11:43 2026
+[runlim] child:			23112
+[runlim] sample:		9.85 time, 10.01 real, 47 MB, 1.00 load
+[runlim] sample:		19.84 time, 20.01 real, 52 MB, 1.00 load
+[runlim] sample:		29.84 time, 30.01 real, 53 MB, 1.00 load
+[runlim] end:			Thu May 21 00:12:14 2026
+[runlim] status:		ok
+[runlim] result:		10
+[runlim] children:		1
+[runlim] processes:		2
+[runlim] real:			31.21 seconds
+[runlim] time:			31.04 seconds
+[runlim] space:			53 MB
+[runlim] load:			1.00 maximum
+[runlim] samples:		313

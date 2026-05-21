@@ -1,0 +1,35 @@
+telingo version 2.1.2
+Reading from ...nces/nomystery/0038-nomystery-63-0.asp ...
+Solving...
+SATISFIABLE
+
+Models       : 1+
+Calls        : 1
+Time         : 5.438s (Solving: 5.35s 1st Model: 5.35s Unsat: 0.00s)
+CPU Time     : 5.438s
+
+Choices      : 254508  
+Conflicts    : 41443    (Analyzed: 41443)
+Restarts     : 126      (Average: 328.91 Last: 3235 Blocked: 0)
+Model-Level  : 49.0    
+Problems     : 1        (Average Length: 2.00 Splits: 0)
+Lemmas       : 41443    (Deleted: 33523)
+  Binary     : 2699     (Ratio:   6.51%)
+  Ternary    : 820      (Ratio:   1.98%)
+  Conflict   : 41443    (Average Length:  398.8 Ratio: 100.00%) 
+  Loop       : 0        (Average Length:    0.0 Ratio:   0.00%) 
+  Other      : 0        (Average Length:    0.0 Ratio:   0.00%) 
+Backjumps    : 41443    (Average:  5.72 Max: 1106 Sum: 236982)
+  Executed   : 41389    (Average:  5.72 Max: 1106 Sum: 236874 Ratio:  99.95%)
+  Bounded    : 54       (Average:  2.00 Max:   2 Sum:    108 Ratio:   0.05%)
+
+Rules        : 41072    (Original: 40064)
+  Choice     : 16      
+Atoms        : 8439    
+Bodies       : 22279    (Original: 22295)
+  Count      : 16       (Original: 32)
+Equivalences : 14316    (Atom=Atom: 2874 Body=Body: 1046 Other: 10396)
+Tight        : Yes
+Variables    : 21458    (Eliminated:    0 Frozen: 4873)
+Constraints  : 89620    (Binary:  77.3% Ternary:  20.3% Other:   2.4%)
+

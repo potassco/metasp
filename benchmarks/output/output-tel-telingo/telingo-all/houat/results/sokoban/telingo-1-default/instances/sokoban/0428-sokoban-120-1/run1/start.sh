@@ -1,0 +1,29 @@
+#!/bin/bash
+# https://github.com/arminbiere/runlim
+
+CAT="../../../../../../../../../../programs/gcat.sh"
+
+cd "$(dirname $0)"
+
+runner=( "../../../../../../../../../../programs/runlim" \
+  --single \
+  --space-limit=20000 \
+  --output-file=runsolver.watcher \
+  --real-time-limit=1200 \
+  "../../../../../../../../../../programs/telingo-1" \
+  --stats 1 -q  --lambd=44 \
+     )
+
+input=( "../../../../../../../../../../instances/tel/instances/sokoban/0428-sokoban-120-1.asp" "../../../../../../../../../../instances/tel/encodings/sokoban-telingo.lp" )
+
+if [[ ! -e .finished ]]; then
+  {
+    if file -b --mime-type -L  "${input[@]}" | grep -qv "text/"; then
+      "$CAT" "${input[@]}" | "${runner[@]}"
+    else
+      "${runner[@]}" "${input[@]}"
+    fi
+  } > runsolver.solver
+fi
+
+touch .finished

@@ -1,0 +1,34 @@
+Metasp (<class 'metasp.app.ClingoApp'>) version 5.8.0
+Reading from ...nces/labyrinth/0082-labyrinth-14-0.asp ...
+Solving...
+SATISFIABLE
+
+Models       : 1+
+Calls        : 1
+Time         : 322.874s (Solving: 314.29s 1st Model: 314.28s Unsat: 0.00s)
+CPU Time     : 322.837s
+
+Choices      : 715383  
+Conflicts    : 604229   (Analyzed: 604229)
+Restarts     : 1641     (Average: 368.21 Last: 226 Blocked: 0)
+Model-Level  : 5.0     
+Problems     : 1        (Average Length: 1.00 Splits: 0)
+Lemmas       : 651568   (Deleted: 586160)
+  Binary     : 2690     (Ratio:   0.41%)
+  Ternary    : 4273     (Ratio:   0.66%)
+  Conflict   : 604229   (Average Length:  109.0 Ratio:  92.73%) 
+  Loop       : 47339    (Average Length:   35.8 Ratio:   7.27%) 
+  Other      : 0        (Average Length:    0.0 Ratio:   0.00%) 
+Backjumps    : 604229   (Average:  1.17 Max: 104 Sum: 706419)
+  Executed   : 604123   (Average:  1.17 Max: 104 Sum: 706313 Ratio:  99.98%)
+  Bounded    : 106      (Average:  1.00 Max:   1 Sum:    106 Ratio:   0.02%)
+
+Rules        : 342344  
+  Choice     : 5       
+Atoms        : 295580  
+Bodies       : 191608  
+Equivalences : 621249   (Atom=Atom: 161168 Body=Body: 107728 Other: 352353)
+Tight        : No       (SCCs: 5 Non-Hcfs: 0 Nodes: 14768 Gammas: 0)
+Variables    : 29537    (Eliminated:    0 Frozen: 29537)
+Constraints  : 104251   (Binary:  75.2% Ternary:  17.2% Other:   7.6%)
+
