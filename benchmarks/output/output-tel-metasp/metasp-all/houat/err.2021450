@@ -1,0 +1,21 @@
+*** Info : (Metasp (<class 'metasp.app.ClingoApp'>)): Sending shutdown signal...
+Traceback (most recent call last):
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/application.py", line 377, in _pyclingo_application_main
+    app.main(Control(control), [_to_str(files[i]) for i in range(size)])
+  File "/mnt/nfsshare/home/hahnmartinlu/potassco/metasp/src/metasp/app.py", line 279, in main
+    super().main(control, final_files)
+  File "/mnt/nfsshare/home/hahnmartinlu/potassco/metasp/src/metasp/app.py", line 38, in main
+    ctl.solve()
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/control.py", line 1081, in solve
+    ret = handle.get()
+          ^^^^^^^^^^^^
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/solving.py", line 583, in get
+    res = _c_call(
+          ^^^^^^^^
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/_internal.py", line 50, in _c_call
+    _handle_error(c_fun(*args, p_ret), handler)
+  File "/mnt/nfsshare/home/hahnmartinlu/.pyenv/versions/3.12.13/envs/metasp/lib/python3.12/site-packages/clingo/_internal.py", line 81, in _handle_error
+    raise RuntimeError(msg)
+RuntimeError: solving stopped by signal
+*** ERROR: (Metasp (<class 'metasp.app.ClingoApp'>)): solving stopped by signal
+*** Info : (Metasp (<class 'metasp.app.ClingoApp'>)): Shutdown completed in 0.003 seconds

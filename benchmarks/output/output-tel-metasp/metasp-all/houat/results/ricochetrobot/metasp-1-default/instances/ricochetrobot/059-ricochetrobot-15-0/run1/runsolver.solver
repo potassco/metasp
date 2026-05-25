@@ -1,0 +1,35 @@
+Metasp (<class 'metasp.app.ClingoApp'>) version 5.8.0
+Reading from ...cochetrobot/059-ricochetrobot-15-0.asp ...
+Solving...
+SATISFIABLE
+
+Models       : 1+
+Calls        : 1
+Time         : 44.685s (Solving: 39.62s 1st Model: 39.62s Unsat: 0.00s)
+CPU Time     : 44.636s
+
+Choices      : 1052636 
+Conflicts    : 147840   (Analyzed: 147840)
+Restarts     : 473      (Average: 312.56 Last: 282 Blocked: 0)
+Model-Level  : 95.0    
+Problems     : 1        (Average Length: 1.00 Splits: 0)
+Lemmas       : 147840   (Deleted: 118420)
+  Binary     : 5942     (Ratio:   4.02%)
+  Ternary    : 3561     (Ratio:   2.41%)
+  Conflict   : 147840   (Average Length:  282.6 Ratio: 100.00%) 
+  Loop       : 0        (Average Length:    0.0 Ratio:   0.00%) 
+  Other      : 0        (Average Length:    0.0 Ratio:   0.00%) 
+Backjumps    : 147840   (Average:  6.86 Max: 1080 Sum: 1013576)
+  Executed   : 147169   (Average:  6.85 Max: 1080 Sum: 1012905 Ratio:  99.93%)
+  Bounded    : 671      (Average:  1.00 Max:   1 Sum:    671 Ratio:   0.07%)
+
+Rules        : 414404   (Original: 414164)
+  Choice     : 135     
+Atoms        : 349970  
+Bodies       : 278276   (Original: 278036)
+  Count      : 0        (Original: 60)
+Equivalences : 877055   (Atom=Atom: 210787 Body=Body: 128836 Other: 537432)
+Tight        : Yes
+Variables    : 44477    (Eliminated:    0 Frozen: 44297)
+Constraints  : 161914   (Binary:  72.1% Ternary:  18.7% Other:   9.2%)
+

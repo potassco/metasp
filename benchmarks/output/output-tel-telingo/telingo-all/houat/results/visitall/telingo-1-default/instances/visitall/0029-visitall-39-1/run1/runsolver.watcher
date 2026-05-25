@@ -1,0 +1,35 @@
+[runlim] version:		2.0.0rc12
+[runlim] host:			kr-node2
+[runlim] time limit:		311040000 seconds
+[runlim] real time limit:	1200 seconds
+[runlim] space limit:		20000 MB
+[runlim] argv[0]:		../../../../../../../../../../programs/telingo-1
+[runlim] argv[1]:		--stats
+[runlim] argv[2]:		1
+[runlim] argv[3]:		-q
+[runlim] argv[4]:		--lambd=35
+[runlim] argv[5]:		../../../../../../../../../../instances/tel/instances/visitall/0029-visitall-39-1.asp
+[runlim] argv[6]:		../../../../../../../../../../instances/tel/encodings/visitall-telingo.lp
+[runlim] start:			Wed May 20 23:35:30 2026
+[runlim] child:			18646
+[runlim] sample:		9.83 time, 10.01 real, 40 MB, 2.00 load
+[runlim] sample:		19.83 time, 20.01 real, 45 MB, 2.00 load
+[runlim] sample:		29.83 time, 30.01 real, 48 MB, 2.00 load
+[runlim] sample:		39.83 time, 40.01 real, 54 MB, 2.00 load
+[runlim] sample:		49.82 time, 50.01 real, 55 MB, 2.00 load
+[runlim] sample:		59.82 time, 60.01 real, 58 MB, 2.00 load
+[runlim] sample:		69.82 time, 70.01 real, 58 MB, 2.00 load
+[runlim] sample:		79.82 time, 80.01 real, 60 MB, 2.00 load
+[runlim] sample:		89.82 time, 90.01 real, 60 MB, 2.00 load
+[runlim] sample:		99.82 time, 100.01 real, 61 MB, 2.00 load
+[runlim] sample:		109.82 time, 110.01 real, 62 MB, 2.00 load
+[runlim] end:			Wed May 20 23:37:22 2026
+[runlim] status:		ok
+[runlim] result:		10
+[runlim] children:		1
+[runlim] processes:		2
+[runlim] real:			111.20 seconds
+[runlim] time:			110.92 seconds
+[runlim] space:			62 MB
+[runlim] load:			2.00 maximum
+[runlim] samples:		1112

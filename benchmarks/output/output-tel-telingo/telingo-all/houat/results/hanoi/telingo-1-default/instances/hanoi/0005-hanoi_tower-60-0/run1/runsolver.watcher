@@ -1,0 +1,35 @@
+[runlim] version:		2.0.0rc12
+[runlim] host:			kr-node2
+[runlim] time limit:		311040000 seconds
+[runlim] real time limit:	1200 seconds
+[runlim] space limit:		20000 MB
+[runlim] argv[0]:		../../../../../../../../../../programs/telingo-1
+[runlim] argv[1]:		--stats
+[runlim] argv[2]:		1
+[runlim] argv[3]:		-q
+[runlim] argv[4]:		--lambd=47
+[runlim] argv[5]:		../../../../../../../../../../instances/tel/instances/hanoi/0005-hanoi_tower-60-0.asp
+[runlim] argv[6]:		../../../../../../../../../../instances/tel/encodings/hanoi-telingo.lp
+[runlim] start:			Thu May 21 00:04:17 2026
+[runlim] child:			22299
+[runlim] sample:		9.84 time, 10.01 real, 51 MB, 1.00 load
+[runlim] sample:		19.84 time, 20.01 real, 53 MB, 1.00 load
+[runlim] sample:		29.84 time, 30.01 real, 56 MB, 1.00 load
+[runlim] sample:		39.84 time, 40.01 real, 66 MB, 1.00 load
+[runlim] sample:		49.85 time, 50.01 real, 67 MB, 1.00 load
+[runlim] sample:		59.85 time, 60.01 real, 67 MB, 1.00 load
+[runlim] sample:		69.85 time, 70.01 real, 71 MB, 1.00 load
+[runlim] sample:		79.85 time, 80.01 real, 71 MB, 1.00 load
+[runlim] sample:		89.85 time, 90.01 real, 72 MB, 1.00 load
+[runlim] sample:		99.85 time, 100.01 real, 72 MB, 1.00 load
+[runlim] sample:		109.85 time, 110.01 real, 72 MB, 1.00 load
+[runlim] end:			Thu May 21 00:06:13 2026
+[runlim] status:		ok
+[runlim] result:		10
+[runlim] children:		1
+[runlim] processes:		2
+[runlim] real:			116.93 seconds
+[runlim] time:			116.75 seconds
+[runlim] space:			72 MB
+[runlim] load:			1.00 maximum
+[runlim] samples:		1170

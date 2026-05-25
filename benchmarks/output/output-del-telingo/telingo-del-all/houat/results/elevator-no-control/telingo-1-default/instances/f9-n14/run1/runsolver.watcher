@@ -1,0 +1,24 @@
+[runlim] version:		2.0.0rc12
+[runlim] host:			kr-node2
+[runlim] time limit:		311040000 seconds
+[runlim] real time limit:	1200 seconds
+[runlim] space limit:		20000 MB
+[runlim] argv[0]:		../../../../../../../../../programs/telingo-1
+[runlim] argv[1]:		--stats
+[runlim] argv[2]:		0
+[runlim] argv[3]:		-q
+[runlim] argv[4]:		--lambd=14
+[runlim] argv[5]:		../../../../../../../../../instances/del/instances/f9-n14.lp
+[runlim] argv[6]:		../../../../../../../../../instances/del/elevator-telingo.lp
+[runlim] start:			Wed May 20 23:58:31 2026
+[runlim] child:			21030
+[runlim] end:			Wed May 20 23:58:31 2026
+[runlim] status:		ok
+[runlim] result:		30
+[runlim] children:		1
+[runlim] processes:		2
+[runlim] real:			0.26 seconds
+[runlim] time:			0.05 seconds
+[runlim] space:			16 MB
+[runlim] load:			1.12 maximum
+[runlim] samples:		3

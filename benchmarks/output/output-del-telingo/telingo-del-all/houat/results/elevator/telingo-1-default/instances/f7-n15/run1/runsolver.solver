@@ -1,0 +1,35 @@
+telingo version 2.1.2
+Reading from ..../../instances/del/instances/f7-n15.lp ...
+Solving...
+SATISFIABLE
+
+Models       : 2
+Calls        : 1
+Time         : 0.042s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
+CPU Time     : 0.042s
+
+Choices      : 40      
+Conflicts    : 33       (Analyzed: 31)
+Restarts     : 0       
+Model-Level  : 10.5    
+Problems     : 1        (Average Length: 8.00 Splits: 0)
+Lemmas       : 31       (Deleted: 0)
+  Binary     : 0        (Ratio:   0.00%)
+  Ternary    : 1        (Ratio:   3.23%)
+  Conflict   : 31       (Average Length:   18.4 Ratio: 100.00%) 
+  Loop       : 0        (Average Length:    0.0 Ratio:   0.00%) 
+  Other      : 0        (Average Length:    0.0 Ratio:   0.00%) 
+Backjumps    : 31       (Average:  1.19 Max:   3 Sum:     37)
+  Executed   : 31       (Average:  1.19 Max:   3 Sum:     37 Ratio: 100.00%)
+  Bounded    : 0        (Average:  0.00 Max:   0 Sum:      0 Ratio:   0.00%)
+
+Rules        : 3739     (Original: 3611)
+  Choice     : 624     
+Atoms        : 1336    
+Bodies       : 2737     (Original: 2609)
+  Count      : 0        (Original: 32)
+Equivalences : 514      (Atom=Atom: 18 Body=Body: 33 Other: 463)
+Tight        : Yes
+Variables    : 1342     (Eliminated:    0 Frozen:  974)
+Constraints  : 2952     (Binary:  79.9% Ternary:  14.3% Other:   5.9%)
+

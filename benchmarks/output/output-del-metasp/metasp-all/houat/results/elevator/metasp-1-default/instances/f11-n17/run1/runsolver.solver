@@ -1,0 +1,37 @@
+Metasp (<class 'metasp.app.ClingoApp'>) version 5.8.0
+Reading from .../../instances/del/instances/f11-n17.lp ...
+Solving...
+SATISFIABLE
+
+Models       : 2
+Calls        : 1
+Time         : 2.529s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
+CPU Time     : 2.513s
+
+Choices      : 132     
+Conflicts    : 105      (Analyzed: 104)
+Restarts     : 1        (Average: 104.00 Last: 43 Blocked: 0)
+Stab. Tests  : 3        (Full: 2 Partial: 1)
+Model-Level  : 2.5     
+Problems     : 1        (Average Length: 1.00 Splits: 0)
+Lemmas       : 128      (Deleted: 0)
+  Binary     : 17       (Ratio:  13.28%)
+  Ternary    : 23       (Ratio:  17.97%)
+  Conflict   : 104      (Average Length:   26.1 Ratio:  81.25%) 
+  Loop       : 24       (Average Length:   14.4 Ratio:  18.75%) 
+  Other      : 0        (Average Length:    0.0 Ratio:   0.00%) 
+Backjumps    : 104      (Average:  1.21 Max:   5 Sum:    126)
+  Executed   : 103      (Average:  1.20 Max:   5 Sum:    125 Ratio:  99.21%)
+  Bounded    : 1        (Average:  1.00 Max:   1 Sum:      1 Ratio:   0.79%)
+
+Rules        : 10190    (Original: 10046)
+  Choice     : 72      
+Atoms        : 8141    
+Disjunctions : 66       (Original: 90)
+Bodies       : 7026     (Original: 6750)
+  Count      : 0        (Original: 36)
+Equivalences : 19924    (Atom=Atom: 4810 Body=Body: 3252 Other: 11862)
+Tight        : No       (SCCs: 1 Non-Hcfs: 1 Nodes: 924 Gammas: 132)
+Variables    : 1735     (Eliminated:    0 Frozen: 1501)
+Constraints  : 4794     (Binary:  72.2% Ternary:  22.9% Other:   4.9%)
+

@@ -1,0 +1,50 @@
+[runlim] version:		2.0.0rc12
+[runlim] host:			kr-node1
+[runlim] time limit:		311040000 seconds
+[runlim] real time limit:	1200 seconds
+[runlim] space limit:		20000 MB
+[runlim] argv[0]:		../../../../../../../../../../programs/metasp-1
+[runlim] argv[1]:		clingo
+[runlim] argv[2]:		--stats
+[runlim] argv[3]:		1
+[runlim] argv[4]:		-q
+[runlim] argv[5]:		--meta-config
+[runlim] argv[6]:		../../../../../../../../../../../examples/tel/config.yml
+[runlim] argv[7]:		-c
+[runlim] argv[8]:		n=16
+[runlim] argv[9]:		../../../../../../../../../../instances/tel/instances/ricochetrobot/030-ricochetrobot-16-0.asp
+[runlim] argv[10]:		../../../../../../../../../../instances/tel/encodings/ricochetrobot-metasp.lp
+[runlim] start:			Thu May 21 01:35:30 2026
+[runlim] child:			2501
+[runlim] sample:		9.49 time, 10.01 real, 312 MB, 1.00 load
+[runlim] sample:		19.49 time, 20.01 real, 313 MB, 1.00 load
+[runlim] sample:		29.49 time, 30.01 real, 313 MB, 1.00 load
+[runlim] sample:		39.49 time, 40.01 real, 314 MB, 1.00 load
+[runlim] sample:		49.48 time, 50.01 real, 314 MB, 1.00 load
+[runlim] sample:		59.48 time, 60.01 real, 314 MB, 1.00 load
+[runlim] sample:		69.49 time, 70.01 real, 314 MB, 1.00 load
+[runlim] sample:		79.49 time, 80.01 real, 314 MB, 1.00 load
+[runlim] sample:		89.49 time, 90.01 real, 314 MB, 1.00 load
+[runlim] sample:		99.49 time, 100.01 real, 314 MB, 1.00 load
+[runlim] sample:		109.48 time, 110.01 real, 315 MB, 1.00 load
+[runlim] sample:		119.48 time, 120.01 real, 317 MB, 1.00 load
+[runlim] sample:		129.48 time, 130.01 real, 320 MB, 1.00 load
+[runlim] sample:		139.48 time, 140.01 real, 321 MB, 1.00 load
+[runlim] sample:		149.48 time, 150.01 real, 321 MB, 1.00 load
+[runlim] sample:		159.48 time, 160.01 real, 322 MB, 1.00 load
+[runlim] sample:		169.48 time, 170.01 real, 322 MB, 1.00 load
+[runlim] sample:		179.48 time, 180.01 real, 322 MB, 1.00 load
+[runlim] sample:		189.48 time, 190.01 real, 323 MB, 1.00 load
+[runlim] sample:		199.48 time, 200.01 real, 323 MB, 1.00 load
+[runlim] sample:		209.48 time, 210.01 real, 323 MB, 1.00 load
+[runlim] sample:		219.48 time, 220.01 real, 325 MB, 1.00 load
+[runlim] end:			Thu May 21 01:39:13 2026
+[runlim] status:		ok
+[runlim] result:		10
+[runlim] children:		1
+[runlim] processes:		2
+[runlim] real:			223.16 seconds
+[runlim] time:			222.58 seconds
+[runlim] space:			326 MB
+[runlim] load:			1.00 maximum
+[runlim] samples:		2232

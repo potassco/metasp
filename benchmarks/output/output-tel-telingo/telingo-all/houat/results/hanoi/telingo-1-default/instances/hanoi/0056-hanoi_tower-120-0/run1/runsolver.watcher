@@ -1,0 +1,46 @@
+[runlim] version:		2.0.0rc12
+[runlim] host:			kr-node2
+[runlim] time limit:		311040000 seconds
+[runlim] real time limit:	1200 seconds
+[runlim] space limit:		20000 MB
+[runlim] argv[0]:		../../../../../../../../../../programs/telingo-1
+[runlim] argv[1]:		--stats
+[runlim] argv[2]:		1
+[runlim] argv[3]:		-q
+[runlim] argv[4]:		--lambd=38
+[runlim] argv[5]:		../../../../../../../../../../instances/tel/instances/hanoi/0056-hanoi_tower-120-0.asp
+[runlim] argv[6]:		../../../../../../../../../../instances/tel/encodings/hanoi-telingo.lp
+[runlim] start:			Thu May 21 00:06:24 2026
+[runlim] child:			22596
+[runlim] sample:		9.85 time, 10.01 real, 43 MB, 1.00 load
+[runlim] sample:		19.85 time, 20.01 real, 51 MB, 1.00 load
+[runlim] sample:		29.85 time, 30.01 real, 54 MB, 1.00 load
+[runlim] sample:		39.85 time, 40.01 real, 57 MB, 1.00 load
+[runlim] sample:		49.85 time, 50.01 real, 59 MB, 1.00 load
+[runlim] sample:		59.85 time, 60.01 real, 62 MB, 1.00 load
+[runlim] sample:		69.85 time, 70.01 real, 64 MB, 1.00 load
+[runlim] sample:		79.85 time, 80.01 real, 68 MB, 1.00 load
+[runlim] sample:		89.84 time, 90.01 real, 72 MB, 1.00 load
+[runlim] sample:		99.85 time, 100.01 real, 77 MB, 1.00 load
+[runlim] sample:		109.85 time, 110.01 real, 77 MB, 1.00 load
+[runlim] sample:		119.85 time, 120.01 real, 77 MB, 1.00 load
+[runlim] sample:		129.85 time, 130.01 real, 77 MB, 1.00 load
+[runlim] sample:		139.85 time, 140.01 real, 77 MB, 1.00 load
+[runlim] sample:		149.84 time, 150.01 real, 78 MB, 1.00 load
+[runlim] sample:		159.84 time, 160.01 real, 78 MB, 1.00 load
+[runlim] sample:		169.84 time, 170.01 real, 82 MB, 1.00 load
+[runlim] sample:		179.84 time, 180.01 real, 85 MB, 1.00 load
+[runlim] sample:		189.84 time, 190.01 real, 85 MB, 1.00 load
+[runlim] sample:		199.84 time, 200.01 real, 85 MB, 1.00 load
+[runlim] sample:		209.84 time, 210.01 real, 85 MB, 1.00 load
+[runlim] sample:		219.84 time, 220.01 real, 88 MB, 1.00 load
+[runlim] end:			Thu May 21 00:10:09 2026
+[runlim] status:		ok
+[runlim] result:		10
+[runlim] children:		1
+[runlim] processes:		2
+[runlim] real:			225.04 seconds
+[runlim] time:			224.84 seconds
+[runlim] space:			88 MB
+[runlim] load:			1.00 maximum
+[runlim] samples:		2251

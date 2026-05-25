@@ -1,0 +1,35 @@
+[runlim] version:		2.0.0rc12
+[runlim] host:			kr-node1
+[runlim] time limit:		311040000 seconds
+[runlim] real time limit:	1200 seconds
+[runlim] space limit:		20000 MB
+[runlim] argv[0]:		../../../../../../../../../../programs/metasp-1
+[runlim] argv[1]:		clingo
+[runlim] argv[2]:		--stats
+[runlim] argv[3]:		1
+[runlim] argv[4]:		-q
+[runlim] argv[5]:		--meta-config
+[runlim] argv[6]:		../../../../../../../../../../../examples/tel/config.yml
+[runlim] argv[7]:		-c
+[runlim] argv[8]:		n=34
+[runlim] argv[9]:		../../../../../../../../../../instances/tel/instances/visitall/0030-visitall-39-1.asp
+[runlim] argv[10]:		../../../../../../../../../../instances/tel/encodings/visitall-metasp.lp
+[runlim] start:			Wed May 20 23:04:42 2026
+[runlim] child:			20936
+[runlim] sample:		9.70 time, 10.01 real, 132 MB, 2.08 load
+[runlim] sample:		19.70 time, 20.01 real, 136 MB, 2.07 load
+[runlim] sample:		29.70 time, 30.01 real, 140 MB, 2.14 load
+[runlim] sample:		39.70 time, 40.01 real, 144 MB, 2.12 load
+[runlim] sample:		49.70 time, 50.01 real, 144 MB, 2.10 load
+[runlim] sample:		59.70 time, 60.01 real, 147 MB, 2.08 load
+[runlim] sample:		69.70 time, 70.01 real, 148 MB, 2.07 load
+[runlim] end:			Wed May 20 23:05:57 2026
+[runlim] status:		ok
+[runlim] result:		10
+[runlim] children:		1
+[runlim] processes:		2
+[runlim] real:			74.28 seconds
+[runlim] time:			73.90 seconds
+[runlim] space:			149 MB
+[runlim] load:			2.14 maximum
+[runlim] samples:		743

@@ -1,0 +1,35 @@
+[runlim] version:		2.0.0rc12
+[runlim] host:			kr-node1
+[runlim] time limit:		311040000 seconds
+[runlim] real time limit:	1200 seconds
+[runlim] space limit:		20000 MB
+[runlim] argv[0]:		../../../../../../../../../../programs/metasp-1
+[runlim] argv[1]:		clingo
+[runlim] argv[2]:		--stats
+[runlim] argv[3]:		1
+[runlim] argv[4]:		-q
+[runlim] argv[5]:		--meta-config
+[runlim] argv[6]:		../../../../../../../../../../../examples/tel/config.yml
+[runlim] argv[7]:		-c
+[runlim] argv[8]:		n=51
+[runlim] argv[9]:		../../../../../../../../../../instances/tel/instances/sokoban/0119-sokoban-42-1.asp
+[runlim] argv[10]:		../../../../../../../../../../instances/tel/encodings/sokoban-metasp.lp
+[runlim] start:			Thu May 21 02:13:20 2026
+[runlim] child:			3480
+[runlim] sample:		9.47 time, 10.01 real, 185 MB, 1.00 load
+[runlim] sample:		19.48 time, 20.01 real, 185 MB, 1.00 load
+[runlim] sample:		29.48 time, 30.01 real, 185 MB, 1.00 load
+[runlim] sample:		39.47 time, 40.01 real, 187 MB, 1.00 load
+[runlim] sample:		49.48 time, 50.01 real, 187 MB, 1.00 load
+[runlim] sample:		59.47 time, 60.01 real, 196 MB, 1.00 load
+[runlim] sample:		69.47 time, 70.01 real, 198 MB, 1.00 load
+[runlim] end:			Thu May 21 02:14:31 2026
+[runlim] status:		ok
+[runlim] result:		10
+[runlim] children:		1
+[runlim] processes:		2
+[runlim] real:			71.24 seconds
+[runlim] time:			70.67 seconds
+[runlim] space:			198 MB
+[runlim] load:			1.00 maximum
+[runlim] samples:		713

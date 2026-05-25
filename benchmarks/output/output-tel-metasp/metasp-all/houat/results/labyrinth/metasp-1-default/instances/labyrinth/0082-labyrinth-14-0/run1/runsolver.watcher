@@ -1,0 +1,60 @@
+[runlim] version:		2.0.0rc12
+[runlim] host:			kr-node1
+[runlim] time limit:		311040000 seconds
+[runlim] real time limit:	1200 seconds
+[runlim] space limit:		20000 MB
+[runlim] argv[0]:		../../../../../../../../../../programs/metasp-1
+[runlim] argv[1]:		clingo
+[runlim] argv[2]:		--stats
+[runlim] argv[3]:		1
+[runlim] argv[4]:		-q
+[runlim] argv[5]:		--meta-config
+[runlim] argv[6]:		../../../../../../../../../../../examples/tel/config.yml
+[runlim] argv[7]:		-c
+[runlim] argv[8]:		n=5
+[runlim] argv[9]:		../../../../../../../../../../instances/tel/instances/labyrinth/0082-labyrinth-14-0.asp
+[runlim] argv[10]:		../../../../../../../../../../instances/tel/encodings/labyrinth-metasp.lp
+[runlim] start:			Wed May 20 23:59:13 2026
+[runlim] child:			31151
+[runlim] sample:		9.80 time, 10.01 real, 295 MB, 1.74 load
+[runlim] sample:		19.80 time, 20.01 real, 295 MB, 1.78 load
+[runlim] sample:		29.80 time, 30.01 real, 295 MB, 1.81 load
+[runlim] sample:		39.80 time, 40.01 real, 295 MB, 1.84 load
+[runlim] sample:		49.80 time, 50.01 real, 296 MB, 2.03 load
+[runlim] sample:		59.79 time, 60.01 real, 296 MB, 1.94 load
+[runlim] sample:		69.79 time, 70.01 real, 297 MB, 1.80 load
+[runlim] sample:		79.79 time, 80.01 real, 297 MB, 1.67 load
+[runlim] sample:		89.79 time, 90.01 real, 297 MB, 1.57 load
+[runlim] sample:		99.79 time, 100.01 real, 297 MB, 1.48 load
+[runlim] sample:		109.79 time, 110.01 real, 298 MB, 1.41 load
+[runlim] sample:		119.79 time, 120.01 real, 300 MB, 1.34 load
+[runlim] sample:		129.79 time, 130.01 real, 300 MB, 1.29 load
+[runlim] sample:		139.79 time, 140.01 real, 301 MB, 1.25 load
+[runlim] sample:		149.79 time, 150.01 real, 301 MB, 1.21 load
+[runlim] sample:		159.79 time, 160.01 real, 301 MB, 1.17 load
+[runlim] sample:		169.79 time, 170.01 real, 301 MB, 1.15 load
+[runlim] sample:		179.79 time, 180.01 real, 301 MB, 1.12 load
+[runlim] sample:		189.79 time, 190.01 real, 301 MB, 1.10 load
+[runlim] sample:		199.79 time, 200.01 real, 301 MB, 1.09 load
+[runlim] sample:		209.79 time, 210.01 real, 301 MB, 1.07 load
+[runlim] sample:		219.79 time, 220.01 real, 301 MB, 1.06 load
+[runlim] sample:		229.79 time, 230.01 real, 301 MB, 1.05 load
+[runlim] sample:		239.79 time, 240.01 real, 301 MB, 1.04 load
+[runlim] sample:		249.79 time, 250.01 real, 301 MB, 1.04 load
+[runlim] sample:		259.79 time, 260.01 real, 301 MB, 1.03 load
+[runlim] sample:		269.79 time, 270.01 real, 301 MB, 1.02 load
+[runlim] sample:		279.79 time, 280.01 real, 301 MB, 1.02 load
+[runlim] sample:		289.79 time, 290.01 real, 301 MB, 1.02 load
+[runlim] sample:		299.79 time, 300.01 real, 301 MB, 1.01 load
+[runlim] sample:		309.79 time, 310.01 real, 301 MB, 1.01 load
+[runlim] sample:		319.79 time, 320.01 real, 301 MB, 1.01 load
+[runlim] end:			Thu May 21 00:04:36 2026
+[runlim] status:		ok
+[runlim] result:		10
+[runlim] children:		1
+[runlim] processes:		2
+[runlim] real:			323.51 seconds
+[runlim] time:			323.29 seconds
+[runlim] space:			303 MB
+[runlim] load:			2.03 maximum
+[runlim] samples:		3236
