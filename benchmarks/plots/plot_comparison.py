@@ -36,7 +36,7 @@ DISPLAY_NAMES = {
     "conflicts": "Conflicts",
 }
 
-RESULTS_DIR = Path(__file__).parent / "results"
+RESULTS_DIR = Path(__file__).parent.parent / "results"
 
 
 def load_data(metric: str) -> pd.DataFrame:
@@ -127,9 +127,9 @@ def plot(metric: str, df: pd.DataFrame) -> None:
     ax.set_ylim(lim)
 
     display = DISPLAY_NAMES[metric]
-    ax.set_xlabel(f"{display} metasp", fontsize=12)
-    ax.set_ylabel(f"{display} telingo-λ", fontsize=12)
-    ax.set_title(f"{display}: metasp vs telingo-λ", fontsize=13)
+    ax.set_xlabel(f"{display} metasp", fontsize=14)
+    ax.set_ylabel(f"{display} telingo-λ", fontsize=14)
+    ax.set_title(f"{display}: metasp vs telingo-λ", fontsize=15)
     ax.set_aspect("equal", adjustable="box")
 
     # Build legend: domain colour patches + per-timeout-case marker entries
@@ -161,11 +161,11 @@ def plot(metric: str, df: pd.DataFrame) -> None:
                 )
             )
             labels.append(label)
-    ax.legend(handles, labels, title="legend", bbox_to_anchor=(1.02, 1), loc="upper left", borderaxespad=0)
+    ax.legend(handles, labels, title="legend", bbox_to_anchor=(1.02, 1), loc="upper left", borderaxespad=0, fontsize=13, title_fontsize=13)
     ax.grid(True, linewidth=0.4, alpha=0.5)
 
     plt.tight_layout()
-    out = RESULTS_DIR / f"comparison_{metric}.pdf"
+    out = Path(__file__).parent / f"comparison_{metric}.pdf"
     plt.savefig(out, bbox_inches="tight")
     print(f"Saved: {out}")
     plt.show()
