@@ -5,38 +5,11 @@ Custom printing functions can be provided by adding the script in the configurat
 
 import logging
 from typing import Callable, Optional
-from clingo import Model, Symbol, SymbolType, Function, Number
-from metasp.utils.logging_utils import COLORS
+from clingo import Model, SymbolType
+from metasp.utils.logging_utils import colored_symbol_str
 import sys
 
 log = logging.getLogger(__name__)
-
-
-def print_logs(model: Model) -> None:
-    """
-    Auxiliary function to print log messages from the model.
-    It looks for symbols of the form _log(Level, Message) and prints the message with the corresponding log level.
-    """
-    for sym in model.symbols(atoms=True):
-        if sym.match("_log", 2):
-            level = str(sym.arguments[0]).strip('"').lower()
-            if level not in ["debug", "info", "warning", "error", "critical"]:
-                log.warning("Invalid log level: {}. Skipping log message.".format(level))
-                continue
-            getattr(log, level)(sym.arguments[1])
-
-
-def print_symbol_str(s: Symbol) -> str:
-    """
-    Auxiliary function to print a symbol with color if it is an internal symbol (those starting with &).
-    Args:
-        s (Symbol): The symbol to be printed.
-    """
-    if s.type == SymbolType.Function and s.name.startswith("__"):
-        s_str = str(s)
-        s_str = s_str.replace("__", "&")
-        return f"{COLORS['YELLOW']}{s_str}{COLORS['NORMAL']}"
-    return str(s)
 
 
 def pretty_printer(model: Model, system) -> None:
@@ -47,7 +20,7 @@ def pretty_printer(model: Model, system) -> None:
         model (Model): The clingo model to be printed.
         system (MetaSystem): The metasp system.
     """
-    sys.stdout.write("\n".join([print_symbol_str(sym) for sym in model.symbols(shown=True)]))
+    sys.stdout.write("\n".join([colored_symbol_str(sym) for sym in model.symbols(shown=True)]))
     sys.stdout.write("\n")
 
 
@@ -82,6 +55,6 @@ def temporal_printer(model: Model, system) -> None:
             if (sym.name, len(sym.arguments), sym.positive) != sig:
                 # sys.stdout.write("\n ")
                 sig = (sym.name, len(sym.arguments), sym.positive)
-            sys.stdout.write(" {}".format(print_symbol_str(sym)))
+            sys.stdout.write(" {}".format(colored_symbol_str(sym)))
         sys.stdout.write("\n")
     sys.stdout.write("\n")

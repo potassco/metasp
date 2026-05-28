@@ -96,6 +96,8 @@ markdown_extensions:
 plugins:
   - search
   - autorefs
+  - literate-nav:
+      nav_file: SUMMARY.md
   - mkdocstrings:
       handlers:
         python:
@@ -112,34 +114,3 @@ plugins:
               show_inherited_detail: true
               show_inherited_detail_toc: true
               show_inherited_detail_tree: true
-
-nav:
-  - Home: index.md
-  - Getting Started: getting_started.md
-  - Examples:
-      - telingo: examples/telingo.md
-      - melingo: examples/melingo.md
-      - delingo: examples/delingo.md
-  - Reference:
-      - reference/index.md
-      - control-name: reference/solver.md
-      - Semantics: reference/semantics.md
-      - Syntax: reference/syntax.md
-      - Print: reference/print.md
-      - Encodings:
-          - reference/encodings/index.md
-          - meta.lp: reference/encodings/meta.md
-          - formulas.lp: reference/encodings/formulas.md
-          - derived.lp: reference/encodings/derived.md
-          - reify-defined.lp: reference/encodings/reify_defined.md
-          - show.lp: reference/encodings/show.md
-          - show-time.lp: reference/encodings/show_time.md
-          - meta-time.lp: reference/encodings/meta_time.md
-      - API: reference/api/index.md
-  - Community:
-      - community/index.md
-      - Help: community/help.md
-      - Changes: community/CHANGES.md
-      - Contributing: community/CONTRIBUTING.md
-      - Development: community/DEVELOPMENT.md
-      - Deployment: community/DEPLOYMENT.md

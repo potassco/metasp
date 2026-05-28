@@ -1,7 +1,7 @@
 from clingo import Model, SymbolType
 import sys
 
-from metasp.printing import print_symbol_str
+from metasp.printing import colored_symbol_str
 
 
 def mel_printer(model: Model, system) -> None:
@@ -43,6 +43,6 @@ def mel_printer(model: Model, system) -> None:
             if (sym.name, len(sym.arguments), sym.positive) != sig:
                 # sys.stdout.write("\n ")
                 sig = (sym.name, len(sym.arguments), sym.positive)
-            sys.stdout.write(" {}".format(print_symbol_str(sym)))
+            sys.stdout.write(" {}".format(colored_symbol_str(sym)))
         sys.stdout.write("\n")
     sys.stdout.write("\n")

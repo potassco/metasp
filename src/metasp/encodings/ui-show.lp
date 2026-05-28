@@ -5,7 +5,6 @@
 #show allow/2.
 #show subtype/2.
 #show expression/2.
-#show world/1.
 #show conjunction/2.
 #show output/2.
 #show shown_type/1.
@@ -29,3 +28,5 @@
 % #show true/2.
 #show derive/3.
 #show expression/4.
+
+#show world(W):time(W).

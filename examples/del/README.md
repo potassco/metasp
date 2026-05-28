@@ -1,12 +1,12 @@
 # DEL
 
-A Dynamic Equilibrium Logic (DEL) encoding of the problem of finding a dynamic stable model of a logic program.
+A Dynamic Equilibrium Logic (DEL)  extension of ASP.
 
 ## Usage
 
 For the encoding in `instances/paper-lights.lp` you can run the following command to get all traces of length 5 which alternates green and red using the `del` extension:
 
-```
+```bash
 > metasp solve clingo --meta-config config.yml -c n=4 instances/paper-lights.lp                                                                                   ─╯
 Metasp (<class 'metasp.app.ClingoApp'>) version 5.8.0
 Reading from instances/paper-lights.lp
