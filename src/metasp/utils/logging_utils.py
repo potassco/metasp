@@ -7,6 +7,7 @@ logging.
 
 import logging
 from typing import TextIO
+from clingo import Model, Symbol, SymbolType
 
 NOTSET = logging.NOTSET
 DEBUG = logging.DEBUG
@@ -23,6 +24,8 @@ COLORS = {
     "RED": "\033[91m",
     "NORMAL": "\033[0m",
 }
+
+log = logging.getLogger(__name__)
 
 
 class SingleLevelFilter(logging.Filter):
@@ -84,3 +87,30 @@ def configure_logging(stream: TextIO, level: int, use_color: bool) -> None:
         make_handler(logging.ERROR, "RED"),
     ]
     logging.basicConfig(handlers=handlers, level=level)
+
+
+def print_model_logs(model: Model) -> None:
+    """
+    Auxiliary function to print log messages from the model.
+    It looks for symbols of the form _log(Level, Message) and prints the message with the corresponding log level.
+    """
+    for sym in model.symbols(atoms=True):
+        if sym.match("_log", 2):
+            level = str(sym.arguments[0]).strip('"').lower()
+            if level not in ["debug", "info", "warning", "error", "critical"]:
+                log.warning("Invalid log level: {}. Skipping log message.".format(level))
+                continue
+            getattr(log, level)(sym.arguments[1])
+
+
+def colored_symbol_str(s: Symbol) -> str:
+    """
+    Auxiliary function to print a symbol with color if it is an internal symbol (those starting with &).
+    Args:
+        s (Symbol): The symbol to be printed.
+    """
+    if s.type == SymbolType.Function and s.name.startswith("__"):
+        s_str = str(s)
+        s_str = s_str.replace("__", "&")
+        return f"{COLORS['YELLOW']}{s_str}{COLORS['NORMAL']}"
+    return str(s)

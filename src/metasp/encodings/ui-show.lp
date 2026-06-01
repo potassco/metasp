@@ -5,7 +5,6 @@
 #show allow/2.
 #show subtype/2.
 #show expression/2.
-#show world/1.
 #show conjunction/2.
 #show output/2.
 #show shown_type/1.
@@ -15,6 +14,11 @@
 #show formula(T,S): formula(T,F), sugar(F,S).
 #show true(S,W): true(F,W), sugar(F,S).
 #show true(S,W): true(F,W), sugar(F,S).
+#show time/1.
+#show model(T) :time(T).
+
+#show true(S,model): true(F), sugar(F,S).
+#show model(model) :not time(_).
 
 #show show/2.
 #show show/0.
@@ -29,3 +33,4 @@
 % #show true/2.
 #show derive/3.
 #show expression/4.
+

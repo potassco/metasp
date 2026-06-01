@@ -3,33 +3,33 @@
 #include "metasp.reify-defined.lp".
 #include "metasp.reify-defined-metasp.lp".
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% #Not
-                :- formula(bool, &not(F)), true(&not(F)), not not true(F).  % ? "not not"
+% ----------------------------
+%##Not
+                :- formula(bool, &not(F)), true(&not(F)), not not true(F).
 true(&not(F))   :- formula(bool, &not(F)), not true(F).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% #And
+% ----------------------------
+%##And
 true(&and(F1,F2)) :- formula(bool, &and(F1,F2)), true(F1), true(F2).
 true(F1):-true(&and(F1,F2)).
 true(F2):-true(&and(F1,F2)).
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% #Or
+% ----------------------------
+%##Or
 true(&or(F1,F2)) :- formula(bool, &or(F1,F2)), true(F1).
 true(&or(F1,F2)) :- formula(bool, &or(F1,F2)), true(F2).
 true(F1);true(F2):-true(&or(F1,F2)).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% #To
+% ----------------------------
+%##To
 true(&to(F1,F2)) :- formula(bool, &to(F1,F2)), true(F2): true(F1).
 true(F2) :- true(&to(F1,F2)), true(F1).
-% ???
-% true(F); true(F' ) :- theory_term_tree(F,("<-",F',F'')),   not not true(F'').
+%% ???
+%% true(F); true(F' ) :- theory_term_tree(F,("<-",F',F'')),   not not true(F'').
 
 %-----------------------------------------
-% Checks and warnings
+%# Warnings
+% Checks and warnings to showcase logging from ASP
 has_not(&not(F)) :- formula(bool, &not(F)).
 _log(warning, nested_negation(&not(F))):- formula(bool, &not(F)), has_not(F).

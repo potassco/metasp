@@ -1,12 +1,11 @@
-% # Window
-% -------
+%## Window
 elem(w, window, root).
 attr(w, class, ("d-flex"; "flex-column")).
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% #General attributes
+%--------------------
+%## General attributes
 attr(main(S), class, ("d-flex"; "flex-row";"bg-opacity-25";"w-100";"p-2";"rounded";"m-2")):-elem(main(S),container,_).
 attr(main(S), class, ("bg-primary";"bg-opacity-59")):-elem(main(S),container,_),_clinguin_browsing.
 attr(main(S), class, ("bg-info")):-elem(main(S),container,_),not _clinguin_unsat, not _clinguin_browsing.
@@ -30,7 +29,6 @@ attr(elem_title(C), height, "28pt"):-elem(elem_title(C),label,_).
 attr(elem_val(C), order, 2):-elem(elem_val(C),_,_).
 attr(elem_val(C), class, ("btn-outline";"btn-small";"fw-lighter")):-elem(elem_val(C),_,_).
 attr(elem_val(C), class, ("pe-3";"pt-1";"pb-1")):-elem(elem_val(C),label,_).
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
@@ -38,10 +36,11 @@ attr(elem_val(C), class, ("pe-3";"pt-1";"pb-1")):-elem(elem_val(C),label,_).
 elem(main(state), container, w).
 attr(main(state), order, 1).
 
-    % ## Constants
     % ------------
+    %## Constants
 
     elem(section(constants), container, main(state)).
+    attr(section(constants), order, 1).
 
         elem(title(constants), label, section(constants)).
         attr(title(constants), label, "Constants").
@@ -55,7 +54,6 @@ attr(main(state), order, 1).
 
                 elem(elem_val(const(C)), label, elem_container(const(C))):-_clinguin_const(C,V).
                 attr(elem_val(const(C)), label,V):-_clinguin_const(C,V).
-                % attr(const_label(C), class, "w-100"):-_clinguin_const(C,V).
 
         elem(footer(constants), container, section(constants)).
 
@@ -76,10 +74,11 @@ attr(main(state), order, 1).
                 when(footer_item(const(btn)),click,call, set_constant(_context_value(const_name),_context_value(const_value))).
 
 
-    % ## Types
     % ------------
+    %## Types
 
     elem(section(types), container, main(state)).
+    attr(section(types), order, 2).
 
         elem(title(types), label, section(types)).
         attr(title(types), label, "Types").
@@ -95,58 +94,9 @@ attr(main(state), order, 1).
                 when(elem_title(type(T)), click,call, set_external(shown_type(T),true)):-atom_type(T),not shown_type(T).
                 when(elem_title(type(T)), click,call, set_external(shown_type(T),false)):-atom_type(T), shown_type(T).
 
-                % elem(elem_val(type(M)), label, elem_container(type(M))):-type(M,_,_,_).
-                % attr(elem_val(type(M)), label,V):-type(M,_,V).
-                % attr(const_label(C), class, "w-100"):-_clinguin_const(C,V).
 
-
-    % elem(section(assignments), container, main(state)).
-
-    %     elem(title(assignments), label, section(assignments)).
-    %     attr(title(assignments), label, "Current model assignments").
-
-    %     elem(content(assignments), container, section(assignments)).
-
-    %         elem(elem_container(assign(K)), container, content(assignments)):-_clinguin_assign(K,V).
-    %         attr(elem_container(assign(K)), order, V):-_clinguin_assign(K,V).
-
-    %             elem(elem_title(assign(K)), label, elem_container(assign(K))):-_clinguin_assign(K,V).
-    %             attr(elem_title(assign(K)), label, K):-_clinguin_assign(K,V).
-
-    %             elem(elem_val(assign(K)), label, elem_container(assign(K))):-_clinguin_assign(K,V).
-    %             attr(elem_val(assign(K)), label,V):-_clinguin_assign(K,V).
-
-    % ## UNSAT
     % ------------
-
-    % elem(section(unsat), container, main(state)):-_clinguin_unsat.
-
-    %     elem(title(unsat), label, section(unsat)):-_clinguin_unsat.
-    %     attr(title(unsat), label, "UNSAT"):-_clinguin_unsat.
-    %     attr(title(unsat), class, "text-danger"):-_clinguin_unsat.
-
-    %     elem(content(unsat), container, section(unsat)):-_clinguin_unsat.
-
-
-        % #Todo add MUS
-
-
-    % ## SAT
-    % ------------
-
-    % elem(section(sat), container, main(state)):-not _clinguin_unsat.
-    % attr(section(sat), class, ("bg-success")):-not _clinguin_unsat.
-
-    %     elem(title(sat), label, section(sat)):-not _clinguin_unsat.
-    %     attr(title(sat), label, "SAT"):-not _clinguin_unsat.
-    %     attr(title(sat), class, "text-success"):-not _clinguin_unsat.
-
-    %     elem(content(sat), container, section(sat)):-not _clinguin_unsat.
-
-
-
-    % ## Actions
-    % ------------
+    %## Actions
 
     elem(footer(model), container, main(state)).
     attr(footer(model), order, 3).
@@ -181,12 +131,6 @@ attr(main(state), order, 1).
         attr(footer_item(next_solution), icon, "fa-forward-step").
         when(footer_item(next_solution), click, call, next_solution).
 
-        % elem(footer_item(next_solution_opt), button, footer_elem(browse)).
-        % attr(footer_item(next_solution_opt), order, 2).
-        % attr(footer_item(next_solution_opt), label, "Next Optimizing").
-        % attr(footer_item(next_solution_opt), icon, "fa-forward-fast").
-        % when(footer_item(next_solution_opt), click, call, next_solution(optN)).
-
         elem(footer_item(stop), button, footer_elem(browse)).
         attr(footer_item(stop), order, 1).
         attr(footer_item(stop), label, "Stop Browsing").
@@ -195,25 +139,20 @@ attr(main(state), order, 1).
         attr(footer_item(stop), icon, "fa-stop").
         when(footer_item(stop), click, call, stop_browsing).
 
-% elem(main(input), container, w).
-% attr(main(input), order, 2).
-
-
-
 elem(main(model), container, w).
 attr(main(model), order, 3).
 
-    %  ## Model
     %  ---------------
+    %## Model
 
-    elem(section(model(W)), container, main(model)):-world(W).
-    attr(section(model(W)), order, W):-world(W).
+    elem(section(model(W)), container, main(model)):-model(W).
+    attr(section(model(W)), order, W):-model(W).
 
-    elem(content(model(W)), container, section(model(W))):-world(W).
-    attr(content(model(W)), class, ("d-flex";"flex-row")):-world(W).
+    elem(content(model(W)), container, section(model(W))):-model(W).
+    attr(content(model(W)), class, ("d-flex";"flex-row")):-model(W).
 
-            elem(title(model(W)), label, section(model(W))):-world(W).
-            attr(title(model(W)), label, W):-world(W).
+            elem(title(model(W)), label, section(model(W))):-model(W).
+            attr(title(model(W)), label, W):-model(W).
 
             _any_or_browse(A):-_clinguin_browsing, _clinguin_model(A).
             _any_or_browse(A):-not _clinguin_browsing, _any(A).
@@ -222,22 +161,20 @@ attr(main(model), order, 3).
             show_model(true(X,W)):-_any_or_browse(conjunction(B,W)), formula(atom,X), show(X,B).
             show_model(true(X,W)):-_any_or_browse(true(X,W)), formula(M,X), shown_type(M), not derive(_,X,_), M!=atom.
             show_model(true(X,W)):-_clinguin_assume(true(X,W),_).
+            _clinguin_assume(true(X,model),V):-_clinguin_assume(true(X),V).
 
-            % show_model(true(X,W)):-_any_or_browse(true(X,W)), formula(atom,X).
 
-
-            elem(sub_content(model(W)), container, content(model(W))):-world(W).
+            elem(sub_content(model(W)), container, content(model(W))):-model(W).
 
 
                 elem(elem_container(model(A,W)), container, sub_content(model(W))):-show_model(true(A,W)).
 
                     elem(elem_title(model(A,W)), button, elem_container(model(A,W))):-show_model(true(A,W)).
-                    % attr(elem_title(model(A,W)), label, A):-show_model(true(A,W)).
                     attr(elem_title(model(A,W)), label, L):-show_model(true(A,W)), label(A,L).
-                    attr(elem_title(model(A,W)), label, A):-show_model(true(A,W)), not label(A,_).
+                    attr(elem_title(model(A,W)), label, @replace(A,"__","&")):-show_model(true(A,W)), not label(A,_).
                     attr(elem_title(model(A,W)), "white-space", "nowrap"):-show_model(true(A,W)).
                     attr(elem_title(model(A,W)), class, "font-monospace"):-show_model(true(A,W)).
-                    attr(elem_title(model(A,W)), class, "opacity-25"):- _all(A), show_model(true(A,W)).
+                    % attr(elem_title(model(A,W)), class, "opacity-25"):- _all(A), show_model(true(A,W)).
                     attr(elem_title(model(A,W)), class, "text-primary"):-  show_model(true(A,W)), not formula(atom,A).
                     attr(elem_title(model(A,W)), class, "text-decoration-underline"):-  show_model(true(A,W)),  _clinguin_assume(true(A,W),true).
                     attr(elem_title(model(A,W)), class, ("text-decoration-line-through")):-  show_model(true(A,W)),  _clinguin_assume(true(A,W),false).
@@ -251,24 +188,29 @@ attr(main(model), order, 3).
 
                         elem(elem_cm(model(A,W),force), button,elem_cm(model(A,W))):-show_model(true(A,W)).
                         attr(elem_cm(model(A,W),force), label,"Force in model"):-show_model(true(A,W)).
-                        when(elem_cm(model(A,W),force), click, call, add_assumption(true(A,W),true)):-show_model(true(A,W)),not _clinguin_assume(true(A,W),_), _any(true(A,W)).
+                        when(elem_cm(model(A,W),force), click, call, add_assumption(true(A,W),true)):-show_model(true(A,W)),not _clinguin_assume(true(A,W),_), _any(true(A,W)), W!=model.
+                        when(elem_cm(model(A,W),force), click, call, add_assumption(true(A),true)):-show_model(true(A,W)),not _clinguin_assume(true(A,W),_), _any(true(A,W)), W=model.
+
                         attr(elem_cm(model(A,W),force), class, ("disabled";"text-light")):-show_model(true(A,W)),not when(elem_cm(model(A,W),force),_,_,_).
 
                         elem(elem_cm(model(A,W),remove), button,elem_cm(model(A,W))):-show_model(true(A,W)).
                         attr(elem_cm(model(A,W),remove), label,"Remove from model"):-show_model(true(A,W)).
-                        when(elem_cm(model(A,W),remove), click, call, add_assumption(true(A,W),false)):-show_model(true(A,W)),not _clinguin_assume(true(A,W),_), not _all(true(A,W)).
+                        when(elem_cm(model(A,W),remove), click, call, add_assumption(true(A,W),false)):-show_model(true(A,W)),not _clinguin_assume(true(A,W),_), not _all(true(A,W)), W!=model.
+                        when(elem_cm(model(A,W),remove), click, call, add_assumption(true(A),false)):-show_model(true(A,W)),not _clinguin_assume(true(A,W),_), not _all(true(A,W)), W=model.
+
                         attr(elem_cm(model(A,W),remove), class, ("disabled";"text-light")):-show_model(true(A,W)),not when(elem_cm(model(A,W),remove),_,_,_).
 
                         elem(elem_cm(model(A,W),clear), button,elem_cm(model(A,W))):-show_model(true(A,W)).
                         attr(elem_cm(model(A,W),clear), label,"Clear selection"):-show_model(true(A,W)).
-                        when(elem_cm(model(A,W),clear), click, call, remove_assumption(true(A,W))):-show_model(true(A,W)),_clinguin_assume(true(A,W),_).
+                        when(elem_cm(model(A,W),clear), click, call, remove_assumption(true(A,W))):-show_model(true(A,W)),_clinguin_assume(true(A,W),_), W!=model.
+                        when(elem_cm(model(A,W),clear), click, call, remove_assumption(true(A))):-show_model(true(A,W)),_clinguin_assume(true(A,W),_), W=model.
                         attr(elem_cm(model(A,W),clear), class, ("disabled";"text-light")):-show_model(true(A,W)),not when(elem_cm(model(A,W),clear),_,_,_).
 
 
-% # Menu bar
 % -----------
+%## Menu bar
     elem(menu_bar, menu_bar, w).
-    attr(menu_bar, title, @format("{} ({})","METASP",S)):-metasp_system(S).
+    attr(menu_bar, title, "METASP").
     attr(menu_bar, icon, "fa-desktop").
 
         elem(menu_bar_restart, button, menu_bar).

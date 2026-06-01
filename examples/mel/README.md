@@ -1,10 +1,12 @@
 # MEL
 
-This folder contains an example of how to use the `mel` (Modal Equilibrium Logic) extension to solve a problem.
+A Metric Equilibrium Logic (MEL) extension of ASP, using the `clingcon` system to handle the time aspect.
 
-We can solve the metric problem from `instances/paper-lights-constraint.lp` with the following command:
+## Usage
 
-```
+We can solve the metric problem from [`instances/paper-lights-constraint.lp`](https://github.com/potassco/metasp/blob/master/examples/mel/instances/paper-lights-constraint.lp) with the following command:
+
+```bash
 > metasp solve clingcon  -c n=2 instances/paper-lights-constraint.lp --syntax-encoding syntax.lp --semantics-encoding semantics.lp  --printer mel_printer --python-scripts print_functions.py -n 0 --log warning
 Metasp (<class 'clingcon.__main__.ClingconApp'>) version 5.2.1
 Reading from instances/paper-lights-constraint.lp
@@ -44,8 +46,13 @@ CPU Time     : 0.200s
 
 Notice the use of a custom temporal printer that enhances the temporal printer with the time via @T.
 
-## UI
+### UI
 
 To run the UI use the following command:
 
-`metasp ui --meta-config config.yml --log info -c n=2 instances/paper-lights-constraint.lp`
+```bash
+metasp ui --meta-config config.yml --log info -c n=3 instances/paper-lights-constraint.lp
+```
+
+<img src="https://github.com/potassco/metasp/blob/master/examples/mel/ui.gif?raw=true">
+

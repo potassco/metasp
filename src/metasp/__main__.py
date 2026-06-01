@@ -40,7 +40,13 @@ def run(argv: list[str]) -> int:
         exit_status = clingo_main(App_class(constants=constants_dict), argv[2:])
         return exit_status
 
-    if selected_command == "test":  # nocoverage
+    if selected_command == "test":
+        if "-h" in argv or "--help" in argv:
+            print(
+                "Run the test cases defined in the test file. If no specific tests file is provided, all test files .test.lp in current directory will be ran."
+            )
+            print("Usage: metasp test [test_files]")
+            return 1
         exit_status = run_tests(argv[1:])
         return exit_status
 

@@ -103,10 +103,10 @@ class MetaSystem:
         """
         log.debug(f"Creating MetaSystem from config: {config}")
         if not "semantics_encoding" in config:
-            log.error(
-                "The 'semantics_encoding' field is required to run metasp. Provided via --meta-config or directly."
+            log.warning(
+                "The 'semantics_encoding' field is required to solve using metasp. Provided via --meta-config or directly."
             )
-            raise ValueError("Missing semantics encoding")
+            # raise ValueError("Missing semantics encoding")
         return cls(
             name=config.get("name", "metasp"),
             control_name=config.get("control_name", "clingo"),
@@ -307,5 +307,5 @@ class MetaSystem:
         backend_name = get_clinguin_backend_control(self.control_name)
         command += ["--backend", backend_name]
         command += ["--explicit-show"]
-        # command += ["--server-log-level", "DEBUG"]
+        command += ["--server-log-level", logging.getLevelName(log.getEffectiveLevel())]
         return command

@@ -1,13 +1,10 @@
 # TEL
 
-A Temporal Equilibrium Logic (TEL) encoding of the problem of finding a temporal stable model of a logic program.
+A Temporal Equilibrium Logic (TEL) extension of ASP.
 
 ## Usage
 
-For the encoding in `instances/paper-lights.lp` you can run the following command to get all traces of length 3:
-
-```bash
-Getting all trances of length 3 with the `tel` extension:
+For the encoding in [`instances/paper-lights.lp`](https://github.com/potassco/metasp/blob/master/examples/tel/instances/paper-lights.lp) you can run the following command to get all traces of length 3:
 
 ```bash
 > metasp solve clingo  -c n=2 instances/paper-lights.lp --syntax-encoding syntax.lp --semantics-encoding semantics.lp  -n 0
@@ -28,7 +25,7 @@ CPU Time     : 0.121s
 
 By adding the `--printer temporal_printer` argument you can get a more readable output:
 
-```
+```bash
 > metasp solve clingo  -c n=2 instances/paper-lights.lp --syntax-encoding syntax.lp --semantics-encoding semantics.lp  --printer temporal_printer -n 0
 Metasp (<class 'metasp.app.ClingoApp'>) version 5.8.0
 Reading from instances/paper-lights.lp
@@ -52,7 +49,7 @@ Notice this only shows the atoms, formulas can be included by adding the corresp
 
 For instance, adding the following code to the `instances/paper-lights.lp` file will show the atom `green` and the formula `&next` in the output:
 
-```
+```clingo
 #show &next/1.
 #show green(L):green(L).
 #show.
@@ -76,10 +73,12 @@ Time         : 0.125s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
 CPU Time     : 0.122s
 ```
 
-
-
-## UI
+### UI
 
 To run the UI use the following command:
 
-`metasp ui --meta-config config.yml --log info -c n=2 instances/paper-lights.lp`
+```bash
+metasp ui --meta-config config.yml --log info -c n=3 instances/paper-lights.lp
+```
+
+<img src="https://github.com/potassco/metasp/blob/master/examples/tel/ui.gif?raw=true">

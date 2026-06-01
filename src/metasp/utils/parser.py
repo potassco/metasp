@@ -112,7 +112,7 @@ def get_parser() -> ArgumentParser:
     )
     output_options = {
         "solve": "Solve the processed and reified input files with the meta encoding for the semantics.",
-        "test": "Run the test cases defined in the test file. If specific tests file is provided, all test files .test.lp in current directory will be ran.",
+        "test": "Run the test cases defined in the test file. If no specific tests file is provided, all test files .test.lp in current directory will be ran.",
         "transform": "Output the transformed first order program and run syntactic checks.",
         "reify": "Output the reification with extensions.",
         "ui": "User interface mode.",

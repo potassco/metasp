@@ -9,10 +9,9 @@ from clingo.application import Application, ApplicationOptions
 from clingcon.__main__ import ClingconApp
 from flingo.__main__ import flingoApp
 
-from metasp.printing import print_logs
 from metasp.utils.parser import load_config
 
-from .utils.logging_utils import configure_logging
+from .utils.logging_utils import configure_logging, print_model_logs
 from .system import MetaSystem
 from metasp.grammar import Grammar
 from metasp import MetaspProcessor
@@ -231,7 +230,7 @@ def make_app(app_name: str) -> Application:
             Args:
                 model (Model): The model to print.
             """
-            print_logs(model)
+            print_model_logs(model)
             if self.on_model is not None:
                 self.on_model(model)
             log.debug(

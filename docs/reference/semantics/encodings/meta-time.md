@@ -1,7 +1,8 @@
 
-# Meta encoding adding time argument
+# `meta-time.lp`
 
-Adds a time argument to the meta predicates. It can be used instead of [`meta.lp`](./meta.md) when the encoding requires time support.
+Adds a time argument to the meta predicates in [`meta.lp`](./meta.md).
+It can be used instead of [`meta.lp`](./meta.md) when the encoding requires time support.
 
 ::: src/metasp/encodings/meta-time.lp
     handler: asp
