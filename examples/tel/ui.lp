@@ -36,3 +36,4 @@ def get_tel_label(formula):
 #end.
 
 label(F,@get_tel_label(F)):-formula(tel,F).
+

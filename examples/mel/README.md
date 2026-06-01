@@ -50,4 +50,9 @@ Notice the use of a custom temporal printer that enhances the temporal printer w
 
 To run the UI use the following command:
 
-`metasp ui --meta-config config.yml --log info -c n=2 instances/paper-lights-constraint.lp`
+```bash
+metasp ui --meta-config config.yml --log info -c n=3 instances/paper-lights-constraint.lp
+```
+
+<img src="https://github.com/potassco/metasp/blob/master/examples/mel/ui.gif?raw=true">
+

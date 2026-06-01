@@ -33,5 +33,4 @@ def get_del_label(formula):
 
 #end.
 
-% del_label(F,@get_label(F)):-formula(T,F).
 label(F,@get_del_label(F)):-formula(del,F).

@@ -8,9 +8,7 @@
         * [Transformations](reference/transformations/index.md)
         * [Externals](reference/transformations/externals.md)
         * [Show statements](reference/transformations/show.md)
-    * Syntax
-        * [Syntax](reference/syntax/index.md)
-        * [Safety](reference/syntax/safety.md)
+    * [Syntax](reference/syntax/index.md)
     * Semantics
         * [Semantics](reference/semantics/index.md)
         * [`meta.lp`](reference/semantics/encodings/meta.md)
@@ -26,6 +24,7 @@
     * [API](reference/api/index.md)
 * Examples
     * [Examples](examples/index.md)
+    * [Boolean](examples/bool.md)
     * [TEL](examples/tel.md)
     * [MEL](examples/mel.md)
     * [DEL](examples/del.md)

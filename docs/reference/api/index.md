@@ -15,7 +15,7 @@ Documentation of the *metasp* API.
         show_root_heading: true
         show_source: false
 
-
+---------------------
 ## Printing functions
 
 ::: metasp.printing
@@ -23,3 +23,4 @@ Documentation of the *metasp* API.
     options:
         show_root_heading: true
         show_source: false
+

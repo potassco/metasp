@@ -14,6 +14,11 @@
 #show formula(T,S): formula(T,F), sugar(F,S).
 #show true(S,W): true(F,W), sugar(F,S).
 #show true(S,W): true(F,W), sugar(F,S).
+#show time/1.
+#show model(T) :time(T).
+
+#show true(S,model): true(F), sugar(F,S).
+#show model(model) :not time(_).
 
 #show show/2.
 #show show/0.
@@ -29,4 +34,3 @@
 #show derive/3.
 #show expression/4.
 
-#show world(W):time(W).

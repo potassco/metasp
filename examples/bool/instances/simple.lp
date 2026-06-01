@@ -1,6 +1,6 @@
 {b}.
 {a}.
-&not(a).
+&not(&not(a)).
 % :- &not(&not(a)).
 % :- &to(a,b).
 % &to(&not(b),a).
@@ -9,6 +9,5 @@
 % :- &and(a,_).
 
 
-#show &eq/2.
-#show a/0.
-#show b/0.
+% #show a/0.
+% #show b/0.

@@ -25,6 +25,8 @@ COLORS = {
     "NORMAL": "\033[0m",
 }
 
+log = logging.getLogger(__name__)
+
 
 class SingleLevelFilter(logging.Filter):
     """

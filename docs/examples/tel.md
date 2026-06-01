@@ -41,3 +41,13 @@ Uses the provided standard encodings:
         start_level: 4
 
 
+### UI
+
+Extension to UI encoding to label formulas
+
+::: examples/tel/ui.lp
+    handler: asp
+    options:
+        encodings:
+            git_link: true
+        start_level: 4

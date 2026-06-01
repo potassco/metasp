@@ -9,12 +9,12 @@ hide:
 A framework to ease the creation of Answer Set Programming (ASP) extensions using meta-programming.
 
 The goal is to simplify the process of defining and running custom extensions by providing a structured way to specify syntax, semantics, and solver configurations.
+Modelers can focus on the ASP encodings that define the details of their extension, while *metasp* takes care of the rest.
 
 - No need for any Python coding!
 - Supports different solvers such as *clingo*, *clingcon*, and more.
-- No need to worry about grounding simplifications metasp takes care of that for you.
-- Modelers can focus on the ASP encodings that define the syntax and semantics of their systems, while *metasp* takes care of the rest.
-- Extended operators can be nested and appear anywhere in the encoding.
+- No need to worry about grounding simplifications *metasp* takes care of that for you.
+- Custom operators can be nested and appear anywhere in the encoding.
 
 ## Useful features
 

@@ -307,5 +307,5 @@ class MetaSystem:
         backend_name = get_clinguin_backend_control(self.control_name)
         command += ["--backend", backend_name]
         command += ["--explicit-show"]
-        # command += ["--server-log-level", "DEBUG"]
+        command += ["--server-log-level", logging.getLevelName(log.getEffectiveLevel())]
         return command

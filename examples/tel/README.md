@@ -78,7 +78,7 @@ CPU Time     : 0.122s
 To run the UI use the following command:
 
 ```bash
-metasp ui --meta-config config.yml --log info -c n=2 instances/paper-lights.lp
+metasp ui --meta-config config.yml --log info -c n=3 instances/paper-lights.lp
 ```
 
-
+<img src="https://github.com/potassco/metasp/blob/master/examples/tel/ui.gif?raw=true">
