@@ -2,23 +2,24 @@
 The metasp project.
 """
 
-from ast import AST
-from dataclasses import dataclass
-from re import match
+import logging
 import sys
-from typing import Dict, List
-from clingox.reify import Reifier
-from clingo import Control, Symbol
+from ast import AST
 from collections.abc import Callable, Sequence
-from metasp.grammar import Grammar, Type
-from clingo import SymbolType, Function
-from metasp.utils.logging_utils import COLORS
+from dataclasses import dataclass
+from importlib.resources import files
+from re import match
+from typing import Dict, List
+
 import meta_tools
+from clingo import Control, Function, Symbol, SymbolType
+from clingox.reify import Reifier
 from meta_tools.extensions import ShowExtension
 from meta_tools.extensions.base_extension import ReifyExtension
+
 from metasp.formula_processing import FormulaRegistery
-import logging
-from importlib.resources import files
+from metasp.grammar import Grammar, Type
+from metasp.utils.logging_utils import COLORS
 
 log = logging.getLogger(__name__)
 

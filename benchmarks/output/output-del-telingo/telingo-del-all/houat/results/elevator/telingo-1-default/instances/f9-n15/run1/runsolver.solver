@@ -8,28 +8,27 @@ Calls        : 1
 Time         : 0.036s (Solving: 0.00s 1st Model: 0.00s Unsat: 0.00s)
 CPU Time     : 0.036s
 
-Choices      : 38      
+Choices      : 38
 Conflicts    : 27       (Analyzed: 24)
-Restarts     : 0       
-Model-Level  : 11.0    
+Restarts     : 0
+Model-Level  : 11.0
 Problems     : 1        (Average Length: 8.00 Splits: 0)
 Lemmas       : 24       (Deleted: 0)
   Binary     : 0        (Ratio:   0.00%)
   Ternary    : 0        (Ratio:   0.00%)
-  Conflict   : 24       (Average Length:   21.5 Ratio: 100.00%) 
-  Loop       : 0        (Average Length:    0.0 Ratio:   0.00%) 
-  Other      : 0        (Average Length:    0.0 Ratio:   0.00%) 
+  Conflict   : 24       (Average Length:   21.5 Ratio: 100.00%)
+  Loop       : 0        (Average Length:    0.0 Ratio:   0.00%)
+  Other      : 0        (Average Length:    0.0 Ratio:   0.00%)
 Backjumps    : 24       (Average:  1.42 Max:  11 Sum:     34)
   Executed   : 24       (Average:  1.42 Max:  11 Sum:     34 Ratio: 100.00%)
   Bounded    : 0        (Average:  0.00 Max:   0 Sum:      0 Ratio:   0.00%)
 
 Rules        : 3716     (Original: 3588)
-  Choice     : 624     
-Atoms        : 1361    
+  Choice     : 624
+Atoms        : 1361
 Bodies       : 2723     (Original: 2595)
   Count      : 0        (Original: 32)
 Equivalences : 502      (Atom=Atom: 18 Body=Body: 33 Other: 451)
 Tight        : Yes
 Variables    : 1425     (Eliminated:    0 Frozen:  993)
 Constraints  : 3236     (Binary:  79.2% Ternary:  14.1% Other:   6.7%)
-

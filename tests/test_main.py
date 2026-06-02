@@ -2,24 +2,13 @@
 Test cases for main application functionality.
 """
 
-from io import StringIO
-from platform import processor
-from unittest import TestCase, result
+from unittest import TestCase
 
+from clingo.application import clingo_main
+
+from metasp import MetaspProcessor, replace_internal_prefix
 from metasp.grammar import Grammar
 from metasp.system import MetaSystem
-from metasp.utils import logging_utils
-from metasp.utils.logging_utils import configure_logging
-from metasp.utils.parser import get_parser
-import subprocess
-import os
-from metasp.app import make_app
-from metasp.utils.parser import parse_constants
-from clingo.application import clingo_main
-from metasp.utils.test import run_tests
-from metasp import MetaspProcessor, replace_internal_prefix
-
-from metasp import replace_internal_prefix
 
 BOOL_DIC = {"syntax_encoding": ["./examples/bool/syntax.lp"], "semantics_encoding": ["./examples/bool/semantics.lp"]}
 TEL_DIC = {

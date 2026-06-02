@@ -4,7 +4,9 @@ A Temporal Equilibrium Logic (TEL) extension of ASP.
 
 ## Usage
 
-For the encoding in [`instances/paper-lights.lp`](https://github.com/potassco/metasp/blob/master/examples/tel/instances/paper-lights.lp) you can run the following command to get all traces of length 3:
+For the encoding in
+[`instances/paper-lights.lp`](https://github.com/potassco/metasp/blob/master/examples/tel/instances/paper-lights.lp)
+you can run the following command to get all traces of length 3:
 
 ```bash
 > metasp solve clingo  -c n=2 instances/paper-lights.lp --syntax-encoding syntax.lp --semantics-encoding semantics.lp  -n 0
@@ -23,7 +25,8 @@ CPU Time     : 0.121s
 
 ### Print output
 
-By adding the `--printer temporal_printer` argument you can get a more readable output:
+By adding the `--printer temporal_printer` argument you can get a more readable
+output:
 
 ```bash
 > metasp solve clingo  -c n=2 instances/paper-lights.lp --syntax-encoding syntax.lp --semantics-encoding semantics.lp  --printer temporal_printer -n 0
@@ -45,9 +48,11 @@ CPU Time     : 0.118s
 
 ### Show statements
 
-Notice this only shows the atoms, formulas can be included by adding the corresponding `#show` directive in the input file.
+Notice this only shows the atoms, formulas can be included by adding the
+corresponding `#show` directive in the input file.
 
-For instance, adding the following code to the `instances/paper-lights.lp` file will show the atom `green` and the formula `&next` in the output:
+For instance, adding the following code to the `instances/paper-lights.lp` file
+will show the atom `green` and the formula `&next` in the output:
 
 ```clingo
 #show &next/1.

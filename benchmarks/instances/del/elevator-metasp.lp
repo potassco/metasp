@@ -17,4 +17,3 @@ called(1;nfloors):-&initial.
 &next(called(X)):- called(X), not &final, #false:at(X), serve.
 :- called(X), &final.
 ready :- called(X), at(X).
-

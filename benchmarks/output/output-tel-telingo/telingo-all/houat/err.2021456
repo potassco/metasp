@@ -90,4 +90,3 @@ RuntimeError: solving stopped by signal
 
 <string>:286:8-19: info: atom does not occur in any rule head:
   goalreached(#Inc0)
-

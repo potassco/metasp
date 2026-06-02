@@ -1,10 +1,12 @@
 # DEL
 
-A Dynamic Equilibrium Logic (DEL)  extension of ASP.
+A Dynamic Equilibrium Logic (DEL) extension of ASP.
 
 ## Usage
 
-For the encoding in `instances/paper-lights.lp` you can run the following command to get all traces of length 5 which alternates green and red using the `del` extension:
+For the encoding in `instances/paper-lights.lp` you can run the following
+command to get all traces of length 5 which alternates green and red using the
+`del` extension:
 
 ```bash
 > metasp solve clingo --meta-config config.yml -c n=4 instances/paper-lights.lp

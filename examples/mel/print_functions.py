@@ -1,5 +1,6 @@
-from clingo import Model, SymbolType
 import sys
+
+from clingo import Model, SymbolType
 
 from metasp.printing import colored_symbol_str
 

@@ -106,5 +106,3 @@ metasp test <file>.test.lp
 
         Test passed!
     ```
-
-

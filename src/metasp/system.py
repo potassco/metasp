@@ -1,22 +1,21 @@
+import importlib.util
+import logging
 import os
 import re
-import logging
-import importlib.util
-import sys
+import shutil
 import tempfile
-from datetime import datetime
 from collections.abc import Sequence
-from typing import Optional, List
-from pathlib import Path
+from datetime import datetime
 from io import StringIO
+from pathlib import Path
+from typing import List, Optional
 
-from aspen.tree import AspenTree
-from tree_sitter import Language
 import tree_sitter_metasp as ts_metasp
+from aspen.tree import AspenTree
 from clingo import Function
+from tree_sitter import Language
 
 from metasp.printing import __dict__ as metasp_printing_dict
-import shutil
 
 log = logging.getLogger(__name__)
 
@@ -134,7 +133,7 @@ class MetaSystem:
 
         tree = AspenTree(default_language=clingo_lang)
 
-        syntax_enc_symbols = [tree.parse(Path(e)) for e in self.syntax_encoding]
+        [tree.parse(Path(e)) for e in self.syntax_encoding]
         input_file_symbols = [tree.parse(Path(i)) for i in files]
         str_input_symb = tree.parse(prg)
 

@@ -41,6 +41,6 @@ metasp(allow(@string_to_const(TName), body))
 		 Text = "body".
 
 aspen(print(format("{}.", (@symbol_to_string(F), ())), fact_file)) :- metasp(F).
-aspen(print(format("macro({}, {}, {}).", 
-									 (TypeName, (node(Head), (node(Body), ())))), 
+aspen(print(format("macro({}, {}, {}).",
+									 (TypeName, (node(Head), (node(Body), ())))),
 						fact_file)) :- macro(TypeName, Head, Body).

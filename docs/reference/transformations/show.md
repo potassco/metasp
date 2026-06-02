@@ -37,6 +37,3 @@ see [`show.lp`](../semantics/encodings/show.md) for more details.
 !!! info
 
     If your system is a temporal extension, you can use the [`show-time.lp`](../semantics/encodings/show-time.md) instead which extends the show encoding with time.
-
-
-

@@ -1,17 +1,15 @@
+import logging
 from dataclasses import dataclass
-from re import match
-from typing import Dict, List
+from typing import List
+
+from clingo import Control, Function, Symbol, SymbolType
 from clingox.reify import Reifier
-from clingo import Control, Symbol
-from collections.abc import Callable, Sequence
-from metasp.grammar import Grammar, Type
-from clingo import SymbolType, Function
-from metasp.utils.logging_utils import COLORS
 from meta_tools import classic_reify, extend_reification, transform
 from meta_tools.extensions import ShowExtension
 from meta_tools.extensions.base_extension import ReifyExtension
-import logging
-from importlib.resources import path
+
+from metasp.grammar import Grammar, Type
+from metasp.utils.logging_utils import COLORS
 
 log = logging.getLogger(__name__)
 

@@ -39,4 +39,3 @@ Uses the provided standard encodings:
         encodings:
             git_link: true
         start_level: 4
-

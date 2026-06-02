@@ -1,11 +1,13 @@
-from dataclasses import dataclass, field
-from functools import lru_cache
-from typing import List, Dict, Any, Sequence, Tuple, Optional, Union
-import clorm
 import logging
 import pprint
+from dataclasses import dataclass, field
+from functools import lru_cache
+from typing import Dict, List, Optional, Sequence, Tuple
+
+import clorm
+from clingo import Function, Symbol, SymbolType
+
 import metasp.clorm_db as clorm_db
-from clingo import Symbol, SymbolType, Function
 
 log = logging.getLogger(__name__)
 
