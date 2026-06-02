@@ -1,0 +1,4 @@
+syntax-encoding:
+  - "./syntax.lp"
+semantics-encoding:
+  - "./semantics.lp"

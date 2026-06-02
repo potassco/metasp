@@ -84,7 +84,7 @@ def make_app(app_name: str) -> Application:
             self.constants = constants or {}
             self.root_dir = root_dir or "."
             self.metasp_config = {}
-            self.on_model = on_model
+            self.metasp_on_model = on_model
             self.metasp_config_file = None
             self._log_level = "warning"
             enable_python()
@@ -231,8 +231,8 @@ def make_app(app_name: str) -> Application:
                 model (Model): The model to print.
             """
             print_model_logs(model)
-            if self.on_model is not None:
-                self.on_model(model)
+            if self.metasp_on_model is not None:
+                self.metasp_on_model(model)
             log.debug(
                 "\n".join([str(s).replace("__", "&") for s in model.symbols(atoms=True, shown=True, theory=True)])
             )
