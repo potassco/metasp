@@ -4,6 +4,7 @@ import logging
 import importlib.util
 import sys
 import tempfile
+from datetime import datetime
 from collections.abc import Sequence
 from typing import Optional, List
 from pathlib import Path
@@ -209,7 +210,8 @@ class MetaSystem:
                 lambda m: f'#include "{os.path.join(ENCODINGS_PATH, m.group(1))}"',
                 file_content,
             )
-        title = "\n\n%%%%%% File: {} %%%%%%\n\n".format(file)
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        title = "\n%%%%%% Created: {} \n%%%%%% File: {} \n\n".format(timestamp, file)
         return title + file_content
 
     def _set_printing_function(self, print_model_name: str) -> None:
