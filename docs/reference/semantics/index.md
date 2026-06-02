@@ -18,6 +18,14 @@ This encoding must also give semantics to the ASP rules, for this you can includ
 The semantics encodings might use a different solver. For instance in the [MEL example](../../examples/mel) we use `clingcon` syntax.
 The specific system will be selected when running the `solve` command of *metasp*, providing the corresponding solver as argument.
 
+### Available systems
+
+- [`clingo`](https://potassco.org/clingo/)
+- [`clingcon`](https://potassco.org/clingcon/)
+- [`fclingo`](https://potassco.org/fclingo/)
+
+If you need another system, please open an issue in [GitHub](https://github.com/potassco/metasp).
+
 ## Available encodings
 
 To simplify the writing of your semantics encoding

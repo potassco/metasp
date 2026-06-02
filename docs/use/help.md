@@ -5,18 +5,18 @@ icon: material/help-circle
 
 ## FAQ
 
-!!! tip "Operator not recognized"
+!!! question "Why is my operator not recognized?"
 
     If you are getting an error about an operator not being recognized,
     check that you are using the correct syntax for the formulas.
     Might be that you are using brackets `{}` instead of parenthesis `()`.
 
-!!! tip "Show unsafe"
+!!! question "Why does it say my program is unsafe?"
 
     You might get errors that the program is unsafe,
     this might be because of the externals generated on the transformation of the formulas.
 
-!!! tip "Formula not shown"
+!!! question "Why is my formula not shown?"
 
     Notice that only the formulas that appear in the rules (not nested) are shown in the output.
 
@@ -38,10 +38,10 @@ icon: material/help-circle
 ## Further help
 
 
-!!! question "Open an Issue"
+!!! tip "Open an Issue"
     Open an [issue][new_issue] describing your problem.
 
-!!! warning "Search for existing issues"
+!!! tip "Search for existing issues"
     To avoid duplicating issues, please search our [issue tracker][issues] and our
     [mailing list][mailing_list] before filing a new issue.
 
@@ -51,7 +51,7 @@ icon: material/help-circle
     the potassco tools. You can also [subscribe] to this list to get updates and
     join the community.
 
-!!! question "Reach out in the mailing list"
+!!! tip "Reach out in the mailing list"
     Send an email to the list with your issue.
 
 ## General ASP support
