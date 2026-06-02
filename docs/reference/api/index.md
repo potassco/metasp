@@ -23,4 +23,3 @@ Documentation of the *metasp* API.
     options:
         show_root_heading: true
         show_source: false
-

@@ -19,9 +19,7 @@ clasp_re = {
     "ctime": ("float", re.compile(r"^(c )?Time[ ]*:[ ]*(?P<val>[0-9]+(\.[0-9]+)?)")),
     "stime": (
         "float",
-        re.compile(
-            r"^(c )?Time[ ]*:[ ]*[0-9]+(\.[0-9]+)?s[ ]*\(Solving:[ ]*(?P<val>[0-9]+(\.[0-9]+)?)"
-        ),
+        re.compile(r"^(c )?Time[ ]*:[ ]*[0-9]+(\.[0-9]+)?s[ ]*\(Solving:[ ]*(?P<val>[0-9]+(\.[0-9]+)?)"),
     ),
     "fmtime": (
         "float",
@@ -31,9 +29,7 @@ clasp_re = {
     "constraints": ("float", re.compile(r"^(c )?Constraints[ ]*:[ ]*(?P<val>[0-9]+)")),
     "roriginal": (
         "float",
-        re.compile(
-            r"^(c )?Rules[ ]*:[ ]*[0-9]+(\.[0-9]+)?[ ]*\(Original:[ ]*(?P<val>[0-9]+(\.[0-9]+)?)"
-        ),
+        re.compile(r"^(c )?Rules[ ]*:[ ]*[0-9]+(\.[0-9]+)?[ ]*\(Original:[ ]*(?P<val>[0-9]+(\.[0-9]+)?)"),
     ),
     "rchoices": ("float", re.compile(r"^(c )?  Choice [ ]*:[ ]*(?P<val>[0-9]+)")),
     "atoms": ("float", re.compile(r"^(c )?Atoms[ ]*:[ ]*(?P<val>[0-9]+)")),
@@ -48,9 +44,7 @@ clasp_re = {
     ),
     "status": (
         "string",
-        re.compile(
-            r"^(s )?(?P<val>SATISFIABLE|UNSATISFIABLE|UNKNOWN|OPTIMUM FOUND)[ ]*$"
-        ),
+        re.compile(r"^(s )?(?P<val>SATISFIABLE|UNSATISFIABLE|UNKNOWN|OPTIMUM FOUND)[ ]*$"),
     ),
     "interrupted": ("string", re.compile(r"(c )?(?P<val>INTERRUPTED)")),
     "error": ("string", re.compile(r"^\*\*\* clasp ERROR: (?P<val>.*)$")),
@@ -89,11 +83,7 @@ def parse(
                         if m:
                             res[val] = (
                                 reg[0],
-                                (
-                                    float(m.group("val"))
-                                    if reg[0] == "float"
-                                    else m.group("val")
-                                ),
+                                (float(m.group("val")) if reg[0] == "float" else m.group("val")),
                             )
         except FileNotFoundError:
             sys.stderr.write(
@@ -105,9 +95,7 @@ def parse(
         res["error"] = ("string", "std::bad_alloc")
         res["status"] = ("string", "UNKNOWN")
     result: dict[str, tuple[str, Any]] = {}
-    error = "status" not in res or (
-        "error" in res and res["error"][1] != "std::bad_alloc"
-    )
+    error = "status" not in res or ("error" in res and res["error"][1] != "std::bad_alloc")
     memout = "error" in res and res["error"][1] == "std::bad_alloc"
     status = res["status"][1] if "status" in res else None
     timedout = (

@@ -70,4 +70,3 @@ outside(&i(M,N),(T,T')):-
     i((M,N)), time(T), time(T'), T<=T', &sum{t(T); -t(T')} > -M.
 outside(&i(M,N),(T,T')):-
     i((M,N)), time(T), time(T'), T<=T', &sum{t(T'); -t(T)} > N-1, N!=#sup.
-

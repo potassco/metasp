@@ -16,20 +16,19 @@ Problems     : 1        (Average Length: 1.00 Splits: 0)
 Lemmas       : 2259262  (Deleted: 2126591)
   Binary     : 26535    (Ratio:   1.17%)
   Ternary    : 16561    (Ratio:   0.73%)
-  Conflict   : 2259262  (Average Length: 1085.4 Ratio: 100.00%) 
-  Loop       : 0        (Average Length:    0.0 Ratio:   0.00%) 
-  Other      : 0        (Average Length:    0.0 Ratio:   0.00%) 
+  Conflict   : 2259262  (Average Length: 1085.4 Ratio: 100.00%)
+  Loop       : 0        (Average Length:    0.0 Ratio:   0.00%)
+  Other      : 0        (Average Length:    0.0 Ratio:   0.00%)
 Backjumps    : 2259262  (Average:  6.54 Max: 7132 Sum: 14768413)
   Executed   : 2258817  (Average:  6.54 Max: 7132 Sum: 14767968 Ratio: 100.00%)
   Bounded    : 445      (Average:  1.00 Max:   1 Sum:    445 Ratio:   0.00%)
 
 Rules        : 827194   (Original: 823117)
-  Choice     : 4104    
-Atoms        : 633605  
+  Choice     : 4104
+Atoms        : 633605
 Bodies       : 570278   (Original: 566201)
   Count      : 27       (Original: 54)
 Equivalences : 1903302  (Atom=Atom: 468699 Body=Body: 300960 Other: 1133643)
 Tight        : Yes
 Variables    : 90740    (Eliminated:    0 Frozen: 90740)
 Constraints  : 381616   (Binary:  78.6% Ternary:  20.0% Other:   1.4%)
-

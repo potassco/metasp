@@ -3,12 +3,13 @@ import os
 import sys
 import textwrap
 from enum import Enum, auto
-from typing import Optional, Union
-from metasp.utils.logging_utils import color
-from metasp.app import make_app
+from typing import Optional
+
 from clingo.application import clingo_main
-from metasp.utils.parser import get_parser, load_config, parse_constants
-from metasp.app import APPS_BY_NAME
+
+from metasp.app import APPS_BY_NAME, make_app
+from metasp.utils.logging_utils import color
+from metasp.utils.parser import parse_constants
 
 log = logging.getLogger(__name__)
 

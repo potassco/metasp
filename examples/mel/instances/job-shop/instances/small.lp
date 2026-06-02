@@ -60,4 +60,3 @@ operation(11).
 job(11,1).
 machine(11,3).
 duration(11,4).
-

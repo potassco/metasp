@@ -1,4 +1,5 @@
-from unittest import TestCase, result
+from unittest import TestCase
+
 from metasp.__main__ import run
 
 

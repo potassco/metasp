@@ -8,13 +8,14 @@ Usage:
 Where <metric> is one of: time, stime, rules, choices, conflicts
 """
 
-import sys
 import re
-import pandas as pd
+import sys
+from pathlib import Path
+
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import numpy as np
-from pathlib import Path
+import pandas as pd
 
 METRICS = {"time", "stime", "rules", "choices", "conflicts", "gtime"}
 DOMAINS = ["hanoi", "labyrinth", "nomystery", "ricochetrobot", "sokoban", "visitall"]

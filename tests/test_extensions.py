@@ -2,9 +2,8 @@
 Test cases for main application functionality.
 """
 
-from io import StringIO
-from unittest import TestCase
 import os
+from unittest import TestCase
 
 from metasp.utils.test import run_tests
 

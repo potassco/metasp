@@ -168,4 +168,3 @@ Args:
     - ID_TUPLE: Identifier of the theory_tuple for the arguments.
 *%
 #defined theory_sequence/3.
-

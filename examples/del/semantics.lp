@@ -76,5 +76,3 @@ true(&always(&seq(P1,P2),F),K):- true(&always(P1,&always(P2,F)),K), formula(del,
 true(F,K):-  true(&always(&star(P),F),K).
 true(&always(P,&always(&star(P),F)),K):-  true(&always(&star(P),F),K).
 true(&always(&star(P),F),K):-  formula(del, &always(&star(P),F)), true(F,K), true(&always(P,&always(&star(P),F)),K).
-
-

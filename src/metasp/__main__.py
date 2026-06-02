@@ -2,24 +2,21 @@
 The main entry point for the application.
 """
 
+import logging
+import subprocess
 import sys
-from typing import Optional
-import os
-from networkx import config
+
 import yaml
-import argparse
 from clingo.application import clingo_main
-from metasp.utils.parser import get_parser, load_config, parse_constants
-from metasp.system import MetaSystem
-from metasp.utils.logging_utils import configure_logging
+from networkx import config
+
+from metasp import MetaspProcessor, replace_internal_prefix
 from metasp.app import make_app
 from metasp.grammar import Grammar
-from metasp import MetaspProcessor, replace_internal_prefix
-from metasp.utils.test import TestMetasp, run_tests
-import subprocess
-from pprint import pprint
-
-import logging
+from metasp.system import MetaSystem
+from metasp.utils.logging_utils import configure_logging
+from metasp.utils.parser import get_parser, load_config, parse_constants
+from metasp.utils.test import run_tests
 
 log = logging.getLogger(__name__)
 

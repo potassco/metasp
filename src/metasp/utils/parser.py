@@ -2,17 +2,15 @@
 The command line parser for the project.
 """
 
-from argparse import ArgumentParser
 import argparse
+from argparse import ArgumentParser
 from importlib import metadata
-import os
-from textwrap import dedent
-from typing import Any, Optional, cast
 from pathlib import Path
+from typing import Any, Optional, cast
 
 import yaml
-from rich_argparse import ArgumentDefaultsRichHelpFormatter
 from rich.text import Text
+from rich_argparse import ArgumentDefaultsRichHelpFormatter
 
 from metasp.utils import logging_utils
 
@@ -58,7 +56,7 @@ def load_config(path, root_dir=None):
     try:
         with open(full_path) as f:
             config = yaml.safe_load(f) or {}
-    except Exception as e:
+    except Exception:
         print(f"Error loading config file {path} from config path {config_dir}")
         raise
 

@@ -1,5 +1,5 @@
 # -------- Clorm
-from clorm import Predicate, ConstantStr, IntegerField, StringField, refine_field, ConstantField, Raw
+from clorm import ConstantField, ConstantStr, IntegerField, Predicate, Raw, StringField, refine_field
 
 
 class ExpressionID(Predicate, is_tuple=True):

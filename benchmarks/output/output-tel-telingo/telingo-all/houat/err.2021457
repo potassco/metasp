@@ -54,4 +54,3 @@ RuntimeError: solving stopped by signal
 
 <string>:18:19-29: info: atom does not occur in any rule head:
   visited(X,#Inc0)
-

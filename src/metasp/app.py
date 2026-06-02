@@ -1,21 +1,21 @@
 import json
-import sys
 import logging
+import sys
 import textwrap
 from typing import Optional
 
+from clingcon.__main__ import ClingconApp
 from clingo import Model
 from clingo.application import Application, ApplicationOptions
-from clingcon.__main__ import ClingconApp
+from clingo.script import enable_python
 from flingo.__main__ import flingoApp
 
+from metasp import MetaspProcessor
+from metasp.grammar import Grammar
 from metasp.utils.parser import load_config
 
-from .utils.logging_utils import configure_logging, print_model_logs
 from .system import MetaSystem
-from metasp.grammar import Grammar
-from metasp import MetaspProcessor
-from clingo.script import enable_python
+from .utils.logging_utils import configure_logging, print_model_logs
 
 log = logging.getLogger(__name__)
 
@@ -145,19 +145,23 @@ def make_app(app_name: str) -> Application:
             options.add(
                 group,
                 "log",
-                textwrap.dedent("""\
+                textwrap.dedent(
+                    """\
                     Logging level.
                                                 <level> ={debug|info|error|warning}
-                                                (default: warning)"""),
+                                                (default: warning)"""
+                ),
                 self.parse_log_level,
                 argument="<level>",
             )
             options.add(
                 group,
                 "syntax-encoding",
-                textwrap.dedent("""\
+                textwrap.dedent(
+                    """\
                     Path to syntax encoding files with the grammar.
-                                                (default: None)"""),
+                                                (default: None)"""
+                ),
                 self.parse_system_config("syntax_encoding", "list"),
                 multi=True,
                 argument="<file>",
@@ -165,9 +169,11 @@ def make_app(app_name: str) -> Application:
             options.add(
                 group,
                 "semantics-encoding",
-                textwrap.dedent("""\
+                textwrap.dedent(
+                    """\
                     Path to semantics encoding defining the semantic extension.
-                                                (default: None)"""),
+                                                (default: None)"""
+                ),
                 self.parse_system_config("semantics_encoding", "list"),
                 multi=True,
                 argument="<file>",
@@ -175,9 +181,11 @@ def make_app(app_name: str) -> Application:
             options.add(
                 group,
                 "required-constants",
-                textwrap.dedent("""\
+                textwrap.dedent(
+                    """\
                     Constants required to run the system.
-                                                (default: None)"""),
+                                                (default: None)"""
+                ),
                 self.parse_system_config("required_constants", "list"),
                 multi=True,
                 argument="<file>",
@@ -185,9 +193,11 @@ def make_app(app_name: str) -> Application:
             options.add(
                 group,
                 "ui-encoding",
-                textwrap.dedent("""\
+                textwrap.dedent(
+                    """\
                     Path to ui encoding files extending basic encoding for interactivity.
-                                                (default: None)"""),
+                                                (default: None)"""
+                ),
                 self.parse_system_config("ui_encoding", "list"),
                 multi=True,
                 argument="<file>",
@@ -195,9 +205,11 @@ def make_app(app_name: str) -> Application:
             options.add(
                 group,
                 "printer",
-                textwrap.dedent("""\
+                textwrap.dedent(
+                    """\
                     Name for the printing function to use for models. By defaults uses clingo print
-                                                (default: None)"""),
+                                                (default: None)"""
+                ),
                 # TODO add list of available ones
                 self.parse_system_config("printer", "str"),
                 argument="<file>",
@@ -205,9 +217,11 @@ def make_app(app_name: str) -> Application:
             options.add(
                 group,
                 "python-scripts",
-                textwrap.dedent("""\
+                textwrap.dedent(
+                    """\
                     Path to python scripts to load before running the system. These files can contain custom printing functions.
-                                                (default: None)"""),
+                                                (default: None)"""
+                ),
                 self.parse_system_config("python_scripts", "list"),
                 multi=True,
                 argument="<file>",
@@ -215,9 +229,11 @@ def make_app(app_name: str) -> Application:
             options.add(
                 group,
                 "meta-config",
-                textwrap.dedent("""\
+                textwrap.dedent(
+                    """\
                     Optional path to metasp yaml configuration file, setting the arguments for the system (Use to avoid long command lines).
-                                                (default: None)\033[0m"""),
+                                                (default: None)\033[0m"""
+                ),
                 self.parse_config,
                 argument="<file>",
             )

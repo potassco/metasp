@@ -7,6 +7,7 @@ logging.
 
 import logging
 from typing import TextIO
+
 from clingo import Model, Symbol, SymbolType
 
 NOTSET = logging.NOTSET

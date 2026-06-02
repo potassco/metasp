@@ -4,7 +4,8 @@ A Boolean extension of ASP.
 
 ## Usage
 
-Run the test instance in `examples/bool/tests/and_not.test.lp` with the following command:
+Run the test instance in `examples/bool/tests/and_not.test.lp` with the
+following command:
 
 ```bash
 > metasp solve clingo examples/bool/tests/and_not.test.lp --meta-config examples/bool/config.yml

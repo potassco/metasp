@@ -4,10 +4,11 @@ Custom printing functions can be provided by adding the script in the configurat
 """
 
 import logging
-from typing import Callable, Optional
-from clingo import Model, SymbolType
-from metasp.utils.logging_utils import colored_symbol_str
 import sys
+
+from clingo import Model, SymbolType
+
+from metasp.utils.logging_utils import colored_symbol_str
 
 log = logging.getLogger(__name__)
 

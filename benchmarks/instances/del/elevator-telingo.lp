@@ -11,4 +11,3 @@ ready :- called(X), at(X).
 
 #program initial.
 at((nfloors+1)/2). called(1;nfloors). %Instance
-

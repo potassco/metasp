@@ -68,4 +68,3 @@ Args:
 true(O,T) :- output(O,B), time(T), hold(L,T) : literal_tuple(B,L).
 % If a formula its true, its literal holds
 hold(L,T) :- output(O,B), time(T), true(O,T),  literal_tuple(B,L).
-

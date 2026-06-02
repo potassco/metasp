@@ -10,4 +10,3 @@ Adds defined directives for the reification predicates that are added by *metasp
             include_references: false
         predicate_table: true
         start_level: 1
-
