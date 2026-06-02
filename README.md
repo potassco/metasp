@@ -1,5 +1,7 @@
 # metasp
 
+Visit the [documentation](https://potassco.org/metasp) for more details on how to use *metasp* and its features.
+
 ## Installation
 
 To install the project you must have Python 3.12 or higher, and run
