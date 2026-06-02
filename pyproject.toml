@@ -39,6 +39,7 @@ doc = [
     "mkdocstrings[python]",
     "mkdoclingo>=1.1.0",
     "mkdocs-literate-nav",
+    "pygments_clingo",
 ]
 lsp = [
     "python-lsp-server",
