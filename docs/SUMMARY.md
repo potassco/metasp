@@ -1,5 +1,5 @@
 * Getting Started
-    * [Getting Started](use/quick-start.md)
+    * [Quick start guide](use/quick-start.md)
     * [Installation](use/installation.md)
     * [Help](use/help.md)
 * Reference

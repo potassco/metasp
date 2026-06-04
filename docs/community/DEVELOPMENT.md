@@ -1,1 +1,1 @@
-../../DEVELOPMENT.md
+--8<-- "DEVELOPMENT.md"

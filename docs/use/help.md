@@ -25,11 +25,11 @@ icon: material/help-circle
 ## General Tips
 
 !!! tip "Search bar"
-    "Search bar" Use the search bar from this documentation page to find
+    Use the search bar from this documentation page to find
     what you are looking for.
 
 !!! tip "Examples"
-    "Look at the examples" The examples tab has might give you some insides
+    The examples tab might give you some insights
     into how to use the tool.
 
 !!! tip "Debug logs"
@@ -41,25 +41,28 @@ icon: material/help-circle
 !!! tip "Open an Issue"
     Open an [issue][new_issue] describing your problem.
 
-!!! tip "Search for existing issues"
-    To avoid duplicating issues, please search our [issue tracker][issues] and our
-    [mailing list][mailing_list] before filing a new issue.
-
 !!! tip "Mailing list"
     Our [mailing list][mailing_list] might have some
     information about your issue. Search for questions made by previous users of
-    the potassco tools. You can also [subscribe] to this list to get updates and
-    join the community.
+    the potassco tools.
 
-!!! tip "Reach out in the mailing list"
-    Send an email to the list with your issue.
+    You can also [subscribe] to this list to get updates and
+    join the community. Or send an email to the list with your issue.
+
+!!! warning "Search for existing issues"
+    To avoid duplicating issues, please search our [issue tracker][issues] and our
+    [mailing list][mailing_list] before filing a new issue.
+
+
 
 ## General ASP support
 
-- Take a look at the [support page][support_page] of Potassco.
+!!! tip "Support page"
+
+    Take a look at the [support page][support_page] of Potassco.
 
 [mailing_list]: https://sourceforge.net/p/potassco/mailman/potassco-users/
 [subscribe]: https://sourceforge.net/projects/potassco/lists/potassco-users/
 [support_page]: https://potassco.org/support/
-[new_issue]: https://github.com/potassco/metasp/issues/new
-[issues]: https://github.com/potassco/metasp/issues
+[new_issue]: https://github.com/potassco/asplain/issues/new
+[issues]: https://github.com/potassco/asplain/issues
