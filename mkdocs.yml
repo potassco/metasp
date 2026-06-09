@@ -1,6 +1,6 @@
 site_name: metasp
 site_url: https://potassco.org/metasp/docs
-site_description:
+site_description: A framework to ease the creation of Answer Set Programming (ASP) extensions using meta-programming.
 repo_name: potassco/metasp
 repo_url: https://github.com/potassco/metasp
 copyright: Copyright &copy; 2024 Potassco
