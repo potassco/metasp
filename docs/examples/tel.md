@@ -1,3 +1,7 @@
+---
+icon: "material/clock-outline"
+---
+
 --8<-- "examples/tel/README.md"
 
 -----------

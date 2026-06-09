@@ -1,6 +1,6 @@
-# MEL
+# Metric Equilibrium Logic (MEL)
 
-A Metric Equilibrium Logic (MEL) extension of ASP, using the `clingcon` system
+A Metric Equilibrium Logic extension of ASP, using the `clingcon` system
 to handle the time aspect.
 
 ## Usage

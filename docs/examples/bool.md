@@ -1,3 +1,7 @@
+---
+icon: "material/circle-half"
+---
+
 --8<-- "examples/bool/README.md"
 
 -----------

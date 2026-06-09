@@ -1,6 +1,6 @@
-# TEL
+# Temporal Equilibrium Logic (TEL)
 
-A Temporal Equilibrium Logic (TEL) extension of ASP.
+A Temporal Equilibrium Logic extension of ASP.
 
 ## Usage
 

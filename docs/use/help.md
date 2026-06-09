@@ -15,6 +15,7 @@ icon: material/help-circle
 
     You might get errors that the program is unsafe,
     this might be because of the externals generated on the transformation of the formulas.
+    Make sure all variables in the operator appear in the body of the rule.
 
 !!! question "Why is my formula not shown?"
 

@@ -24,13 +24,12 @@
     * [API](reference/api/index.md)
 * Examples
     * [Examples](examples/index.md)
+    * [Temporal Equilibrium Logic](examples/tel.md)
+    * [Metric Equilibrium Logic](examples/mel.md)
+    * [Dynamic Equilibrium Logic](examples/del.md)
     * [Boolean](examples/bool.md)
-    * [TEL](examples/tel.md)
-    * [MEL](examples/mel.md)
-    * [DEL](examples/del.md)
 * Community
-    * [Community](community/index.md)
-    * [Changes](community/CHANGES.md)
     * [Contributing](community/CONTRIBUTING.md)
+    * [Changes](community/CHANGES.md)
     * [Development](community/DEVELOPMENT.md)
     * [Deployment](community/DEPLOYMENT.md)

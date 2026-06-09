@@ -1,6 +1,6 @@
-# DEL
+#  Dynamic Equilibrium Logic (DEL)
 
-A Dynamic Equilibrium Logic (DEL) extension of ASP.
+A Dynamic Equilibrium Logic extension of ASP.
 
 ## Usage
 

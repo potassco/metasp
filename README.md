@@ -1,5 +1,7 @@
 # metasp
 
+A framework to ease the creation of Answer Set Programming (ASP) extensions using meta-programming.
+
 Visit the [documentation](https://potassco.org/metasp) for more details on how
 to use *metasp* and its features.
 

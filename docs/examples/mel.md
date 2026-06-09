@@ -1,3 +1,7 @@
+---
+icon: "material/clock-end"
+---
+
 --8<-- "examples/mel/README.md"
 
 ## Example

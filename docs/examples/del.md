@@ -1,3 +1,7 @@
+---
+icon: "material/progress-clock"
+---
+
 --8<-- "examples/del/README.md"
 
 -----------
