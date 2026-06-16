@@ -8,5 +8,7 @@ Adds defined directives for the reification predicates that are added by *metasp
     options:
         glossary:
             include_references: false
+        predicate_info:
+            include_undocumented: false
         predicate_table: true
         start_level: 1

@@ -9,8 +9,7 @@ It can be used instead of [`meta.lp`](./meta.md) when the encoding requires time
     options:
         glossary:
             include_references: false
-            include_undocumented: false
-        predicate_table:
+        predicate_info:
             include_undocumented: false
         encodings:
             git_link: true

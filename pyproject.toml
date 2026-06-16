@@ -37,7 +37,7 @@ doc = [
     "mkdocs",
     "mkdocs-material",
     "mkdocstrings[python]",
-    "mkdoclingo>=1.1.0",
+    "clindocs>=1.5.1",
     "mkdocs-literate-nav",
     "pygments_clingo",
 ]

@@ -41,6 +41,7 @@ Uses the provided standard encodings:
     handler: asp
     options:
         encodings:
+            include_title: false
             git_link: true
         start_level: 4
 
@@ -53,5 +54,6 @@ Extension to UI encoding to label formulas
     handler: asp
     options:
         encodings:
+            include_title: false
             git_link: true
         start_level: 4

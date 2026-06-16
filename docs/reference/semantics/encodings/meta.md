@@ -13,8 +13,7 @@ Gives ASP semantics for the reification predicates as done in [How to build your
     options:
         glossary:
             include_references: false
-            include_undocumented: false
-        predicate_table:
+        predicate_info:
             include_undocumented: false
         encodings:
             git_link: true

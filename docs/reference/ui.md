@@ -72,4 +72,5 @@ The interface can be extended by defining new elements and attributes in the `ui
     options:
         encodings:
             git_link: true
+            include_title: false
         start_level: 2

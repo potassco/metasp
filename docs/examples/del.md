@@ -41,5 +41,6 @@ Uses the provided standard encodings:
     handler: asp
     options:
         encodings:
+            include_title: false
             git_link: true
         start_level: 4
