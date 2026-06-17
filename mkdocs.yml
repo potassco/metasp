@@ -60,10 +60,16 @@ theme:
 
 extra:
   social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/potassco/metasp
     - icon: potassco-logo
       link: https://potassco.org
+    - icon: fontawesome/brands/github
+      link: https://github.com/potassco
+    - icon: fontawesome/brands/x-twitter
+      link: https://x.com/potassco
+    - icon: fontawesome/brands/facebook
+      link: https://www.facebook.com/potassco
+    - icon: fontawesome/brands/youtube
+      link: https://www.youtube.com/@Potassco-live
   generator: false
 
 markdown_extensions:
