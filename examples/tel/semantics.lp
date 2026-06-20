@@ -6,6 +6,7 @@
 #include "metasp.reify-defined.lp".
 #include "metasp.reify-defined-metasp.lp".
 % ----------------------------
+
 %## Operators
 
 %### `&true`
