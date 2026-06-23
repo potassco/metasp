@@ -300,6 +300,9 @@ class Grammar:
         if self.is_atom(pattern_symbol):
             log.warning(f"Pattern {pattern_symbol} is an atom, pehaps you meant to use a variable?")
         # TODO what if symbol is not a function?
+        if symbol.type == SymbolType.Number:
+            # Notice that number should only match with a variable which is handled above
+            return False
         if (symbol.name, len(symbol.arguments)) != (
             pattern_symbol.name,
             len(pattern_symbol.arguments),
