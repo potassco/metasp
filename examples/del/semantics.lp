@@ -1,32 +1,5 @@
-%# Semantics encoding for Dynamic Equilibrium Logic (DEL)
-
-% Notice that it includes all the TEL semantics
-
-% ----------------------------
-%## Fischer-Ladner closure
-
-%### Eventually
-formula(del, &eventually(P,&eventually(&star(P),F))) :- formula(del, &eventually(&star(P),F)).
-formula(del, &eventually(P1,F)) :- formula(del, &eventually(&choice(P1,P2),F)).
-formula(del, &eventually(P2,F)) :- formula(del, &eventually(&choice(P1,P2),F)).
-formula(del, &eventually(P1,&eventually(P2,F))) :- formula(del, &eventually(&seq(P1,P2),F)).
-formula(del, &eventually(P2,F)) :- formula(del, &eventually(&seq(P1,P2),F)).
-
-%### Always
-formula(del, &always(P,&always(&star(P),F))) :- formula(del, &always(&star(P),F)).
-formula(del, &always(P1,F)) :- formula(del, &always(&choice(P1,P2),F)).
-formula(del, &always(P2,F)) :- formula(del, &always(&choice(P1,P2),F)).
-formula(del, &always(P1,&always(P2,F))) :- formula(del, &always(&seq(P1,P2),F)).
-formula(del, &always(P2,F)) :- formula(del, &always(&seq(P1,P2),F)).
-
 % ----------------------------
 %## Operators
-
-%### `&true/0`
-true(&true,K) :- formula(del,&true), time(K).
-
-%### `&false/0`
-:- formula(del,&false), time(K), true(&false,K).
 
 %### `&eventually(&step,_)`
 true(F,K+1): time(K+1) :- formula(del,&eventually(&step,F)), true(&eventually(&step,F),K).

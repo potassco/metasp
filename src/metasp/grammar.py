@@ -267,9 +267,12 @@ class Grammar:
                     valid_types = self.types[as_type].sub_types + [as_type]
                     log.debug(f"Looking for sugar in type {as_type} and its subtypes {valid_types}")
                     if sugar.type not in valid_types:
+                        # print("COntinue")
                         continue
                 if self.match_sugar_pattern(type_def, sugar.pattern.symbol, s, match_variables):
+                    # print("Here")
                     return sugar
+                # print(f"Did not match sugar {sugar.pattern.symbol} with symbol {s}")
         return None
 
     def name_without_prefix(self, s: Symbol) -> str:
@@ -284,16 +287,24 @@ class Grammar:
     ) -> bool:
         # print(f"Matching pattern symbol {pattern_symbol} with symbol {symbol}")
         if type_def.is_variable(pattern_symbol):
+            # print(f"Pattern symbol {pattern_symbol} is a variable, checking type")
             variables = type_def.variables[pattern_symbol.name]
             if len(variables) == 0:
                 raise ValueError(f"Variable {pattern_symbol.name} not defined in grammar.")
             var_types = [v.type_var for v in variables]
             # TODO here I should make it softer to include possible sugar
-            symbol_type = self.get_fl_type(symbol, check_sugar=True)
+            # TODO This is giving an infinite recursion issue.
+            symbol_type = self.get_fl_type(symbol, check_sugar=True, as_type=type_def.name)
+            if symbol_type is None:
+                log.debug(f"  ->Variable {pattern_symbol.name} type mismatch, symbol {symbol} has no type")
+                return False
+            # print("Checking variable types", var_types, symbol_type.name)
 
             valid_type = "any" in var_types or any(v in self.all_types(symbol_type) for v in var_types)
             if not valid_type:
-                # print(f"  ->Variable {pattern_symbol.name} type mismatch, {var.type.name} != {symbol_type.name}")
+                log.debug(
+                    f"  ->Variable {pattern_symbol.name} type mismatch, expected {var_types}, got {symbol_type.name}"
+                )
                 return False
             matched_variables[pattern_symbol.name] = symbol
             return True
