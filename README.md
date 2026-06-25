@@ -1,8 +1,12 @@
+[![Documentation](https://img.shields.io/badge/docs-potassco.org-blue)](https://docs.potassco.org/metasp/)
+[![PyPI version](https://img.shields.io/pypi/v/metasp)](https://pypi.org/project/metasp/)
+[![License](https://img.shields.io/github/license/potassco/metasp)](LICENSE)
+
 # metasp
 
 A framework to ease the creation of Answer Set Programming (ASP) extensions using meta-programming.
 
-Visit the [documentation](https://potassco.org/metasp/docs) for more details on how
+Visit the [documentation](https://docs.potassco.org/metasp/) for more details on how
 to use *metasp* and its features.
 
 ## Installation

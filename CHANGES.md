@@ -1,5 +1,9 @@
 # Changes
 
+## v1.0.4
+
+- Fixed case for number as a variablein the macros
+
 ## v1.0.2
 
 - Fixed bug for flingo
