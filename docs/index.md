@@ -33,13 +33,13 @@ Modelers can focus on the ASP encodings that define the details of their extensi
 !!! quote "Citation"
 
     **Meta-Programming for Linear-time Temporal Answer Set Programming**
-    Susana Hahn, Amade Nems, Javier Romero, Torsten Schaub
+    Susana Hahn, Amade Nemes, Javier Romero, Torsten Schaub
     [arXiv:2605.29965](https://arxiv.org/abs/2605.29965)
 
     ```bibtex
     @article{hanerosc26a,
       title   = {Meta-Programming for Linear-time Temporal Answer Set Programming},
-      author  = {S. Hahn and A. Nems and J. Romero and T. Schaub},
+      author  = {S. Hahn and A. Nemes and J. Romero and T. Schaub},
       journal = {arXiv preprint arXiv:2605.29965},
       year    = {2026},
       url     = {https://arxiv.org/abs/2605.29965}
