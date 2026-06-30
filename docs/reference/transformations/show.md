@@ -22,7 +22,7 @@ See [reified defined](../../semantics/encodings/reify-defined) and [reify metasp
     If you want to see this transformation for your input you can use the `transform` command of *metasp*.
 
 
-When the program is reified we give special tratment to the new auxiliary predicates, generating the following corresponding facts in the reification.
+When the program is reified we give special treatment to the new auxiliary predicates, generating the following corresponding facts in the reification.
 
 
 | Input | Reified output |
