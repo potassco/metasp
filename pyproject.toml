@@ -26,11 +26,11 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/krr-up/metasp.git/"
+Homepage = "https://github.com/potassco/metasp.git/"
 Documentation = "https://docs.potassco.org/metasp/"
 Repository = "https://github.com/potassco/metasp"
 Issues = "https://github.com/potassco/metasp/issues"
-Changelog = "https://github.com/potassco/metasp/blob/master/CHANGELOG.md"
+Changelog = "https://github.com/potassco/metasp/blob/master/CHANGES.md"
 
 [project.optional-dependencies]
 format = ["black", "isort", "autoflake"]
