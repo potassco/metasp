@@ -6,7 +6,7 @@
     * [Reference](reference/index.md)
     * Transformations
         * [Transformations](reference/transformations/index.md)
-        * [Externals](reference/transformations/externals.md)
+        * [Safety and Externals](reference/transformations/safety-externals.md)
         * [Show statements](reference/transformations/show.md)
     * [Syntax](reference/syntax/index.md)
     * Semantics
