@@ -14,18 +14,18 @@ the head of the given rule, forming the head of the corresponding
 simplified rule, the body of which consists of the conjunction of all
 safe body atoms of the rule `r`.
 
-So, taking as example the following rule
+!!! example
 
-```
-&until(a(X),&next(a(Y))) :- not b(Y), &next(c(Y)), &until(d(Y),&next(e(X))).
-```
+    ```
+    &until(a(X),&next(a(Y))) :- not b(Y), &next(c(Y)), &until(d(Y),&next(e(X))).
+    ```
 
-the set of simplified rules corresponding to this rule would be
+    the set of simplified rules corresponding to this rule would be
 
-```
-a(X) :- c(Y), e(X).
-a(Y) :- c(Y), e(X).
-```
+    ```
+    a(X) :- c(Y), e(X).
+    a(Y) :- c(Y), e(X).
+    ```
 
 We define a rule to be safe, if the set of corresponding simplified
 rules are safe with regard to the standard safety definition of clingo.
@@ -54,32 +54,38 @@ body of the rule. This aforementioned expression forms the head of the
 external, with the body of the external being that of (one of) the
 corresponding simplified rule.
 
-To see a concrete example, consider again the example rule
 
-```
-&until(a(X),&next(a(Y))) :- not b(Y), &next(c(Y)), &until(d(Y),&next(e(X))).
-```
 
-with corresponding simplified rules
+!!! example
 
-```
-a(X) :- c(Y), e(X).
-a(Y) :- c(Y), e(X).
-```
+    To see a concrete example, consider again the example rule
 
-We will have one head external for each simplified rule
+    ```clingo
+    &until(a(X),&next(a(Y))) :- not b(Y), &next(c(Y)), &until(d(Y),&next(e(X))).
+    ```
 
-```
-#external a(X): c(Y), e(X).
-#external a(Y): c(Y), e(X).
-```
+    with corresponding simplified rules
 
-And we will have one body external for each body expression
+    ```clingo
+    a(X) :- c(Y), e(X).
+    a(Y) :- c(Y), e(X).
+    ```
 
-```
-#external &next(c(Y)): c(Y), e(X).
-#external &until(d(Y),&next(e(X))): c(Y), e(X).
-```
+    We will have one head external for each simplified rule
+
+    ```clingo
+    #external a(X): c(Y), e(X).
+    #external a(Y): c(Y), e(X).
+    ```
+
+    And we will have one body external for each body expression
+
+    ```clingo
+    #external &next(c(Y)): c(Y), e(X).
+    #external &until(d(Y),&next(e(X))): c(Y), e(X).
+    ```
+
+
 
 Finally, we provide some intuition on how why this grounding method
 will result in a correct grounding of the program with regard to the
