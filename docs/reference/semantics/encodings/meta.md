@@ -17,4 +17,5 @@ Gives ASP semantics for the reification predicates as done in [How to build your
             include_undocumented: false
         encodings:
             git_link: true
+            source: true
         start_level: 1

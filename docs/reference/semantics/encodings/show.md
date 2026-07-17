@@ -8,4 +8,5 @@ Handles show predicates which are generated during preprocessing for `#show` dir
     options:
         encodings:
             git_link: true
+            source: true
         start_level: 1

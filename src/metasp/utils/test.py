@@ -87,7 +87,7 @@ class TestMetasp:
 
     @classmethod
     def from_command_line_args(cls, args: list[str], current_path: Optional[str] = None) -> list["TestMetasp"]:
-        test_files = [arg for arg in args if arg.endswith(".test.lp")]
+        test_files = [arg for arg in args if arg.endswith(".test.lp") or arg.endswith(".lp")]
         if len(test_files) == 0:
             log.info(
                 "No test file provided in the command line arguments. Will search for test files in the current directory and its subdirectories."

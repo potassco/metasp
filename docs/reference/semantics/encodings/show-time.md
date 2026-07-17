@@ -9,4 +9,5 @@ It includes the time argument in the show predicates, which is necessary for enc
     options:
         encodings:
             git_link: true
+            source: true
         start_level: 1

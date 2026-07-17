@@ -13,4 +13,5 @@ It can be used instead of [`meta.lp`](./meta.md) when the encoding requires time
             include_undocumented: false
         encodings:
             git_link: true
+            source: true
         start_level: 1

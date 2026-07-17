@@ -38,7 +38,12 @@ def temporal_printer(model: Model, system) -> None:
     table = {}
     extra_shown = []
     for sym in model.symbols(shown=True):
-        if sym.type == SymbolType.Function and len(sym.arguments) > 0 and sym.name == "true":
+        if (
+            sym.type == SymbolType.Function
+            and len(sym.arguments) > 0
+            and sym.name == "true"
+            and len(sym.arguments) == 2
+        ):
             formula = sym.arguments[0]
             table.setdefault(sym.arguments[-1].number, []).append(formula)
         else:
