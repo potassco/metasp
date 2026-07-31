@@ -1,0 +1,10 @@
+syntax-encoding:
+  - "./syntax.lp"
+  # - "../tel/syntax.lp"
+  # - "./syntax-tel.lp"
+semantics-encoding:
+  - "./semantics.lp"
+  # - "../tel/semantics.lp"
+printer: thtc_printer
+python-scripts:
+  - "./print_functions.py"
