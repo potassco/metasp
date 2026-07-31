@@ -6,7 +6,6 @@ This section contains detailed documentation and technical information about
 the system. It’s designed for those who want to explore the inner workings,
 learn about specific components, or access essential resources.
 
-!!! tip
+## *metasp* Workflow
 
-    Use this section to find the information you need, whether you’re debugging,
-    extending functionality, or learning more about the system.
+![Workflow](../assets/images/workflow.png)
