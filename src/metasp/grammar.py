@@ -225,18 +225,40 @@ class Grammar:
         return Function(sugar_expansion.name, new_args, True)
 
     def get_fl_type(self, s: Symbol, check_sugar: bool = False, as_type: str | None = None) -> Optional[Type]:
+        log.debug("Getting type for symbol %s with check_sugar=%s and as_type=%s", s, check_sugar, as_type)
         # --------- Base cases
         if s.type == SymbolType.Number:
+            log.debug("Symbol %s is a number", s)
+            if as_type is not None and as_type != "number":
+                log.debug("Symbol %s is a number trying to match with %s, returning None", s, as_type)
+                return None
             return self.types.get("number", None)
         if s.type == SymbolType.String:
+            log.debug("Symbol %s is a string", s)
+            if as_type is not None and as_type != "string":
+                log.debug("Symbol %s is a string trying to match with %s, returning None", s, as_type)
+                return None
             return self.types.get("string", None)
         if s.type == SymbolType.Infimum:
+            log.debug("Symbol %s is an infimum", s)
+            if as_type is not None and as_type != "infimum":
+                log.debug("Symbol %s is an infimum trying to match with %s, returning None", s, as_type)
+                return None
             return self.types.get("infimum", None)
         if s.type == SymbolType.Supremum:
+            log.debug("Symbol %s is a supremum", s)
+            if as_type is not None and as_type != "supremum":
+                log.debug("Symbol %s is a supremum trying to match with %s, returning None", s, as_type)
+                return None
             return self.types.get("supremum", None)
         if self.is_atom(s):
+            log.debug("Symbol %s is an atom", s)
+            if as_type is not None and as_type != "atom":
+                log.debug("Symbol %s is an atom trying to match with %s, returning None", s, as_type)
+                return None
             return self.types.get("atom", None)
 
+        log.debug("Symbol %s is a function, checking for expression or sugar", s)
         # --------- Expression case
         name = s.name[len(self._prefix) :]
         arity = len(s.arguments)
@@ -245,6 +267,7 @@ class Grammar:
             return self.types.get(expression.type_name, None)
 
         if check_sugar:
+            log.debug("Checking for sugar for symbol %s as type %s", s, as_type)
             sugar = self.find_macro(s, as_type=as_type)
             if sugar is not None:
                 log.debug("Found sugar %s->%s for symbol %s", sugar.pattern, sugar.expansion, s)
@@ -265,9 +288,8 @@ class Grammar:
                 # if as_type is not None and sugar.type != as_type:
                 if as_type is not None:
                     valid_types = self.types[as_type].sub_types + [as_type]
-                    log.debug(f"Looking for sugar in type {as_type} and its subtypes {valid_types}")
+                    # log.debug(f"Looking for sugar in type {as_type} and its subtypes {valid_types}")
                     if sugar.type not in valid_types:
-                        # print("COntinue")
                         continue
                 if self.match_sugar_pattern(type_def, sugar.pattern.symbol, s, match_variables):
                     # print("Here")
@@ -285,29 +307,27 @@ class Grammar:
     def match_sugar_pattern(
         self, type_def: Type, pattern_symbol: Symbol, symbol: Symbol, matched_variables: Dict[str, Symbol]
     ) -> bool:
-        # print(f"Matching pattern symbol {pattern_symbol} with symbol {symbol}")
+        log.debug(f"Matching pattern symbol {pattern_symbol} with symbol {symbol}")
         if type_def.is_variable(pattern_symbol):
-            # print(f"Pattern symbol {pattern_symbol} is a variable, checking type")
+            log.debug(f"Pattern symbol {pattern_symbol} is a variable, checking type")
             variables = type_def.variables[pattern_symbol.name]
             if len(variables) == 0:
                 raise ValueError(f"Variable {pattern_symbol.name} not defined in grammar.")
             var_types = [v.type_var for v in variables]
+            log.debug(f"Variable types for {pattern_symbol.name}: {var_types}")
             # TODO here I should make it softer to include possible sugar
             # TODO This is giving an infinite recursion issue.
-            symbol_type = self.get_fl_type(symbol, check_sugar=True, as_type=type_def.name)
-            if symbol_type is None:
-                log.debug(f"  ->Variable {pattern_symbol.name} type mismatch, symbol {symbol} has no type")
-                return False
-            # print("Checking variable types", var_types, symbol_type.name)
+            for v in var_types:
+                log.debug(f"Checking if symbol {symbol} is of type {v}")
+                symbol_type = self.get_fl_type(symbol, check_sugar=True, as_type=v)
+                if symbol_type is None:
+                    continue
+                matched_variables[pattern_symbol.name] = symbol
+                return True
 
-            valid_type = "any" in var_types or any(v in self.all_types(symbol_type) for v in var_types)
-            if not valid_type:
-                log.debug(
-                    f"  ->Variable {pattern_symbol.name} type mismatch, expected {var_types}, got {symbol_type.name}"
-                )
-                return False
-            matched_variables[pattern_symbol.name] = symbol
-            return True
+            log.debug(f"  Variable {pattern_symbol.name} type mismatch, expected {var_types}")
+            return False
+
         if self.is_atom(pattern_symbol):
             log.warning(f"Pattern {pattern_symbol} is an atom, pehaps you meant to use a variable?")
         # TODO what if symbol is not a function?
