@@ -79,8 +79,20 @@ class Grammar:
             if st == str(type.name):
                 all_types_extended.add(st)
             else:
-                all_types_extended.update(self.all_types(self.types[st]))
+                all_types_extended.update(self.all_types(self.get_type(st)))
         return list([str(s) for s in all_types_extended])
+
+    def all_sub_types(self, type: Type) -> List[str]:
+        all_sub_types = set(type.sub_types).union(set([type.name]))
+        for st in type.sub_types:
+            all_sub_types.update(self.all_sub_types(self.get_type(st)))
+        return list(all_sub_types)
+
+    def get_type(self, type_name: str) -> Optional[Type]:
+        if not type_name in self.types:
+            log.error(f"Type '{type_name}' is not defined in the grammar.")
+            raise RuntimeError(f"Type '{type_name}' is not defined in the grammar but used in the syntax.")
+        return self.types[type_name]
 
     @classmethod
     def from_asp_files(cls, asp_files: Sequence[str]) -> "Grammar":
@@ -217,7 +229,7 @@ class Grammar:
         # print(f"Replacing pattern symbol {sugar_expansion} with matched variables {matched_variables}")
         if sugar_expansion.type != SymbolType.Function:
             return sugar_expansion
-        type_def = self.types[type]
+        type_def = self.get_type(type)
         if type_def.is_variable(sugar_expansion):
             return matched_variables[sugar_expansion.name]
             # return matched_variables[sugar_expansion.name].symbol_with_prefix()
@@ -274,6 +286,7 @@ class Grammar:
                 log.debug("Will return the type of the expansion %s", sugar.expansion)
                 return self.get_fl_type(sugar.expansion.symbol, check_sugar=True)
 
+        print("refuring NOne")
         return None
 
     def find_macro(
@@ -287,7 +300,7 @@ class Grammar:
             for sugar in type_def.macros:
                 # if as_type is not None and sugar.type != as_type:
                 if as_type is not None:
-                    valid_types = self.types[as_type].sub_types + [as_type]
+                    valid_types = self.get_type(as_type).sub_types + [as_type]
                     # log.debug(f"Looking for sugar in type {as_type} and its subtypes {valid_types}")
                     if sugar.type not in valid_types:
                         continue
@@ -317,11 +330,13 @@ class Grammar:
             log.debug(f"Variable types for {pattern_symbol.name}: {var_types}")
             # TODO here I should make it softer to include possible sugar
             # TODO This is giving an infinite recursion issue.
-            for v in var_types:
-                log.debug(f"Checking if symbol {symbol} is of type {v}")
-                symbol_type = self.get_fl_type(symbol, check_sugar=True, as_type=v)
-                if symbol_type is None:
-                    continue
+            for main_v in var_types:
+                print(self.all_sub_types(self.get_type(main_v)))
+                for v in self.all_sub_types(self.get_type(main_v)):
+                    log.debug(f"Checking if symbol {symbol} is of type {v}")
+                    symbol_type = self.get_fl_type(symbol, check_sugar=True, as_type=v)
+                    if symbol_type is None:
+                        continue
                 matched_variables[pattern_symbol.name] = symbol
                 return True
 
