@@ -143,15 +143,26 @@ class FormulaRegistery:
     @_print_done_decorator
     def match(self, s: Symbol, as_type: str | None = None) -> Formula:
         log.debug(f"▶️ Trying to match symbol {p(s)} as type {t(as_type)}")
+
         formula_type = self.grammar.get_fl_type(s)  # Just to raise error if not valid
         if formula_type is None:
             log.debug(f"Symbol {p(s)} has no direct type or expression, checking syntactic sugar")
-            formula_type = self.grammar.get_fl_type(
-                s, check_sugar=True, as_type=as_type
-            )  # Just to raise error if not valid
+            formula_type = self.grammar.get_fl_type(s, check_sugar=True, as_type=as_type)
             if formula_type is None:
                 log.debug(f"No syntactic sugar found for {p(s)} as type {t(as_type)}.")
-                raise ValueError(f"No expression or syntactic sugar found for symbol {p(s)}.")
+                if as_type is not None:
+                    log.debug(f"Checking if it matches subtypes of allowed types {as_type}")
+                    for subtype in self.grammar.get_type(as_type).sub_types:
+                        log.debug(f"Checking if {p(s)} matches subtype {t(subtype)}")
+                        try:
+                            formula_from_subtype = self.match(s, as_type=subtype)
+                            if formula_from_subtype is not None:
+                                return formula_from_subtype
+                        except ValueError:
+                            continue
+                raise ValueError(
+                    f"No expression or syntactic sugar found for symbol {p(s)}. as type {t(as_type)} or any of its subtypes."
+                )
             new_symbol = self.remove_syntactic_sugar(s, as_type=as_type)
             same_symbol = new_symbol == s
             if same_symbol:
@@ -159,7 +170,9 @@ class FormulaRegistery:
                 raise ValueError(m)
             new_formula = self.match(new_symbol, as_type=as_type)
             return self.add_formula(new_formula)
+
         try:
+            print(f"Checking if symbol {p(s)} of type {t(as_type)} is in {self.grammar.all_types(formula_type)}")
             self.assert_type_in(as_type, self.grammar.all_types(formula_type), s)
         except ValueError as e:
             log.debug(f"No match of symbol {p(s)} as type {t(as_type)}: {e}. Will try to remove sugar.")
