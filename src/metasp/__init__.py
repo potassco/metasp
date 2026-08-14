@@ -101,6 +101,7 @@ class MetaspExtension(ReifyExtension):
 
         formula_symbols = []
         for f in self._formula_registery.formulas.values():
+
             used_types = f.used_types
             for s in used_types:
                 formula_symbols.append(

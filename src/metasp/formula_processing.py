@@ -78,7 +78,12 @@ class FormulaRegistery:
         self.formulas: dict[str, Formula] = {}
 
     def add_formula(self, f: Formula):
-        self.formulas[str(f)] = f
+        if str(f) in self.formulas:
+            existing_formula = self.formulas[str(f)]
+            # Merge super types
+            existing_formula.super_types = list(set(existing_formula.super_types + f.super_types))
+        else:
+            self.formulas[str(f)] = f
         return self.formulas[str(f)]
 
     def remove_syntactic_sugar(self, symbol: Symbol, as_type=None) -> Symbol:
@@ -144,19 +149,23 @@ class FormulaRegistery:
     def match(self, s: Symbol, as_type: str | None = None) -> Formula:
         log.debug(f"▶️ Trying to match symbol {p(s)} as type {t(as_type)}")
 
-        formula_type = self.grammar.get_fl_type(s)  # Just to raise error if not valid
+        formula_type = self.grammar.get_fl_type(s, as_type=as_type)  # Just to raise error if not valid
         if formula_type is None:
             log.debug(f"Symbol {p(s)} has no direct type or expression, checking syntactic sugar")
             formula_type = self.grammar.get_fl_type(s, check_sugar=True, as_type=as_type)
-            if formula_type is None:
+            found_sugar = formula_type is not None
+            if not found_sugar:
                 log.debug(f"No syntactic sugar found for {p(s)} as type {t(as_type)}.")
                 if as_type is not None:
-                    log.debug(f"Checking if it matches subtypes of allowed types {as_type}")
-                    for subtype in self.grammar.get_type(as_type).sub_types:
-                        log.debug(f"Checking if {p(s)} matches subtype {t(subtype)}")
+                    subtypes = self.grammar.get_type(as_type).sub_types
+                    log.debug(f"🔳Checking if it matches subtypes {subtypes} of allowed types {as_type}")
+                    for subtype in subtypes:
+                        log.debug(f"▪️Checking if {p(s)} matches subtype {t(subtype)}")
                         try:
                             formula_from_subtype = self.match(s, as_type=subtype)
                             if formula_from_subtype is not None:
+                                formula_from_subtype.super_types.append(as_type)
+
                                 return formula_from_subtype
                         except ValueError:
                             continue
@@ -168,20 +177,21 @@ class FormulaRegistery:
             if same_symbol:
                 m = f"Symbol {p(s)} was not changed by syntactic sugar removal. This would lead to infinite recursion."
                 raise ValueError(m)
+            log.debug(f"Syntactic sugar removed for {p(s)}, matching new symbol {p(new_symbol)}")
             new_formula = self.match(new_symbol, as_type=as_type)
             return self.add_formula(new_formula)
 
-        try:
-            print(f"Checking if symbol {p(s)} of type {t(as_type)} is in {self.grammar.all_types(formula_type)}")
-            self.assert_type_in(as_type, self.grammar.all_types(formula_type), s)
-        except ValueError as e:
-            log.debug(f"No match of symbol {p(s)} as type {t(as_type)}: {e}. Will try to remove sugar.")
-            new_symbol = self.remove_syntactic_sugar(s, as_type=as_type)
-            if new_symbol == s:
-                log.debug(f"No syntactic sugar removed for {p(s)}")
-                raise e
-            log.debug(f"Syntactic sugar removed for {p(s)}, matching new symbol {p(new_symbol)}")
-            return self.match(new_symbol, as_type=as_type)
+        # try:
+        #     print(f"Checking if symbol {p(s)} of type {t(as_type)} is in {self.grammar.all_types(formula_type)}")
+        #     self.assert_type_in(as_type, self.grammar.all_types(formula_type), s)
+        # except ValueError as e:
+        #     log.debug(f"No match of symbol {p(s)} as type {t(as_type)}: {e}. Will try to remove sugar.")
+        #     new_symbol = self.remove_syntactic_sugar(s, as_type=as_type)
+        #     if new_symbol == s:
+        #         log.debug(f"No syntactic sugar removed for {p(s)}")
+        #         raise e
+        #     log.debug(f"Syntactic sugar removed for {p(s)}, matching new symbol {p(new_symbol)}")
+        #     return self.match(new_symbol, as_type=as_type)
 
         if formula_type.is_base_type:
             log.debug(f"✅ Symbol {p(s)} is base type {t(formula_type.name)}, returning directly")
@@ -199,7 +209,6 @@ class FormulaRegistery:
         name = s.name[len(self._prefix) :]
         arity = len(s.arguments)
         expression = self.grammar.get_expression(name, arity)
-
         # --------- Match arguments
         log.debug(f"☑️ Matched expression {p(expression.name)} of type {t(expression.type_name)}")
         log.debug(f"  Trying to match arguments...")
