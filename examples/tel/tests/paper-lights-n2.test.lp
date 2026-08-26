@@ -6,3 +6,7 @@ red(L) :- not green(L), light(L).
 % #TEST
 % clingo --meta-config ../config.yml -c n=2
 % - true(light(l1),0) true(red(l1),0) true(light(l1),1) true(push(l1),1) true(red(l1),1) true(green(l1),2) true(light(l1),2)
+
+% #TEST
+% clingo --meta-config ../config-ht.yml -c n=2
+% - true(light(l1),0) true(red(l1),0) true(light(l1),1) true(push(l1),1) true(red(l1),1) true(green(l1),2) true(light(l1),2)
