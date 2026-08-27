@@ -2,4 +2,6 @@ syntax-encoding:
   - "./syntax.lp"
 semantics-encoding:
   - "./semantics.lp"
-printer: temporal_printer
+printer: adel_printer
+python-scripts:
+  - "./print_functions.py"
