@@ -2,13 +2,15 @@ import json
 import logging
 import sys
 import textwrap
+from collections.abc import Callable
+from time import perf_counter
 from typing import Optional
 
-from clingcon.__main__ import ClingconApp
 from clingo import Model
 from clingo.application import Application, ApplicationOptions
+from clingo.statistics import StatisticsMap
 from clingo.script import enable_python
-from flingo.__main__ import FlingoApp
+
 
 from metasp import MetaspProcessor
 from metasp.grammar import Grammar
@@ -18,6 +20,24 @@ from .system import MetaSystem
 from .utils.logging_utils import configure_logging, print_model_logs
 
 log = logging.getLogger(__name__)
+
+# ======== Setting up possible applications ========
+
+try:
+    from clingcon.__main__ import ClingconApp
+except ImportError:
+    ClingconApp = None
+
+try:
+    from flingo.__main__ import FlingoApp
+
+    class MyFlingoApp(FlingoApp):
+        def __init__(self, name):
+            super().__init__()
+            self.program_name = name
+
+except ImportError:
+    MyFlingoApp = None
 
 
 class ClingoApp(Application):
@@ -34,13 +54,17 @@ class ClingoApp(Application):
         if not files:
             ctl.load("-")
         ctl.ground([("base", [])])
-        ctl.solve()
+        ctl.solve(on_statistics=self.__on_statistics)
 
+    def __on_statistics(self, step: StatisticsMap, accu: StatisticsMap):
+        """
+        Handle statistics from the solver.
 
-class MyFlingoApp(FlingoApp):
-    def __init__(self, name):
-        super().__init__()
-        self.program_name = name
+        Args:
+            step (StatisticsMap): The current step statistics.
+            accu (StatisticsMap): The accumulated statistics.
+        """
+        pass
 
 
 APPS_BY_NAME = {
@@ -48,6 +72,29 @@ APPS_BY_NAME = {
     "clingcon": ClingconApp,
     "flingo": MyFlingoApp,
 }
+
+
+def get_statistics_hook(
+    app_class: type[object],
+) -> tuple[Optional[str], Optional[Callable[[object, StatisticsMap, StatisticsMap], None]]]:
+    """
+    Get the private name and method for the __on_statistics hook in the given application class.
+    This follows the patter of Clingcon and Flingo, which have a private method for handling statistics
+    which is called in the solve call.
+
+    Args:
+        app_class (type[object]): The application class to inspect.
+
+    Returns:
+        tuple[Optional[str], Optional[Callable[[object, StatisticsMap, StatisticsMap], None]]]:
+            A tuple containing the mangled name of the hook and the hook itself, or (None, None) if not found.
+    """
+    for candidate in app_class.__mro__:
+        mangled_name = f"_{candidate.__name__}__on_statistics"
+        hook = candidate.__dict__.get(mangled_name)
+        if hook is not None:
+            return mangled_name, hook
+    return None, None
 
 
 def get_app_by_name(app_name: str) -> Optional[Application]:
@@ -63,6 +110,10 @@ def get_app_by_name(app_name: str) -> Optional[Application]:
         msg = f"Control name '{app_name}' not found. Available options: {list(APPS_BY_NAME.keys())}"
         log.error(msg)
         raise ValueError(msg)
+    if APPS_BY_NAME[app_name] is None:
+        msg = f"Install the corresponding package via pip for '{app_name}' to use it."
+        log.error(msg)
+        raise ImportError(msg)
     return APPS_BY_NAME.get(app_name, None)
 
 
@@ -87,6 +138,7 @@ def make_app(app_name: str) -> Application:
             self.metasp_on_model = on_model
             self.metasp_config_file = None
             self._log_level = "warning"
+            self.times = {}
             enable_python()
 
         @property
@@ -241,6 +293,15 @@ def make_app(app_name: str) -> Application:
             else:
                 super().print_model(model, printer)
 
+        def _metasp_on_statistics(self, step: StatisticsMap, accu: StatisticsMap):
+            accu.update(
+                {
+                    "Metasp": {
+                        "Times in seconds": self.times,
+                    }
+                }
+            )
+
         def main(self, control, files):
             """
             Main entry point for the application.
@@ -269,12 +330,37 @@ def make_app(app_name: str) -> Application:
             self.meta_system = MetaSystem.from_dict(self.metasp_config)
 
             self.meta_system.set_constants(self.constants)
+
+            start_time = perf_counter()
             transformed_input = self.meta_system.fo_transform(files, "")
+            self.times["FO-Transform"] = round(perf_counter() - start_time, 3)
+
+            start_time = perf_counter()
             grammar = Grammar.from_asp_files(self.meta_system.syntax_encoding)
+            self.times["Load-Grammar"] = round(perf_counter() - start_time, 3)
+
             processor = MetaspProcessor(grammar)
+
+            start_time = perf_counter()
             reified = processor.reify_and_extend(transformed_input, self.constants)
+            self.times["Reify-and-Extend"] = round(perf_counter() - start_time, 3)
+
             final_files = self.meta_system.get_files(reified)
 
             super().main(control, final_files)
+
+    # Overwrite statistics to include Metasp Statistics
+    parent_private_name, parent_on_statistics = get_statistics_hook(base_class)
+
+    if parent_on_statistics is None:
+        print("Parent class does not have __on_statistics method")
+
+    def _override_on_statistics(self, step: StatisticsMap, accu: StatisticsMap):
+        if parent_on_statistics is not None:
+            parent_on_statistics(self, step, accu)
+        self._metasp_on_statistics(step, accu)
+
+    if parent_private_name is not None:
+        setattr(MetaspApp, parent_private_name, _override_on_statistics)
 
     return MetaspApp
