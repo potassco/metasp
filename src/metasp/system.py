@@ -8,7 +8,6 @@ from collections.abc import Sequence
 from datetime import datetime
 from io import StringIO
 from pathlib import Path
-from typing import List, Optional
 
 import tree_sitter_metasp as ts_metasp
 from aspen.tree import AspenTree
@@ -55,10 +54,10 @@ class MetaSystem:
         control_name: str,
         syntax_encoding: Sequence[str],
         semantics_encoding: Sequence[str],
-        ui_encoding: Optional[Sequence[str]] = None,
-        print_model: Optional[str] = None,
-        constants: Optional[Sequence[str]] = None,
-        python_scripts: Optional[Sequence[str]] = None,
+        ui_encoding: Sequence[str] | None = None,
+        print_model: str | None = None,
+        constants: Sequence[str] | None = None,
+        python_scripts: Sequence[str] | None = None,
     ):
         """
         Initialize the System with its name, control_name, and encodings.
@@ -104,7 +103,7 @@ class MetaSystem:
         log.debug(f"Creating MetaSystem from config: {config}")
         if not "semantics_encoding" in config:
             log.warning(
-                "The 'semantics_encoding' field is required to solve using metasp. Provided via --meta-config or directly."
+                "The 'semantics_encoding' field is required if you attempt to solve using metasp. Provided via --meta-config or directly."
             )
             # raise ValueError("Missing semantics encoding")
         return cls(
@@ -118,7 +117,7 @@ class MetaSystem:
             python_scripts=config.get("python_scripts", []),
         )
 
-    def fo_transform(self, files: List[str], prg: str) -> str:
+    def fo_transform(self, files: list[str], prg: str) -> str:
         """
         Transforms a list of files and a program string and returns a string with the transformation.
 
@@ -132,7 +131,9 @@ class MetaSystem:
         out_dir = Path(self.out_dir)
 
         tree = AspenTree(default_language=clingo_lang)
-
+        if self.syntax_encoding is None or len(self.syntax_encoding) == 0:
+            log.warning("No syntax encoding files provided.")
+            self.syntax_encoding = []
         [tree.parse(Path(e)) for e in self.syntax_encoding]
         input_file_symbols = [tree.parse(Path(i)) for i in files]
         str_input_symb = tree.parse(prg)
@@ -146,8 +147,8 @@ class MetaSystem:
                 )
             except Exception as e:
                 if len(self.syntax_encoding) == 0:
-                    log.error(f"No syntax encoding files provided is likely the cause of the error.")
-                log.error(f"Error transforming input.\n Error: %s", e)
+                    log.error("No syntax encoding files provided is likely the cause of the error.")
+                log.error("Error transforming input.\n Error: %s", e)
                 raise (e)
             facts_str = buf.getvalue().strip().replace("&", "__")
         with open(syntax_fact_file, "w") as fact_file:
@@ -210,7 +211,7 @@ class MetaSystem:
                 file_content,
             )
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        title = "\n%%%%%% Created: {} \n%%%%%% File: {} \n\n".format(timestamp, file)
+        title = f"\n%%%%%% Created: {timestamp} \n%%%%%% File: {file} \n\n"
         return title + file_content
 
     def _set_printing_function(self, print_model_name: str) -> None:

@@ -1,12 +1,7 @@
 import logging
 from dataclasses import dataclass
-from typing import List
 
-from clingo import Control, Function, Symbol, SymbolType
-from clingox.reify import Reifier
-from meta_tools import classic_reify, extend_reification, transform
-from meta_tools.extensions import ShowExtension
-from meta_tools.extensions.base_extension import ReifyExtension
+from clingo import Function, Symbol, SymbolType
 
 from metasp.grammar import Grammar, Type
 from metasp.utils.logging_utils import COLORS
@@ -19,17 +14,17 @@ class Formula:
     name: str
     symbol: Symbol
     type: Type
-    arguments: List["Formula"] = None
-    super_types: List[str] = None
+    arguments: list["Formula"] = None
+    super_types: list[str] = None
 
     @property
     def signature(self) -> tuple[str, int]:
         return (self.name, len(self.symbol.arguments))
 
     @property
-    def used_types(self) -> List[str]:
+    def used_types(self) -> list[str]:
         types = set([self.type.name] + (self.super_types or []))
-        return list(types)
+        return sorted(types)
 
     def symbol_with_prefix(self) -> Symbol:
         is_tuple = self.type is None
@@ -67,7 +62,7 @@ def p(s) -> str:
 
 
 def t(s) -> str:
-    return f"{COLORS['GREEN']}{str(s)}{COLORS['NORMAL']}{COLORS['GREY']}"
+    return f"{COLORS['GREEN']}{s!s}{COLORS['NORMAL']}{COLORS['GREY']}"
 
 
 class FormulaRegistery:
@@ -96,7 +91,7 @@ class FormulaRegistery:
         log.debug(f"  New symbol: {p(new_symbol)}")
         return new_symbol
 
-    def assert_type_in(self, as_type: str | None, possible_types: List[str], symbol: Symbol) -> None:
+    def assert_type_in(self, as_type: str | None, possible_types: list[str], symbol: Symbol) -> None:
         if as_type is not None and as_type not in possible_types:
             m = f"Type mismatch for symbol {p(symbol)} expected {t(as_type)}, but matches only with: {possible_types}"
             # log.error(m)
@@ -107,7 +102,7 @@ class FormulaRegistery:
         errors = []
         matched_formulas = {}
         if len(possible_types) == 0:
-            log.warn(
+            log.warning(
                 "No types defined in the grammar to be allowed as atoms in the program. Make sure to define at least one type with allow(X,head) or allow(X,body)."
             )
             return None
@@ -211,7 +206,7 @@ class FormulaRegistery:
         expression = self.grammar.get_expression(name, arity)
         # --------- Match arguments
         log.debug(f"☑️ Matched expression {p(expression.name)} of type {t(expression.type_name)}")
-        log.debug(f"  Trying to match arguments...")
+        log.debug("  Trying to match arguments...")
         arguments = []
         for i, a in enumerate(s.arguments):
             arg_defs = expression.args.get(i, None)
@@ -259,11 +254,11 @@ class FormulaRegistery:
             except ValueError as e:
                 log.error(f"Could not match argument {p(a)} of {p(s)}: {e}")
                 raise e
-        log.debug(f"  All arguments matched!")
+        log.debug("  All arguments matched!")
         log.debug(
             f"✅ Symbol {p(s)} is type {t(formula_type.name)}, with expression ({expression.name},{expression.arity})"
         )
-        new_symbol_fun = Function(name, [a.symbol for a in arguments], True)
+        new_symbol_fun = Function(name, [a.symbol for a in arguments], s.positive)
         formula = Formula(
             name=name,
             symbol=new_symbol_fun,

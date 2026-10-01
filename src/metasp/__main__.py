@@ -8,7 +8,6 @@ import sys
 
 import yaml
 from clingo.application import clingo_main
-from networkx import config
 
 from metasp import MetaspProcessor, replace_internal_prefix
 from metasp.app import make_app
@@ -17,6 +16,7 @@ from metasp.system import MetaSystem
 from metasp.utils.logging_utils import configure_logging
 from metasp.utils.parser import get_parser, load_config, parse_constants
 from metasp.utils.test import run_tests
+from metasp.utils.visualization import visualize_reified_program
 
 log = logging.getLogger(__name__)
 
@@ -89,6 +89,8 @@ def run(argv: list[str]) -> int:
     reified = processor.reify_and_extend(transformed_input, constants_dict)
     if args.output == "reify":
         sys.stdout.write(replace_internal_prefix(reified) + "\n")
+        if args.viz_reify:
+            visualize_reified_program(reified)
         return 0
     if args.output == "ui":  # nocoverage
         print("Running in user interface mode. Use Ctrl+C to exit.")

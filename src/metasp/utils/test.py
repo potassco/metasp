@@ -3,7 +3,6 @@ import os
 import sys
 import textwrap
 from enum import Enum, auto
-from typing import Optional
 
 from clingo.application import clingo_main
 
@@ -31,7 +30,7 @@ class TestStatus(Enum):
 
 
 class StatusInfo:
-    def __init__(self, status: TestStatus, message: Optional[str] = None):
+    def __init__(self, status: TestStatus, message: str | None = None):
         self.status = status
         self.message = message
 
@@ -41,7 +40,7 @@ class StatusInfo:
         return self.status.name
 
 
-def find_test_files(current_path: Optional[str] = None) -> list[str]:
+def find_test_files(current_path: str | None = None) -> list[str]:
     """
     Find all test files in the current directory and its subdirectories.
     Test files are identified by the .test.lp extension.
@@ -86,7 +85,7 @@ class TestMetasp:
         return self.status.status == TestStatus.PASS
 
     @classmethod
-    def from_command_line_args(cls, args: list[str], current_path: Optional[str] = None) -> list["TestMetasp"]:
+    def from_command_line_args(cls, args: list[str], current_path: str | None = None) -> list["TestMetasp"]:
         test_files = [arg for arg in args if arg.endswith(".test.lp") or arg.endswith(".lp")]
         if len(test_files) == 0:
             log.info(
@@ -149,7 +148,7 @@ class TestMetasp:
                     reading_command = False
                     continue
                 if reading_test and line.startswith("-"):
-                    expected_model = line.split("-")[1].strip()  # Extract expected model after "-"
+                    expected_model = line[line.index("-") + 1 :].strip()  # Extract expected model after "-"
                     expected_models.append([s.replace("&", "__") for s in expected_model.split()])
                 if reading_test and not line.startswith("-"):
                     log.error("Invalid test format in file %s", file_path)
@@ -246,11 +245,11 @@ def run_tests(command_line: list[str], current_path: str = None) -> None:
     summary = ""
     for test in tests:
         if test.status.status == TestStatus.FAIL:
-            summary += color(f"✗", "red")
+            summary += color("✗", "red")
         if test.status.status == TestStatus.PASS:
-            summary += color(f"✓", "green")
+            summary += color("✓", "green")
         if test.status.status == TestStatus.PENDING:
-            summary += color(f"？", "yellow")
+            summary += color("？", "yellow")
     fail = any(not test.passed for test in tests)
     print(color(f"\n-----------------------\nTEST Results: {summary}", "green" if not fail else "red"))
     return fail

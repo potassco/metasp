@@ -6,7 +6,7 @@ import argparse
 from argparse import ArgumentParser
 from importlib import metadata
 from pathlib import Path
-from typing import Any, Optional, cast
+from typing import Any, cast
 
 import yaml
 from rich.text import Text
@@ -39,7 +39,7 @@ levels = [
 ]
 
 
-def get(levels: list[tuple[str, int]], name: str) -> Optional[int]:  # nocoverage
+def get(levels: list[tuple[str, int]], name: str) -> int | None:  # nocoverage
     for key, val in levels:
         if key == name:
             return val
@@ -153,6 +153,11 @@ def get_parser() -> ArgumentParser:
             "--meta-config",
             type=str,
             help="Optional path to metasp yaml configuration file, setting the arguments for the system (Use to avoid long command lines).",
+        )
+        output_parser.add_argument(
+            "--viz-reify",
+            help="Flag to enable visualization of the reified program. Will open a png generated using clingraph. Only available when using the reify output option.",
+            action="store_true",
         )
 
     return parser
