@@ -20,19 +20,9 @@ from meta_tools.extensions.base_extension import ReifyExtension
 from metasp.formula_processing import FormulaRegistery
 from metasp.grammar import Grammar, Type
 from metasp.utils.logging_utils import COLORS
+from metasp.utils.visualization import replace_internal_prefix
 
 log = logging.getLogger(__name__)
-
-
-def replace_internal_prefix(prg: str) -> str:
-    """
-    Replaces the __ prefix by & in the program.
-    Used to show the output to the user.
-
-    Args:
-        prg (str): The program string to process.
-    """
-    return prg.replace("__", "&")
 
 
 RESERVED_PREDICATES = [("_show", 0), ("_show_term", 1), ("_show_atom", 1)]
@@ -91,7 +81,7 @@ class MetaspExtension(ReifyExtension):
                 return formula.symbol_with_prefix()
             return symbol  # nocoverage
 
-        setattr(context, "match_output", match_output)
+        context.match_output = match_output
 
     def additional_symbols(self) -> Sequence[Symbol]:
         """
@@ -138,7 +128,7 @@ class MetaspProcessor:
             log.error("Error during grounding of the transformed input:\n%s", prg)
             log.error("Error: %s", e)
             raise e
-        simple_reified_prg = "\n".join([f"{str(s)}." for s in rsymbols])
+        simple_reified_prg = "\n".join([f"{s!s}." for s in rsymbols])
         log.debug("---------- Classic reification \n" + simple_reified_prg + "\n-------------------")
 
         reified_prg = self.grammar.asp_str
