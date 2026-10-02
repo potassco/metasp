@@ -1,7 +1,7 @@
 
 #type adel{
   expressions: {
-    &not/1: { type: adel, safety: safe; };
+    &sneg/1: { type: adel, safety: safe; };
     &false/0;
     &always/2: {
       type: path, safety: unsafe;
@@ -15,7 +15,8 @@
   subtypes:  { fluent; };
   occurrence: any;
   macros: {
-    &true: &not(&false);
+    &not(x): &always(&test(x),&false);
+    &true: &sneg(&false);
     &or(x,y): &eventually(&choice(&test(x),&test(y)), &true);
     &and(x,y): &eventually(&test(x), y);
     &next(x): &eventually(&atrue, x);
