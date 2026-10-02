@@ -45,10 +45,9 @@ rel(&conv(P),M, (T2,T1)) :- formula(path, &conv(P)), rel(P, M, (T1,T2)).
 % False
 :- formula(adel,&false), true(&false, M, T), time(T), model(M).
 
-% Negation
-% Why not use it as a derived operator with the alwys?
-:- formula(adel,&not(F)), true(&not(F), M, T), true(F, M, T), time(T), model(M).
-true(&not(F), M, T) :- formula(adel,&not(F)), not true(F, M, T), time(T), model(M).
+% Strong Negation
+:- true(&sneg(F), M, T), true(F, M, T), time(T), model(M).
+
 
 % ## Eventually
 
@@ -71,9 +70,10 @@ true(F, h, TJ) :- true(&always(P,F), h, TI), rel(P, t, (TI,TJ)), rel(P, h, (TI,T
 
 #show action/1.
 #show fluent/1.
-#show label/2.
+#show label/2. %Must be shown to print the actions
 % #show rel/3.
 % #show true/3.
+% #show -true/3.
 
 
 
