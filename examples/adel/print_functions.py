@@ -18,7 +18,6 @@ def adel_printer(model: Model, system) -> None:
     labels = {}
     extra_shown = []
     for sym in model.symbols(shown=True):
-        print(sym)
         if sym.type == SymbolType.Function and sym.name == "label" and len(sym.arguments) == 2:
             i, j = sym.arguments[1].arguments
             labels.setdefault(i.number, []).append(sym.arguments[0])
