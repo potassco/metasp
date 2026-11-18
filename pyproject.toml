@@ -21,7 +21,7 @@ dependencies = [
     "clingcon",
     "flingo",
     "meta-tools-clingo>=0.3.4",
-    "aspen-tree-5",
+    "aspen-tree-5==0.1.1",
     "tree-sitter-metasp",
 ]
 
