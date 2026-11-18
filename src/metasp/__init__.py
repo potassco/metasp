@@ -101,6 +101,9 @@ class MetaspExtension(ReifyExtension):
 
 
 class MetaspProcessor:
+    """
+    Processor for handling the reification and extension of ASP programs using the MetaspExtension.
+    """
 
     def __init__(self, grammar: Grammar) -> None:
         self.grammar = grammar
@@ -129,7 +132,7 @@ class MetaspProcessor:
             log.error("Error: %s", e)
             raise e
         simple_reified_prg = "\n".join([f"{s!s}." for s in rsymbols])
-        log.debug("---------- Classic reification \n" + simple_reified_prg + "\n-------------------")
+        log.debug("---------- Classic reification \n%s\n-------------------", simple_reified_prg)
 
         reified_prg = self.grammar.asp_str
 
