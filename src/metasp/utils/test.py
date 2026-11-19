@@ -256,14 +256,14 @@ class TestMetasp:
     def print_result(self) -> None:
         """Print the result of the test case to the standard output."""
         if self.status.status == TestStatus.PASS:
-            print(color(f"✓ Test '{self.name}' passed.", "green"))
+            print(color(f"[PASS] Test '{self.name}' passed.", "green"))
         elif self.status.status == TestStatus.PENDING:
-            print(color(f"？ Test '{self.name}' status is pending. No result to print.", "yellow"))
+            print(color(f"[PENDING] Test '{self.name}' status is pending. No result to print.", "yellow"))
         elif self.status.status == TestStatus.FAIL:
             expected_models = "\n\t\t" + "\n\t\t".join([f"    - {' '.join(model)}" for model in self.expected_models])
             obtained_models = "\n\t\t" + "\n\t\t".join([f"    - {' '.join(model)}" for model in self.obtained_models])
             error_message = f"""
-✗ Test {self.name} failed.\n
+[FAIL] Test {self.name} failed.\n
     Reason:          {self.status.message}
     Arguments:       {self.command_line_args}
     Command:         {self.command}
@@ -308,14 +308,14 @@ def run_tests(command_line: list[str], current_path: str | None = None) -> bool:
         )
         test.run(models)
         test.print_result()
-    summary = ""
+    summary: list[str] = []
     for test in tests:
         if test.status.status == TestStatus.FAIL:
-            summary += color("✗", "red")
+            summary.append(color("FAIL", "red"))
         if test.status.status == TestStatus.PASS:
-            summary += color("✓", "green")
+            summary.append(color("PASS", "green"))
         if test.status.status == TestStatus.PENDING:
-            summary += color("？", "yellow")
+            summary.append(color("PENDING", "yellow"))
     fail = any(not test.passed for test in tests)
-    print(color(f"\n-----------------------\nTEST Results: {summary}", "green" if not fail else "red"))
+    print(color(f"\n-----------------------\nTEST Results: {' '.join(summary)}", "green" if not fail else "red"))
     return fail
