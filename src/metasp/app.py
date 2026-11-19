@@ -373,8 +373,8 @@ def make_app(app_name: str) -> MetaspApplicationFactory:
                 "python-scripts",
                 textwrap.dedent(
                     """\
-                    Path to python scripts to load before running the system. These files can contain custom printing functions.
-                                                (default: None)"""
+                    Path to python scripts to load before running the system.
+                    These files can contain custom printing functions. (default: None)"""
                 ),
                 self.parse_system_config("python_scripts", "list"),
                 multi=True,
@@ -385,8 +385,8 @@ def make_app(app_name: str) -> MetaspApplicationFactory:
                 "meta-config",
                 textwrap.dedent(
                     """\
-                    Optional path to metasp yaml configuration file, setting the arguments for the system (Use to avoid long command lines).
-                                                (default: None)\033[0m"""
+                    Optional path to metasp yaml configuration file, setting the arguments for the system.
+                    (Use to avoid long command lines) (default: None)\033[0m"""
                 ),
                 self.parse_config,
                 argument="<file>",
