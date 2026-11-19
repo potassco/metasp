@@ -1,3 +1,7 @@
+"""
+MetaASP system module used as the main interface for configuring and running MetaASP systems.
+"""
+
 import importlib.util
 import logging
 import os
@@ -34,16 +38,16 @@ def get_clinguin_backend_control(control_name: str) -> str:  # nocoverage
     """
     if control_name == "clingcon":
         return "ClingconBackend"
-    elif control_name == "clingo":
+    if control_name == "clingo":
         return "ClingoBackend"
-    elif control_name == "flingo":
+    if control_name == "flingo":
         return "FlingoBackend"
-    else:
-        log.error("Control '%s' has no backend for clinguin.", control_name)
-        raise ValueError(f"Control '{control_name}' is not a valid backend for clinguin.")
+
+    log.error("Control '%s' has no backend for clinguin.", control_name)
+    raise ValueError(f"Control '{control_name}' is not a valid backend for clinguin.")
 
 
-class MetaSystem:
+class MetaSystem:  # pylint: disable=too-many-instance-attributes
     """
     Class representing a MetaASP system with its configurations and methods to run it.
     """
@@ -54,6 +58,7 @@ class MetaSystem:
         control_name: str,
         syntax_encoding: Sequence[str],
         semantics_encoding: Sequence[str],
+        *,
         ui_encoding: Sequence[str] | None = None,
         print_model: str | None = None,
         constants: Sequence[str] | None = None,
@@ -100,10 +105,11 @@ class MetaSystem:
         Returns:
             MetaSystem: An instance of the MetaSystem class.
         """
-        log.debug(f"Creating MetaSystem from config: {config}")
+        log.debug("Creating MetaSystem from config: %s", config)
         if not "semantics_encoding" in config:
             log.warning(
-                "The 'semantics_encoding' field is required if you attempt to solve using metasp. Provided via --meta-config or directly."
+                "The 'semantics_encoding' field is required if you attempt to solve using metasp."
+                "Provided via --meta-config or directly."
             )
             # raise ValueError("Missing semantics encoding")
         return cls(
@@ -134,7 +140,8 @@ class MetaSystem:
         if self.syntax_encoding is None or len(self.syntax_encoding) == 0:
             log.warning("No syntax encoding files provided.")
             self.syntax_encoding = []
-        [tree.parse(Path(e)) for e in self.syntax_encoding]
+        for encoding_file in self.syntax_encoding:
+            tree.parse(Path(encoding_file))
         input_file_symbols = [tree.parse(Path(i)) for i in files]
         str_input_symb = tree.parse(prg)
 
@@ -149,9 +156,9 @@ class MetaSystem:
                 if len(self.syntax_encoding) == 0:
                     log.error("No syntax encoding files provided is likely the cause of the error.")
                 log.error("Error transforming input.\n Error: %s", e)
-                raise (e)
+                raise e
             facts_str = buf.getvalue().strip().replace("&", "__")
-        with open(syntax_fact_file, "w") as fact_file:
+        with open(syntax_fact_file, "w", encoding="utf-8") as fact_file:
             fact_file.write(facts_str)
         self.syntax_encoding = [str(syntax_fact_file)]
 
@@ -166,7 +173,7 @@ class MetaSystem:
             fname = "_".join([Path(f).stem for f in files]) + "_stdin.lp"
         else:
             fname = "stdin.lp"
-        with open(out_dir / fname, "w") as f:
+        with open(out_dir / fname, "w", encoding="utf-8") as f:
             f.write(rewritten_program_str)
 
         tree = AspenTree(default_language=clingo_lang)
@@ -180,8 +187,9 @@ class MetaSystem:
             p = source.path
             assert p is not None
             out_file = out_dir / ("semantics_rewritten.lp")
-            # TODO: Fix this better, because at the moment if you have different paths it uses a single file name and replaces things
-            with open(out_file, "a") as sem_file:
+            # TODO: Fix this better, because at the moment if you have different paths
+            # it uses a single file name and replaces things
+            with open(out_file, "a", encoding="utf-8") as sem_file:
                 sem_file.write(str(source.source_bytes, encoding=source.encoding))
         self.semantics_encoding = [out_dir / ("semantics_rewritten.lp")]
         return rewritten_program_str
@@ -195,15 +203,16 @@ class MetaSystem:
         Returns:
             str: The processed file name with package includes.
         """
-        log.debug(f"Processing file: {file}")
-        with open(file, "r") as f:
+        log.debug("Processing file: %s", file)
+        with open(file, "r", encoding="utf-8") as f:
             file_content = f.read()
             has_other_includes = re.search(r'#include\s+"(?!metasp\.)[^"]+"', file_content) is not None
             if has_other_includes:  # nocoverage
                 log.warning(
-                    f"File {file} contains #include statements that do not use the 'metasp.' prefix. "
-                    f"The use of & in these files will not be properly handled. "
-                    f"Add the file to the semantics_encoding instead for the system to properly handle them. "
+                    "File %s contains #include statements that do not use the 'metasp.' prefix. "
+                    "The use of & in these files will not be properly handled. "
+                    "Add the file to the semantics_encoding instead for the system to properly handle them.",
+                    file,
                 )
             file_content = re.sub(
                 r'#include\s+"metasp\.([^"]+)"',
@@ -226,7 +235,7 @@ class MetaSystem:
             return
         script_functions = {}
         for script_path in self.python_scripts:
-            log.debug(f"Loading python script: {script_path}")
+            log.debug("Loading python script: %s", script_path)
             module_name = os.path.splitext(os.path.basename(script_path))[0]
             spec = importlib.util.spec_from_file_location(module_name, script_path)
             module = importlib.util.module_from_spec(spec)
@@ -242,7 +251,10 @@ class MetaSystem:
         printing_func = metasp_printing_dict.get(print_model_name)
         if printing_func is None:  # nocoverage
             log.error(
-                f"Print model function '{print_model_name}' not found. Available print functions: {list(script_functions.keys()) + list(metasp_printing_dict.keys())}"
+                "Print model function '%s' not found.\n"
+                "Available print functions: %s",
+                print_model_name,
+                list(script_functions.keys()) + list(metasp_printing_dict.keys()),
             )
             raise ValueError(f"Print model function '{print_model_name}' not found")
 
@@ -259,7 +271,7 @@ class MetaSystem:
         """
         for const in self.required_constants:
             if const not in constants:
-                log.error(f"You must provide the constant {const}  to run the system, using -c {const}=<val>.")
+                log.error("You must provide the constant %s  to run the system, using -c %s=<val>.", const, const)
                 raise ValueError(f"You must provide the constant  {const} to run the system, using -c {const}=<val>.")
         self.constants = constants.copy()
 
@@ -276,12 +288,12 @@ class MetaSystem:
         semantics_with_includes = "\n".join([self._replace_package_includes(f) for f in self.semantics_encoding])
 
         tmp_file_path = os.path.join(self.out_dir, f"{self.name}_combined.lp")
-        with open(tmp_file_path, "w") as tmp_file:
+        with open(tmp_file_path, "w", encoding="utf-8") as tmp_file:
             tmp_file.write(semantics_with_includes)
             tmp_file.write("\n")
             tmp_file.write(reified_input)
 
-        log.info(f"Saved combined input to temporary file: {tmp_file_path}")
+        log.info("Saved combined input to temporary file: %s", tmp_file_path)
 
         return [tmp_file_path] + list(self.syntax_encoding)
 
