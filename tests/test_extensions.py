@@ -14,6 +14,9 @@ class TestAvailableSystems(TestCase):
     """
 
     def test_provided_systems(self) -> None:
-        example_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), f"../"))
+        """
+        Test that the provided systems run successfully.
+        """
+        example_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../"))
         status = run_tests([], current_path=example_dir)
         self.assertEqual(status, 0, msg="Test failed")

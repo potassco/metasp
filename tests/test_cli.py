@@ -1,6 +1,10 @@
+"""Test cases for the command line interface."""
+
 from unittest import TestCase
 
 from metasp.__main__ import run
+
+# pylint: disable=missing-docstring
 
 
 class TestCli(TestCase):

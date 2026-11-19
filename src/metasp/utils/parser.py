@@ -39,14 +39,34 @@ levels = [
 ]
 
 
-def get(levels: list[tuple[str, int]], name: str) -> int | None:  # nocoverage
-    for key, val in levels:
+def get(log_levels: list[tuple[str, int]], name: str) -> int | None:  # nocoverage
+    """
+    Get the integer value corresponding to the given level name.
+
+    Args:
+        log_levels (list): A list of tuples containing level names and their corresponding integer values.
+        name (str): The name of the level to retrieve.
+
+    Returns:
+        int | None: The integer value of the level if found, otherwise None.
+    """
+    for key, val in log_levels:
         if key == name:
             return val
     return None
 
 
-def load_config(path, root_dir=None):
+def load_config(path: str | Path, root_dir: str | Path | None = None):
+    """
+    Load the configuration from a YAML file.
+
+    Args:
+        path (str | Path): The path to the configuration file.
+        root_dir (str | Path | None): The root directory to resolve relative paths.
+
+    Returns:
+        dict: The loaded configuration with resolved paths.
+    """
     if root_dir is not None:
         full_path = Path(root_dir) / path
     else:
@@ -54,7 +74,7 @@ def load_config(path, root_dir=None):
 
     config_dir = full_path.resolve().parent
     try:
-        with open(full_path) as f:
+        with open(full_path, encoding="utf-8") as f:
             config = yaml.safe_load(f) or {}
     except Exception:
         print(f"Error loading config file {path} from config path {config_dir}")
@@ -110,7 +130,8 @@ def get_parser() -> ArgumentParser:
     )
     output_options = {
         "solve": "Solve the processed and reified input files with the meta encoding for the semantics.",
-        "test": "Run the test cases defined in the test file. If no specific tests file is provided, all test files .test.lp in current directory will be ran.",
+        "test": "Run the test cases defined in the test file. If no specific tests file is provided,"
+        "all test files .test.lp in current directory will be ran.",
         "transform": "Output the transformed first order program and run syntactic checks.",
         "reify": "Output the reification with extensions.",
         "ui": "User interface mode.",
@@ -152,11 +173,13 @@ def get_parser() -> ArgumentParser:
         output_parser.add_argument(
             "--meta-config",
             type=str,
-            help="Optional path to metasp yaml configuration file, setting the arguments for the system (Use to avoid long command lines).",
+            help="Optional path to metasp yaml configuration file,"
+            "setting the arguments for the system (Use to avoid long command lines).",
         )
         output_parser.add_argument(
             "--viz-reify",
-            help="Flag to enable visualization of the reified program. Will open a png generated using clingraph. Only available when using the reify output option.",
+            help="Flag to enable visualization of the reified program."
+            "Will open a png generated using clingraph. Only available when using the reify output option.",
             action="store_true",
         )
 

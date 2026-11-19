@@ -21,6 +21,8 @@ from metasp.utils.visualization import visualize_reified_program
 log = logging.getLogger(__name__)
 
 
+# pylint: disable=too-many-branches
+# pylint: disable=too-many-statements
 def run(argv: list[str]) -> int:
     """Core CLI logic"""
 
@@ -40,7 +42,8 @@ def run(argv: list[str]) -> int:
     if selected_command == "test":
         if "-h" in argv or "--help" in argv:
             print(
-                "Run the test cases defined in the test file. If no specific tests file is provided, all test files .test.lp in current directory will be ran."
+                "Run the test cases defined in the test file."
+                "If no specific tests file is provided, all test files .test.lp in current directory will be ran."
             )
             print("Usage: metasp test [test_files]")
             return 1
@@ -48,7 +51,7 @@ def run(argv: list[str]) -> int:
         return exit_status
 
     parser = get_parser()
-    args, remaining = parser.parse_known_args(argv)
+    args, _ = parser.parse_known_args(argv)
 
     defaults = {}
     if args.meta_config:
@@ -56,8 +59,9 @@ def run(argv: list[str]) -> int:
 
     # inject defaults
     # Set defaults for each subparser instead of the main parser
+    # pylint: disable=protected-access
     for subparser in parser._subparsers._group_actions:
-        for choice, sub in subparser.choices.items():
+        for _, sub in subparser.choices.items():
             sub.set_defaults(**defaults)
 
     args = parser.parse_args(argv)
@@ -74,10 +78,11 @@ def run(argv: list[str]) -> int:
     try:
         grammar = Grammar.from_asp_files(meta_system.syntax_encoding)
     except Exception as e:  # nocoverage
-        log.error(f"Error loading grammar from syntax encoding files: {e}")
+        log.error("Error loading grammar from syntax encoding files: %s", e)
         # TODO maybe more specific error message for syntax errors
         log.error(
-            "Make sure the path to the syntax encoding files is correct (if using a config file, it should be relative where metasp is run)."
+            "Make sure the path to the syntax encoding files is correct"
+            "(if using a config file, it should be relative where metasp is run)."
         )
         raise e
     processor = MetaspProcessor(grammar)
@@ -96,10 +101,12 @@ def run(argv: list[str]) -> int:
         print("Running in user interface mode. Use Ctrl+C to exit.")
         command = meta_system.clinguin_command(reified)
         print(f"Running command: {' '.join(command)}")
-        result = subprocess.run(command, shell=False)
+        result = subprocess.run(command, shell=False, check=False)
         if result.returncode != 0:
             print(f"Command failed with exit code {result.returncode}")
         return 0
+
+    return 0
 
 
 def main() -> None:  # nocoverage

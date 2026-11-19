@@ -1,3 +1,5 @@
+"""Test utilities for Metasp."""
+
 import logging
 import os
 import sys
@@ -24,17 +26,23 @@ followed by a line with the command, and the list of expected models, each start
 
 
 class TestStatus(Enum):
+    """Enumeration for test status."""
+
     PENDING = auto()
     FAIL = auto()
     PASS = auto()
 
 
 class StatusInfo:
+    """Class to hold status information for a test."""
+
     def __init__(self, status: TestStatus, message: str | None = None):
+        """Initialize the status info with a status and an optional message."""
         self.status = status
         self.message = message
 
     def __repr__(self):
+        """Return a string representation of the status info."""
         if self.status == TestStatus.FAIL and self.message:
             return f"{self.status.name}({self.message})"
         return self.status.name
@@ -46,13 +54,12 @@ def find_test_files(current_path: str | None = None) -> list[str]:
     Test files are identified by the .test.lp extension.
 
     Args:
-        current_path (Optional[str]): The path to start searching for test files. Defaults to the current working directory.
+        current_path (Optional[str]): The path to start searching for test files. Defaults to the current
+            working directory.
 
     Returns:
-        list: A list of file paths to the test files.
+        list: A list of file paths to the test files
     """
-    import os
-
     if current_path is None:
         current_path = os.getcwd()
     test_files = []
@@ -64,32 +71,50 @@ def find_test_files(current_path: str | None = None) -> list[str]:
 
 
 class TestMetasp:
+    """Class representing a Metasp test case."""
 
     def __init__(self, file: str, system: str, command_line_args: str, expected_models: list[list[str]]) -> None:
+        """Initialize a Metasp test case with the given file, system, command line arguments, and expected models."""
         self.file = file
         self.system = system
         self.command_line_args = command_line_args
         self.expected_models = expected_models
         self.status = StatusInfo(TestStatus.PENDING)
+        self.obtained_models: list[list[str]] = []
 
     @property
     def root_dir(self) -> str:
+        """Return the root directory of the test file."""
         return os.path.dirname(self.file)
 
     @property
     def name(self) -> str:
+        """Return the name of the test file."""
         return os.path.basename(self.file)
 
     @property
     def passed(self) -> bool:
+        """Return True if the test has passed, False otherwise."""
         return self.status.status == TestStatus.PASS
 
     @classmethod
     def from_command_line_args(cls, args: list[str], current_path: str | None = None) -> list["TestMetasp"]:
+        """
+        Create test cases from command line arguments, searching for test files if none are provided.
+
+        Args:
+            args (list[str]): The command line arguments.
+            current_path (Optional[str]): The path to start searching for test files if none are provided
+                in the arguments.
+
+        Returns:
+            list: A list of TestMetasp instances.
+        """
         test_files = [arg for arg in args if arg.endswith(".test.lp") or arg.endswith(".lp")]
         if len(test_files) == 0:
             log.info(
-                "No test file provided in the command line arguments. Will search for test files in the current directory and its subdirectories."
+                "No test file provided in the command line arguments. Will search for test files in the current "
+                "directory and its subdirectories."
             )
             test_files = find_test_files(current_path)
             if not test_files:
@@ -103,6 +128,15 @@ class TestMetasp:
 
     @classmethod
     def from_test_file(cls, file_path: str) -> list["TestMetasp"]:
+        """
+        Create test cases from a test file.
+
+        Args:
+            file_path (str): The path to the test file.
+
+        Returns:
+            list: A list of TestMetasp instances.
+        """
         args = ""
         expected_models = []
         reading_test = False
@@ -139,9 +173,10 @@ class TestMetasp:
                         log.error("Invalid test format in file %s", file_path)
                         log.error(FORMAT)
                         raise ValueError(
-                            "Unexpected line format in test file: command line arguments should be in a single line after '% #TEST'."
+                            "Unexpected line format in test file: command line arguments should be in a "
+                            "single line after '% #TEST'."
                         )
-                    if system not in APPS_BY_NAME.keys():
+                    if system not in APPS_BY_NAME:
                         log.error("Invalid test format in file %s", file_path)
                         log.error(FORMAT)
                         raise ValueError(f"Unknown system '{system}' in test file {file_path}.")
@@ -156,13 +191,14 @@ class TestMetasp:
                     raise ValueError(f"Unexpected format in test file: {line}")
 
         if not reading_test:
-            log.warning(f"No test comments found in the test file. {file_path}")
+            log.warning("No test comments found in the test file. %s", file_path)
             log.warning(FORMAT)
         else:
             tests.append(cls(file=file_path, system=system, command_line_args=args, expected_models=expected_models))
         return tests
 
     def print_fail(self, s: str) -> None:
+        """Print a failure message to the standard output."""
         sys.stdout.write(s + "\n")
 
     def run(self, obtained_models: list[list[str]]) -> None:
@@ -173,12 +209,13 @@ class TestMetasp:
             obtained_models (list[list[str]]): The list of obtained models, where each model is a list of strings.
         """
         self.obtained_models = obtained_models
-        log.info(f"Obtained models: {obtained_models}")
-        log.info(f"Expected models: {self.expected_models}")
+        log.info("Obtained models: %s", obtained_models)
+        log.info("Expected models: %s", self.expected_models)
         if len(obtained_models) != len(self.expected_models):
             self.status = StatusInfo(
                 TestStatus.FAIL,
-                f"Number of obtained models ({len(obtained_models)}) does not match expected ({len(self.expected_models)}).",
+                f"Number of obtained models ({len(obtained_models)}) "
+                f"does not match expected ({len(self.expected_models)}).",
             )
             return
 
@@ -201,6 +238,7 @@ class TestMetasp:
         self.status = StatusInfo(TestStatus.PASS)
 
     def print_result(self) -> None:
+        """Print the result of the test case to the standard output."""
         if self.status.status == TestStatus.PASS:
             print(color(f"✓ Test '{self.name}' passed.", "green"))
         elif self.status.status == TestStatus.PENDING:
@@ -220,10 +258,21 @@ class TestMetasp:
 
     @property
     def command(self) -> str:
+        """Return the command to run the test case using the Metasp solver."""
         return f"cd {self.root_dir}; metasp solve {self.system} {' '.join(self.command_line_args)} {self.name} 0"
 
 
 def run_tests(command_line: list[str], current_path: str = None) -> None:
+    """
+    Run Metasp tests based on the provided command line arguments and current path.
+
+    Args:
+        command_line (list[str]): The command line arguments for the tests.
+        current_path (Optional[str]): The path to start searching for test files if none are provided in the arguments.
+
+    Returns:
+        bool: True if any test failed, False otherwise.
+    """
     tests = TestMetasp.from_command_line_args(command_line, current_path=current_path)
     for test in tests:
         sep = "=" * 40
@@ -231,8 +280,9 @@ def run_tests(command_line: list[str], current_path: str = None) -> None:
         App_class = make_app(test.system)
         models = []
 
-        def save_model(model):
-            models.append([str(s) for s in model.symbols(shown=True, theory=True)])
+        # pylint: disable=dangerous-default-value
+        def save_model(model, obtained_models=models):
+            obtained_models.append([str(s) for s in model.symbols(shown=True, theory=True)])
 
         args = test.command_line_args + [test.file, "0"]
         constants_dict = parse_constants(args)
