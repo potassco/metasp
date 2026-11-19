@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from functools import lru_cache
 
 import clorm
+from clorm import Raw
 from clingo import Function, Symbol, SymbolType
 
 from metasp import clorm_db
@@ -30,7 +31,7 @@ class Arg:
     """
 
     key: str
-    value: str
+    value: Raw
 
 
 @dataclass
@@ -52,8 +53,8 @@ class Macro:
     """
 
     type: str
-    pattern: str
-    expansion: str
+    pattern: Raw
+    expansion: Raw
 
 
 @dataclass
@@ -161,7 +162,7 @@ class Grammar:
                 all_sub_types.update(self.all_sub_types(st_type))
         return list(all_sub_types)
 
-    def get_type(self, type_name: str) -> Type | None:
+    def get_type(self, type_name: str) -> Type:
         """
         Returns the Type object corresponding to the given type name.
         Raises a RuntimeError if the type is not defined in the grammar.
@@ -205,11 +206,11 @@ class Grammar:
         for t in fb.query(clorm_db.Type).all():
             type_def = Type(name=t.name)
             for c in fb.query(clorm_db.Expression).where(clorm_db.Expression.type == t.name).all():
-                args = {}
-                for a in fb.query(clorm_db.Arg).where(clorm_db.Arg.cons_id == c.id).all():
-                    if a.index not in args:
-                        args[a.index] = []
-                    args[a.index].append(Arg(key=a.key, value=a.value))
+                args: dict[int, list[Arg]] = {}
+                for arg_fact in fb.query(clorm_db.Arg).where(clorm_db.Arg.cons_id == c.id).all():
+                    if arg_fact.index not in args:
+                        args[arg_fact.index] = []
+                    args[arg_fact.index].append(Arg(key=arg_fact.key, value=arg_fact.value))
                 expression_name = c.id.name
                 if not expression_name.startswith(grammar._prefix):
                     raise ValueError(
@@ -223,14 +224,14 @@ class Grammar:
             grammar.add_type(type_def)
 
         for type_def in grammar.types.values():
-            for c in fb.query(clorm_db.Subtype).where(clorm_db.Subtype.sub == type_def.name).all():
-                type_def.super_types.append(c.sup)
-            for c in fb.query(clorm_db.Subtype).where(clorm_db.Subtype.sup == type_def.name).all():
-                type_def.sub_types.append(c.sub)
+            for subtype_fact in fb.query(clorm_db.Subtype).where(clorm_db.Subtype.sub == type_def.name).all():
+                type_def.super_types.append(subtype_fact.sup)
+            for subtype_fact in fb.query(clorm_db.Subtype).where(clorm_db.Subtype.sup == type_def.name).all():
+                type_def.sub_types.append(subtype_fact.sub)
 
         for type_def in grammar.types.values():
-            for c in fb.query(clorm_db.Allow).where(clorm_db.Allow.type == type_def.name).all():
-                position = str(c.position)
+            for allow_fact in fb.query(clorm_db.Allow).where(clorm_db.Allow.type == type_def.name).all():
+                position = str(allow_fact.position)
                 if position not in ["head", "body"]:
                     raise ValueError(f"Unknown allow position '{position}' for type '{type_def.name}'.")
                 if position == "head":
@@ -360,7 +361,7 @@ class Grammar:
         new_args = [self.apply_sugar_with_vars(t, arg, matched_variables) for arg in sugar_expansion.arguments]
         return Function(sugar_expansion.name, new_args, True)
 
-    def get_fl_type_sugar(self, s: Symbol, as_type: str) -> Type | None:
+    def get_fl_type_sugar(self, s: Symbol, as_type: str | None) -> Type | None:
         """
         Checks if there is a sugar expansion for the given symbol as the specified type.
 
@@ -566,7 +567,7 @@ class Grammar:
         Returns:
             list[tuple[str, int]]: A list of expression keys as (name, arity) tuples.
         """
-        keys = []
+        keys: list[tuple[str, int]] = []
         for type_def in self.types.values():
             keys.extend(type_def.expressions.keys())
             if include_sugar:
@@ -629,27 +630,31 @@ class Grammar:
         for t in self.types.values():
             fb = clorm.FactBase()
             asp_str += f"%----------- TYPE {t.name} \n"
-            fb.add(clorm_db.Type(name=t.name))
+            fb.add(clorm_db.Type(name=t.name))  # type: ignore[no-untyped-call]
             if t.allow_in_head:
-                fb.add(clorm_db.Allow(type=t.name, position="head"))
+                fb.add(clorm_db.Allow(type=t.name, position="head"))  # type: ignore[no-untyped-call]
             if t.allow_in_body:
-                fb.add(clorm_db.Allow(type=t.name, position="body"))
+                fb.add(clorm_db.Allow(type=t.name, position="body"))  # type: ignore[no-untyped-call]
 
             for st in t.sub_types:
-                fb.add(clorm_db.Subtype(sub=st, sup=t.name))
+                fb.add(clorm_db.Subtype(sub=st, sup=t.name))  # type: ignore[no-untyped-call]
 
             for expr in t.expressions.values():
                 fb.add(
-                    clorm_db.Expression(
+                    clorm_db.Expression(  # type: ignore[no-untyped-call]
                         type=t.name,
-                        id=clorm_db.ExpressionID(name=f"{self._prefix}{expr.name}", arity=expr.arity),
+                        id=clorm_db.ExpressionID(  # type: ignore[no-untyped-call]
+                            name=f"{self._prefix}{expr.name}", arity=expr.arity
+                        ),
                     )
                 )
                 for index, args in expr.args.items():
                     for arg in args:
                         fb.add(
-                            clorm_db.Arg(
-                                cons_id=clorm_db.ExpressionID(name=f"{self._prefix}{expr.name}", arity=expr.arity),
+                            clorm_db.Arg(  # type: ignore[no-untyped-call]
+                                cons_id=clorm_db.ExpressionID(  # type: ignore[no-untyped-call]
+                                    name=f"{self._prefix}{expr.name}", arity=expr.arity
+                                ),
                                 index=index,
                                 key=arg.key,
                                 value=arg.value,
@@ -658,10 +663,14 @@ class Grammar:
 
             for v in t.variables.values():
                 for var in v:
-                    fb.add(clorm_db.Var(type=t.name, name=var.name, type_var=var.type_var))
+                    fb.add(
+                        clorm_db.Var(type=t.name, name=var.name, type_var=var.type_var)  # type: ignore[no-untyped-call]
+                    )
 
             for macro in t.macros:
-                fb.add(clorm_db.Macro(type=macro.type, lhs=macro.pattern, rhs=macro.expansion))
+                fb.add(
+                    clorm_db.Macro(type=macro.type, lhs=macro.pattern, rhs=macro.expansion)  # type: ignore[no-untyped-call]
+                )
 
             asp_str += fb.asp_str()
 

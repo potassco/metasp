@@ -6,6 +6,7 @@ import sys
 import textwrap
 from enum import Enum, auto
 
+from clingo import Model
 from clingo.application import clingo_main
 
 from metasp.app import APPS_BY_NAME, make_app
@@ -41,7 +42,7 @@ class StatusInfo:
         self.status = status
         self.message = message
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a string representation of the status info."""
         if self.status == TestStatus.FAIL and self.message:
             return f"{self.status.name}({self.message})"
@@ -73,7 +74,13 @@ def find_test_files(current_path: str | None = None) -> list[str]:
 class TestMetasp:
     """Class representing a Metasp test case."""
 
-    def __init__(self, file: str, system: str, command_line_args: str, expected_models: list[list[str]]) -> None:
+    def __init__(
+        self,
+        file: str,
+        system: str,
+        command_line_args: list[str],
+        expected_models: list[list[str]],
+    ) -> None:
         """Initialize a Metasp test case with the given file, system, command line arguments, and expected models."""
         self.file = file
         self.system = system
@@ -137,12 +144,14 @@ class TestMetasp:
         Returns:
             list: A list of TestMetasp instances.
         """
-        args = ""
-        expected_models = []
+        # pylint: disable=too-many-branches
+        # pylint: disable=too-many-statements
+        args: list[str] = []
+        expected_models: list[list[str]] = []
         reading_test = False
         reading_command = False
-        system = None
-        tests = []
+        system: str | None = None
+        tests: list[TestMetasp] = []
         with open(file_path, "r", encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
@@ -150,6 +159,8 @@ class TestMetasp:
                     continue
                 if line.startswith("% #TEST"):
                     if reading_test:
+                        if system is None:
+                            raise ValueError("Test case is missing a system command.")
                         tests.append(
                             cls(file=file_path, system=system, command_line_args=args, expected_models=expected_models)
                         )
@@ -167,8 +178,11 @@ class TestMetasp:
                     )
                 line = line.lstrip("%").strip()  # Remove leading '%' and any leading/trailing whitespace
                 if reading_command:
-                    system = line.split()[0]
-                    args = line.split()[1:]
+                    command = line.split()
+                    if not command:
+                        raise ValueError("Test case is missing a system command.")
+                    system = command[0]
+                    args = command[1:]
                     if line.startswith("-"):
                         log.error("Invalid test format in file %s", file_path)
                         log.error(FORMAT)
@@ -194,6 +208,8 @@ class TestMetasp:
             log.warning("No test comments found in the test file. %s", file_path)
             log.warning(FORMAT)
         else:
+            if system is None:
+                raise ValueError("Test case is missing a system command.")
             tests.append(cls(file=file_path, system=system, command_line_args=args, expected_models=expected_models))
         return tests
 
@@ -262,7 +278,7 @@ class TestMetasp:
         return f"cd {self.root_dir}; metasp solve {self.system} {' '.join(self.command_line_args)} {self.name} 0"
 
 
-def run_tests(command_line: list[str], current_path: str = None) -> None:
+def run_tests(command_line: list[str], current_path: str | None = None) -> bool:
     """
     Run Metasp tests based on the provided command line arguments and current path.
 
@@ -278,10 +294,10 @@ def run_tests(command_line: list[str], current_path: str = None) -> None:
         sep = "=" * 40
         print(color(f"\n{sep}\nRunning test '{test.name}'\n{sep}", "normal"))
         App_class = make_app(test.system)
-        models = []
+        models: list[list[str]] = []
 
         # pylint: disable=dangerous-default-value
-        def save_model(model, obtained_models=models):
+        def save_model(model: Model, obtained_models: list[list[str]] = models) -> None:
             obtained_models.append([str(s) for s in model.symbols(shown=True, theory=True)])
 
         args = test.command_line_args + [test.file, "0"]

@@ -8,17 +8,18 @@ import os
 import re
 import shutil
 import tempfile
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from datetime import datetime
 from io import StringIO
 from pathlib import Path
+from typing import Any
 
 import tree_sitter_metasp as ts_metasp
 from aspen.tree import AspenTree
-from clingo import Function
+from clingo import Function, Model
 from tree_sitter import Language
 
-from metasp.printing import __dict__ as metasp_printing_dict
+import metasp.printing as metasp_printing
 
 log = logging.getLogger(__name__)
 
@@ -76,12 +77,13 @@ class MetaSystem:  # pylint: disable=too-many-instance-attributes
         """
         self.name = name
         self.control_name = control_name
-        self.syntax_encoding = syntax_encoding
-        self.semantics_encoding = semantics_encoding
-        self.ui_encoding = ui_encoding or []
-        self.required_constants = constants or []
-        self.constants = {}
-        self.python_scripts = python_scripts or []
+        self.syntax_encoding = list(syntax_encoding)
+        self.semantics_encoding = list(semantics_encoding)
+        self.ui_encoding = list(ui_encoding or [])
+        self.required_constants = list(constants or [])
+        self.constants: dict[str, str] = {}
+        self.python_scripts = list(python_scripts or [])
+        self.print_model: Callable[[Model], Any] | None = None
         self._set_printing_function(print_model)
 
         out_dir = Path.cwd() / "out"
@@ -96,7 +98,7 @@ class MetaSystem:  # pylint: disable=too-many-instance-attributes
         self.out_dir = out_dir
 
     @classmethod
-    def from_dict(cls, config: dict) -> "MetaSystem":
+    def from_dict(cls, config: dict[str, Any]) -> "MetaSystem":
         """
         Create a MetaSystem instance from a configuration dictionary.
 
@@ -123,7 +125,7 @@ class MetaSystem:  # pylint: disable=too-many-instance-attributes
             python_scripts=config.get("python_scripts", []),
         )
 
-    def fo_transform(self, files: list[str], prg: str) -> str:
+    def fo_transform(self, files: Sequence[str], prg: str) -> str:
         """
         Transforms a list of files and a program string and returns a string with the transformation.
 
@@ -191,7 +193,7 @@ class MetaSystem:  # pylint: disable=too-many-instance-attributes
             # it uses a single file name and replaces things
             with open(out_file, "a", encoding="utf-8") as sem_file:
                 sem_file.write(str(source.source_bytes, encoding=source.encoding))
-        self.semantics_encoding = [out_dir / ("semantics_rewritten.lp")]
+        self.semantics_encoding = [str(out_dir / "semantics_rewritten.lp")]
         return rewritten_program_str
 
     def _replace_package_includes(self, file: str) -> str:
@@ -223,7 +225,7 @@ class MetaSystem:  # pylint: disable=too-many-instance-attributes
         title = f"\n%%%%%% Created: {timestamp} \n%%%%%% File: {file} \n\n"
         return title + file_content
 
-    def _set_printing_function(self, print_model_name: str) -> None:
+    def _set_printing_function(self, print_model_name: str | None) -> None:
         """
         Set the printing function for the system.
 
@@ -233,11 +235,13 @@ class MetaSystem:  # pylint: disable=too-many-instance-attributes
         if print_model_name is None:
             self.print_model = None
             return
-        script_functions = {}
+        script_functions: dict[str, Callable[..., Any]] = {}
         for script_path in self.python_scripts:
             log.debug("Loading python script: %s", script_path)
             module_name = os.path.splitext(os.path.basename(script_path))[0]
             spec = importlib.util.spec_from_file_location(module_name, script_path)
+            if spec is None or spec.loader is None:
+                raise ImportError(f"Could not load Python script '{script_path}'.")
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
             for attr in dir(module):
@@ -248,13 +252,13 @@ class MetaSystem:  # pylint: disable=too-many-instance-attributes
             self.print_model = lambda model: script_functions[print_model_name](model, self)
             return
 
-        printing_func = metasp_printing_dict.get(print_model_name)
+        printing_func = vars(metasp_printing).get(print_model_name)
         if printing_func is None:  # nocoverage
             log.error(
                 "Print model function '%s' not found.\n"
                 "Available print functions: %s",
                 print_model_name,
-                list(script_functions.keys()) + list(metasp_printing_dict.keys()),
+                list(script_functions.keys()) + list(vars(metasp_printing).keys()),
             )
             raise ValueError(f"Print model function '{print_model_name}' not found")
 

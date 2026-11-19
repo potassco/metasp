@@ -5,16 +5,20 @@ Custom printing functions can be provided by adding the script in the configurat
 
 import logging
 import sys
+from typing import TYPE_CHECKING
 
-from clingo import Model, SymbolType
+from clingo import Model, Symbol, SymbolType
 
 from metasp.utils.logging_utils import colored_symbol_str
+
+if TYPE_CHECKING:
+    from metasp.system import MetaSystem
 
 log = logging.getLogger(__name__)
 
 
 # pylint: disable=unused-argument
-def pretty_printer(model: Model, system) -> None:
+def pretty_printer(model: Model, system: "MetaSystem") -> None:
     """
     Print the model with color highlighting the internal symbols (those starting with &) in yellow.
 
@@ -26,7 +30,7 @@ def pretty_printer(model: Model, system) -> None:
     sys.stdout.write("\n")
 
 
-def temporal_printer(model: Model, system) -> None:
+def temporal_printer(model: Model, system: "MetaSystem") -> None:
     """
     Prints the model as in telingo, separating the states.
 
@@ -36,7 +40,7 @@ def temporal_printer(model: Model, system) -> None:
     """
     assert "n" in system.constants, "system must have a 'n' property for the trace length to use temporal_printer"
     l = int(system.constants["n"]) + 1
-    table = {}
+    table: dict[int, list[Symbol]] = {}
     extra_shown = []
     for sym in model.symbols(shown=True):
         if (

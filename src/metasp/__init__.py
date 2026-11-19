@@ -3,24 +3,15 @@ The metasp project.
 """
 
 import logging
-import sys
-from ast import AST
-from collections.abc import Callable, Sequence
-from dataclasses import dataclass
 from importlib.resources import files
-from re import match
-from typing import Dict, List
+from typing import Any, cast
 
 import meta_tools
-from clingo import Control, Function, Symbol, SymbolType
-from clingox.reify import Reifier
-from meta_tools.extensions import ShowExtension
+from clingo import Control, Function, Symbol
 from meta_tools.extensions.base_extension import ReifyExtension
 
 from metasp.formula_processing import FormulaRegistery
-from metasp.grammar import Grammar, Type
-from metasp.utils.logging_utils import COLORS
-from metasp.utils.visualization import replace_internal_prefix
+from metasp.grammar import Grammar
 
 log = logging.getLogger(__name__)
 
@@ -82,15 +73,15 @@ class MetaspExtension(ReifyExtension):
                 return formula.symbol_with_prefix()
             return symbol  # nocoverage
 
-        context.match_output = match_output
+        cast(Any, context).match_output = match_output
 
-    def additional_symbols(self) -> Sequence[Symbol]:
+    def additional_symbols(self) -> list[Symbol]:
         """
         Provides additional symbols to be added to the reified program.
         In this case, it provides the symbols for the formulas in the formula registery.
         """
 
-        formula_symbols = []
+        formula_symbols: list[Symbol] = []
         for f in self._formula_registery.formulas.values():
 
             used_types = f.used_types
@@ -108,7 +99,7 @@ class MetaspProcessor:
 
     def __init__(self, grammar: Grammar) -> None:
         self.grammar = grammar
-        self.extensions = [MetaspExtension(grammar=grammar)]
+        self.extensions: list[ReifyExtension] = [MetaspExtension(grammar=grammar)]
 
     def reify_and_extend(self, prg: str, constants: dict[str, str]) -> str:
         """

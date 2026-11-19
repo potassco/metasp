@@ -30,7 +30,7 @@ def lint_pylint(session):
     session.run("pylint", "metasp", "tests")
 
 
-@nox.session
+@nox.session(python="3.12")
 def typecheck(session):
     """
     Typecheck the code using mypy.
