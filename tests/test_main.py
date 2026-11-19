@@ -2,6 +2,7 @@
 Test cases for main application functionality.
 """
 
+from pathlib import Path
 from unittest import TestCase
 
 from metasp import MetaspProcessor
@@ -9,10 +10,15 @@ from metasp.grammar import Grammar
 from metasp.system import MetaSystem
 from metasp.utils.visualization import replace_internal_prefix
 
-BOOL_DIC = {"syntax_encoding": ["./examples/bool/syntax.lp"], "semantics_encoding": ["./examples/bool/semantics.lp"]}
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+BOOL_DIC = {
+    "syntax_encoding": [str(REPO_ROOT / "examples" / "bool" / "syntax.lp")],
+    "semantics_encoding": [str(REPO_ROOT / "examples" / "bool" / "semantics.lp")],
+}
 TEL_DIC = {
-    "syntax_encoding": ["./examples/tel/syntax.lp"],
-    "semantics_encoding": ["./examples/tel/semantics.lp"],
+    "syntax_encoding": [str(REPO_ROOT / "examples" / "tel" / "syntax.lp")],
+    "semantics_encoding": [str(REPO_ROOT / "examples" / "tel" / "semantics.lp")],
     "required_constants": ["n"],
 }
 
