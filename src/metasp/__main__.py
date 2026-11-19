@@ -17,10 +17,7 @@ from metasp.system import MetaSystem
 from metasp.utils.logging_utils import configure_logging
 from metasp.utils.parser import get_parser, load_config, parse_constants
 from metasp.utils.test import run_tests
-from metasp.utils.visualization import (
-    replace_internal_prefix,
-    visualize_reified_program,
-)
+from metasp.utils.visualization import replace_internal_prefix, visualize_reified_program
 
 log = logging.getLogger(__name__)
 

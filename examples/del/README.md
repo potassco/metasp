@@ -1,4 +1,4 @@
-#  Dynamic Equilibrium Logic (DEL)
+# Dynamic Equilibrium Logic (DEL)
 
 A Dynamic Equilibrium Logic extension of ASP.
 

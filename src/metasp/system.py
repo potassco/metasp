@@ -255,8 +255,7 @@ class MetaSystem:  # pylint: disable=too-many-instance-attributes
         printing_func = vars(metasp_printing).get(print_model_name)
         if printing_func is None:  # nocoverage
             log.error(
-                "Print model function '%s' not found.\n"
-                "Available print functions: %s",
+                "Print model function '%s' not found.\n" "Available print functions: %s",
                 print_model_name,
                 list(script_functions.keys()) + list(vars(metasp_printing).keys()),
             )

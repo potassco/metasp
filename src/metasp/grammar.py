@@ -9,8 +9,8 @@ from dataclasses import dataclass, field
 from functools import lru_cache
 
 import clorm
-from clorm import Raw
 from clingo import Function, Symbol, SymbolType
+from clorm import Raw
 
 from metasp import clorm_db
 
