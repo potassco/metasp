@@ -44,7 +44,8 @@ def is_reserved_predicate(symbol: Symbol) -> bool:
 class MetaspExtension(ReifyExtension):
     """
     Metasp Extension for the reification process.
-    It uses ASPEN to transform the input program and then reifies it with the help of the FormulaRegistery to keep track of the formulas and their types.
+    It uses ASPEN to transform the input program and then reifies it
+    with the help of the FormulaRegistery to keep track of the formulas and their types.
     """
 
     def __init__(

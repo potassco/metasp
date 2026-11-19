@@ -1,16 +1,18 @@
+"""
+Metasp application wrapper for Clingo-based solvers.
+"""
+
 import json
 import logging
 import sys
 import textwrap
 from collections.abc import Callable
 from time import perf_counter
-from typing import Optional
 
 from clingo import Model
 from clingo.application import Application, ApplicationOptions
-from clingo.statistics import StatisticsMap
 from clingo.script import enable_python
-
+from clingo.statistics import StatisticsMap
 
 from metasp import MetaspProcessor
 from metasp.grammar import Grammar
@@ -32,29 +34,62 @@ try:
     from flingo.__main__ import FlingoApp
 
     class MyFlingoApp(FlingoApp):
+        """
+        Initialize the Flingo application wrapper since flingo init is missing the name argument.
+
+        Args:
+            name (str): The name of the program.
+        """
+
         def __init__(self, name):
             super().__init__()
             self.program_name = name
 
 except ImportError:
+    # pylint: disable=invalid-name
     MyFlingoApp = None
 
 
 class ClingoApp(Application):
+    """
+    Clingo application wrapper to generalize and also have one for other Clingo-based solvers
+    like Clingcon and Flingo.
+    """
+
     def __init__(self, name):
+        """
+        Initialize the Clingo application wrapper.
+
+        Args:
+            name (str): The name of the program.
+        """
         self.program_name = name
 
     def print_model(self, model: Model, printer) -> None:
+        """
+        Print the model using the given printer.
+
+        Args:
+            model (Model): The model to print.
+            printer (Callable): The printer function to use.
+        """
         model_symbols = " ".join([str(s).replace("__", "&") for s in model.symbols(shown=True)])
         sys.stdout.write(model_symbols + "\n")
 
-    def main(self, ctl, files):
+    def main(self, control, files):
+        """
+        Main entry point for the Clingo application.
+
+        Args:
+            control: The Clingo control object.
+            files (list[str]): The list of files to load.
+        """
         for f in files:
-            ctl.load(f)
+            control.load(f)
         if not files:
-            ctl.load("-")
-        ctl.ground([("base", [])])
-        ctl.solve(on_statistics=self.__on_statistics)
+            control.load("-")
+        control.ground([("base", [])])
+        control.solve(on_statistics=self.__on_statistics)
 
     def __on_statistics(self, step: StatisticsMap, accu: StatisticsMap):
         """
@@ -64,7 +99,6 @@ class ClingoApp(Application):
             step (StatisticsMap): The current step statistics.
             accu (StatisticsMap): The accumulated statistics.
         """
-        pass
 
 
 APPS_BY_NAME = {
@@ -76,7 +110,7 @@ APPS_BY_NAME = {
 
 def get_statistics_hook(
     app_class: type[object],
-) -> tuple[Optional[str], Optional[Callable[[object, StatisticsMap, StatisticsMap], None]]]:
+) -> tuple[str | None, Callable[[object, StatisticsMap, StatisticsMap], None] | None]:
     """
     Get the private name and method for the __on_statistics hook in the given application class.
     This follows the patter of Clingcon and Flingo, which have a private method for handling statistics
@@ -97,7 +131,7 @@ def get_statistics_hook(
     return None, None
 
 
-def get_app_by_name(app_name: str) -> Optional[Application]:
+def get_app_by_name(app_name: str) -> Application | None:
     """
     Get the application wrapper for the given name.
 
@@ -108,28 +142,46 @@ def get_app_by_name(app_name: str) -> Optional[Application]:
     """
     if app_name not in APPS_BY_NAME:
         msg = f"Control name '{app_name}' not found. Available options: {list(APPS_BY_NAME.keys())}"
-        log.error(msg)
+        log.error("%s", msg)
         raise ValueError(msg)
     if APPS_BY_NAME[app_name] is None:
         msg = f"Install the corresponding package via pip for '{app_name}' to use it."
-        log.error(msg)
+        log.error("%s", msg)
         raise ImportError(msg)
     return APPS_BY_NAME.get(app_name, None)
 
 
+# pylint: disable=too-many-statements
 def make_app(app_name: str) -> Application:
+    """
+    Create a Metasp application instance for the given application name.
+
+    Args:
+        app_name (str): The name of the application.
+
+    Returns:
+        Application: The Metasp application instance.
+    """
+    # pylint: disable=too-many-instance-attributes
 
     base_class = get_app_by_name(app_name)
 
     class MetaspApp(base_class):
+        """
+        Metasp application class that extends the base application class.
+        """
+
         def __init__(self, constants=None, on_model=None, root_dir=None):
             """
             Create application
 
             Args:
-                config (dict): The configuration dictionary.
-                constants (Optional[dict], optional): The constants required by the system that will become attributes. Defaults to None.
-                on_model (Optional[callable], optional): A callback function to handle models. Defaults to None.
+                constants (Optional[dict], optional): The constants required
+                    by the system that will become attributes. Defaults to None.
+                on_model (Optional[callable], optional): A callback function
+                    to handle models. Defaults to None.
+                root_dir (Optional[str], optional): The root directory for the application.
+                    Defaults to None.
             """
             super().__init__(f"Metasp ({base_class})")
             self.constants = constants or {}
@@ -143,11 +195,17 @@ def make_app(app_name: str) -> Application:
 
         @property
         def name(self):
+            """
+            Get the name of the application.
+
+            Returns:
+                str: The name of the application.
+            """
             return self.metasp_config.get("name", "metasp")
 
         def parse_log_level(self, log_level):
             """
-            Parse log
+            Parse log level.
 
             Args:
                 log_level (str): The log level to set.
@@ -160,9 +218,29 @@ def make_app(app_name: str) -> Application:
 
             return True
 
-        def parse_system_config(self, name, type="str") -> callable:
+        def parse_system_config(self, name, t="str") -> callable:
+            """
+            Parse a system configuration option. Helps generalize the setup of command line options.
+
+            Args:
+                name (str): The name of the configuration option.
+                t (str, optional): The type of the configuration option. Defaults to "str".
+
+            Returns:
+                callable: A function to parse the configuration option.
+            """
+
             def parse_option(value):
-                if type == "list":
+                """
+                Parse the given configuration option value.
+
+                Args:
+                    value: The value of the configuration option.
+
+                Returns:
+                    bool: True if the value is successfully parsed, False otherwise.
+                """
+                if t == "list":
                     if name not in self.metasp_config:
                         self.metasp_config[name] = []
                     self.metasp_config[name].append(value)
@@ -293,7 +371,14 @@ def make_app(app_name: str) -> Application:
             else:
                 super().print_model(model, printer)
 
-        def _metasp_on_statistics(self, step: StatisticsMap, accu: StatisticsMap):
+        def _metasp_on_statistics(self, _: StatisticsMap, accu: StatisticsMap):
+            """
+            Update the accumulated statistics with Metasp-specific information.
+
+            Args:
+                step (StatisticsMap): The current step's statistics.
+                accu (StatisticsMap): The accumulated statistics to update.
+            """
             accu.update(
                 {
                     "Metasp": {
@@ -304,11 +389,14 @@ def make_app(app_name: str) -> Application:
 
         def main(self, control, files):
             """
-            Main entry point for the application.
+            Main entry point for the Metasp application.
+
+            Args:
+                control: The Clingo control object.
+                files (list): The list of input files.
             """
             log_level_num = logging.getLevelNamesMapping().get(self._log_level.upper(), logging.WARNING)
             configure_logging(sys.stdout, log_level_num, use_color=True)
-            log = logging.getLogger("metasp")
 
             metasp_system_final_config = {}
             if self.metasp_config_file is not None:
@@ -320,13 +408,17 @@ def make_app(app_name: str) -> Application:
             self.metasp_config = metasp_system_final_config
 
             if "control_name" in self.metasp_config and self.metasp_config["control_name"] != app_name:
-                msg = f"Control name '{self.metasp_config['control_name']}' in configuration does not match the used control name '{app_name}'"
-                log.error(msg)
+                msg = (
+                    f"Control name '{self.metasp_config['control_name']}' in configuration "
+                    f"does not match the used control name '{app_name}'"
+                )
+                log.error("%s", msg)
                 raise ValueError(msg)
-            log.info(f"=== Running meta system: ===")
-            log.info(f"Config: {json.dumps(self.metasp_config, indent=12)}")
-            log.info(f"Input files: {files}")
+            log.info("=== Running meta system: ===")
+            log.info("Config: %s", json.dumps(self.metasp_config, indent=12))
+            log.info("Input files: %s", files)
 
+            # pylint: disable=attribute-defined-outside-init
             self.meta_system = MetaSystem.from_dict(self.metasp_config)
 
             self.meta_system.set_constants(self.constants)
@@ -356,6 +448,7 @@ def make_app(app_name: str) -> Application:
         print("Parent class does not have __on_statistics method")
 
     def _override_on_statistics(self, step: StatisticsMap, accu: StatisticsMap):
+        # pylint: disable=protected-access
         if parent_on_statistics is not None:
             parent_on_statistics(self, step, accu)
         self._metasp_on_statistics(step, accu)
