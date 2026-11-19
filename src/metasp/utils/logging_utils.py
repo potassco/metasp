@@ -49,17 +49,17 @@ class SingleLevelFilter(logging.Filter):
         return record.levelno == self.passlevel
 
 
-def color(s: str, color: str) -> str:
+def color(s: str, c: str) -> str:
     """
     Color a string.
 
     Args:
         s (str): The string to color.
-        color (str): The color to use. Must be one of the keys in the COLORS dictionary.
+        c (str): The color to use. Must be one of the keys in the COLORS dictionary.
     Returns:
         str: The colored string.
     """
-    return f"{COLORS[color.upper()]}{s}{COLORS['NORMAL']}"
+    return f"{COLORS[c.upper()]}{s}{COLORS['NORMAL']}"
 
 
 def configure_logging(stream: TextIO, level: int, use_color: bool) -> None:
@@ -68,16 +68,16 @@ def configure_logging(stream: TextIO, level: int, use_color: bool) -> None:
     """
     logging.getLogger("aspen").setLevel(logging.WARNING)
 
-    def format_str(color: str) -> str:
+    def format_str(c: str) -> str:
         if use_color:
-            return f"{COLORS[color]}%(levelname)-5s:{COLORS['GREY']}  - %(message)s{COLORS['NORMAL']}"
+            return f"{COLORS[c]}%(levelname)-5s:{COLORS['GREY']}  - %(message)s{COLORS['NORMAL']}"
         return f"%(levelname)s:  - %(message)s {COLORS['NORMAL']}"  # nocoverage
 
-    def make_handler(level: int, color: str) -> "logging.StreamHandler[TextIO]":
+    def make_handler(level: int, c: str) -> "logging.StreamHandler[TextIO]":
         handler = logging.StreamHandler(stream)
         handler.addFilter(SingleLevelFilter(level, False))
         handler.setLevel(level)
-        formatter = logging.Formatter(format_str(color))
+        formatter = logging.Formatter(format_str(c))
         handler.setFormatter(formatter)
         return handler
 
@@ -99,7 +99,7 @@ def print_model_logs(model: Model) -> None:
         if sym.match("_log", 2):
             level = str(sym.arguments[0]).strip('"').lower()
             if level not in ["debug", "info", "warning", "error", "critical"]:
-                log.warning("Invalid log level: {}. Skipping log message.".format(level))
+                log.warning("Invalid log level: %s. Skipping log message.", level)
                 continue
             getattr(log, level)(sym.arguments[1])
 

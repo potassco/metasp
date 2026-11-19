@@ -1,8 +1,19 @@
-# -------- Clorm
-from clorm import ConstantField, ConstantStr, IntegerField, Predicate, Raw, StringField, refine_field
+"""Clorm database schema for Metasp."""
+
+from clorm import ConstantField, ConstantStr, Predicate, Raw, refine_field
+
+# pylint: disable=abstract-method
 
 
 class ExpressionID(Predicate, is_tuple=True):
+    """
+    Identifier for an expression, consisting of its name and arity.
+
+    Args:
+        name (const): The name of the expression.
+        arity (int): The arity of the expression.
+    """
+
     name: ConstantStr
     arity: int
 
@@ -99,8 +110,8 @@ class Macro(Predicate, name="macro"):
 
     Args:
         type (const): The type that the formula to replace should be in the current context.
-            If a context is given then formulas appearing directly in the program are not replaced, since the context there is not known.
-            To replace in any context use "any".
+            If a context is given then formulas appearing directly in the program are not replaced,
+            since the context there is not known. To replace in any context use "any".
         lhs (raw): The pattern to be replaced. Can use any defined variable.
         rhs (raw): The expansion of the pattern. #TODO at the moment this pattern needs to use __ for expressions
     """

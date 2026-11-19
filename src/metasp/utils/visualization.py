@@ -1,3 +1,5 @@
+"""Visualization utilities for Metasp using Clinguin."""
+
 import logging
 from importlib.resources import files
 
@@ -5,11 +7,7 @@ from clingo import Control
 from clingo.symbol import String
 
 try:
-    from clingraph.clingo_utils import (
-        ClingraphContext,
-        add_elements_ids,
-        add_svg_interaction,
-    )
+    from clingraph.clingo_utils import ClingraphContext
     from clingraph.graphviz import compute_graphs, render
     from clingraph.orm import Factbase
 
@@ -44,7 +42,10 @@ def replace_internal_prefix_html(prg: str) -> str:
 
 
 class MetaspContext(ClingraphContext):
+    """Context for Metasp visualization using Clinguin."""
+
     def formula_label(self, obj):
+        """Return the label for a formula object, replacing internal prefixes for HTML display."""
         return String(replace_internal_prefix_html(str(obj)))
 
 
@@ -57,7 +58,8 @@ def visualize_reified_program(reified_prg: str) -> None:
     """
     if not CLINGRAPH_AVAILABLE:
         log.error(
-            "Clingraph is not available. Cannot visualize the reified program.\n Install clingraph manually https://clingraph.readthedocs.io/en/latest/"
+            "Clingraph is not available. Cannot visualize the reified program.\n"
+            "Install clingraph manually https://clingraph.readthedocs.io/en/latest/"
         )
 
         return

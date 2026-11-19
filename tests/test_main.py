@@ -4,8 +4,6 @@ Test cases for main application functionality.
 
 from unittest import TestCase
 
-from clingo.application import clingo_main
-
 from metasp import MetaspProcessor, replace_internal_prefix
 from metasp.grammar import Grammar
 from metasp.system import MetaSystem

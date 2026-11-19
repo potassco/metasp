@@ -13,6 +13,7 @@ from metasp.utils.logging_utils import colored_symbol_str
 log = logging.getLogger(__name__)
 
 
+# pylint: disable=unused-argument
 def pretty_printer(model: Model, system) -> None:
     """
     Print the model with color highlighting the internal symbols (those starting with &) in yellow.
@@ -51,16 +52,16 @@ def temporal_printer(model: Model, system) -> None:
     if len(extra_shown) > 0:  # nocoverage
         sys.stdout.write(" Other shown symbols:\n")
         for sym in extra_shown:
-            sys.stdout.write(" {}".format(sym))
+            sys.stdout.write(f" {sym}")
         sys.stdout.write("\n\n")
     for step in range(l):
         symbols = table.get(step, [])
-        sys.stdout.write(" State {}:".format(step))
+        sys.stdout.write(f" State {step}:")
         sig = None
         for sym in sorted(symbols):
             if (sym.name, len(sym.arguments), sym.positive) != sig:
                 # sys.stdout.write("\n ")
                 sig = (sym.name, len(sym.arguments), sym.positive)
-            sys.stdout.write(" {}".format(colored_symbol_str(sym)))
+            sys.stdout.write(f" {colored_symbol_str(sym)}")
         sys.stdout.write("\n")
     sys.stdout.write("\n")
