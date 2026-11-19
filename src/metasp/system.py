@@ -218,7 +218,7 @@ class MetaSystem:  # pylint: disable=too-many-instance-attributes
                 )
             file_content = re.sub(
                 r'#include\s+"metasp\.([^"]+)"',
-                lambda m: f'#include "{os.path.join(ENCODINGS_PATH, m.group(1))}"',
+                lambda m: f'#include "{(Path(ENCODINGS_PATH) / m.group(1)).as_posix()}"',
                 file_content,
             )
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
