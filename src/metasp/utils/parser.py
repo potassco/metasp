@@ -56,7 +56,7 @@ def get(log_levels: list[tuple[str, int]], name: str) -> int | None:  # nocovera
     return None
 
 
-def load_config(path: str | Path, root_dir: str | Path | None = None):
+def load_config(path: str | Path, root_dir: str | Path | None = None) -> dict[str, Any]:
     """
     Load the configuration from a YAML file.
 
@@ -118,7 +118,7 @@ def get_parser() -> ArgumentParser:
     """
     parser = ArgumentParser(
         prog="metasp",
-        description=ascii_art_metasp + "\n🚀 Framework for metaprogramming in ASP.",
+        description=str(ascii_art_metasp + "\n🚀 Framework for metaprogramming in ASP."),
         formatter_class=ArgumentDefaultsRichHelpFormatter,
     )
     parser.add_argument("--version", "-v", action="version", version=f"%(prog)s {VERSION}")

@@ -35,7 +35,7 @@ Changelog = "https://github.com/potassco/metasp/blob/master/CHANGES.md"
 [project.optional-dependencies]
 format = ["black", "isort", "autoflake"]
 lint_pylint = ["pylint"]
-typecheck = ["types-setuptools", "mypy"]
+typecheck = ["types-PyYAML", "types-setuptools", "mypy"]
 test = ["coverage[toml]"]
 doc = [
     "mkdocs",
@@ -60,6 +60,9 @@ metasp = "metasp.__main__:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+metasp = ["py.typed"]
 
 [tool.setuptools_scm]
 version_scheme = "python-simplified-semver"

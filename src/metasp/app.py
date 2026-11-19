@@ -6,10 +6,11 @@ import json
 import logging
 import sys
 import textwrap
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from time import perf_counter
+from typing import Any, Protocol, cast
 
-from clingo import Model
+from clingo import Control, Model
 from clingo.application import Application, ApplicationOptions
 from clingo.script import enable_python
 from clingo.statistics import StatisticsMap
@@ -24,16 +25,20 @@ from .utils.logging_utils import configure_logging, print_model_logs
 log = logging.getLogger(__name__)
 
 # ======== Setting up possible applications ========
-
+# pylint: disable=invalid-name
+ClingconApp: type[Application] | None = None
 try:
-    from clingcon.__main__ import ClingconApp
+    from clingcon.__main__ import ClingconApp as _ClingconApp
 except ImportError:
-    ClingconApp = None
+    pass
+else:
+    ClingconApp = _ClingconApp
 
+MyFlingoApp: type[Application] | None = None
 try:
-    from flingo.__main__ import FlingoApp
+    from flingo.__main__ import FlingoApp as _FlingoApp
 
-    class MyFlingoApp(FlingoApp):
+    class _MyFlingoApp(_FlingoApp):
         """
         Initialize the Flingo application wrapper since flingo init is missing the name argument.
 
@@ -41,13 +46,14 @@ try:
             name (str): The name of the program.
         """
 
-        def __init__(self, name):
-            super().__init__()
+        def __init__(self, name: str) -> None:
+            super().__init__()  # type: ignore[no-untyped-call]
             self.program_name = name
 
 except ImportError:
-    # pylint: disable=invalid-name
-    MyFlingoApp = None
+    pass
+else:
+    MyFlingoApp = _MyFlingoApp
 
 
 class ClingoApp(Application):
@@ -56,7 +62,7 @@ class ClingoApp(Application):
     like Clingcon and Flingo.
     """
 
-    def __init__(self, name):
+    def __init__(self, name: str) -> None:
         """
         Initialize the Clingo application wrapper.
 
@@ -65,7 +71,7 @@ class ClingoApp(Application):
         """
         self.program_name = name
 
-    def print_model(self, model: Model, printer) -> None:
+    def print_model(self, model: Model, printer: object) -> None:
         """
         Print the model using the given printer.
 
@@ -76,7 +82,7 @@ class ClingoApp(Application):
         model_symbols = " ".join([str(s).replace("__", "&") for s in model.symbols(shown=True)])
         sys.stdout.write(model_symbols + "\n")
 
-    def main(self, control, files):
+    def main(self, control: Control, files: Sequence[str]) -> None:
         """
         Main entry point for the Clingo application.
 
@@ -91,7 +97,7 @@ class ClingoApp(Application):
         control.ground([("base", [])])
         control.solve(on_statistics=self.__on_statistics)
 
-    def __on_statistics(self, step: StatisticsMap, accu: StatisticsMap):
+    def __on_statistics(self, step: StatisticsMap, accu: StatisticsMap) -> None:
         """
         Handle statistics from the solver.
 
@@ -101,7 +107,7 @@ class ClingoApp(Application):
         """
 
 
-APPS_BY_NAME = {
+APPS_BY_NAME: dict[str, type[Application] | None] = {
     "clingo": ClingoApp,
     "clingcon": ClingconApp,
     "flingo": MyFlingoApp,
@@ -127,32 +133,44 @@ def get_statistics_hook(
         mangled_name = f"_{candidate.__name__}__on_statistics"
         hook = candidate.__dict__.get(mangled_name)
         if hook is not None:
-            return mangled_name, hook
+            return mangled_name, cast(Callable[[object, StatisticsMap, StatisticsMap], None], hook)
     return None, None
 
 
-def get_app_by_name(app_name: str) -> Application | None:
+def get_app_by_name(app_name: str) -> type[Application]:
     """
     Get the application wrapper for the given name.
 
     Args:
         app_name (str): The name of the application.
     Returns:
-        Optional[ClingoControl]: The application wrapper or None if not found.
+        type[Application]: The application class for the requested solver.
     """
     if app_name not in APPS_BY_NAME:
         msg = f"Control name '{app_name}' not found. Available options: {list(APPS_BY_NAME.keys())}"
         log.error("%s", msg)
         raise ValueError(msg)
-    if APPS_BY_NAME[app_name] is None:
+    app_class = APPS_BY_NAME[app_name]
+    if app_class is None:
         msg = f"Install the corresponding package via pip for '{app_name}' to use it."
         log.error("%s", msg)
         raise ImportError(msg)
-    return APPS_BY_NAME.get(app_name, None)
+    return app_class
+
+
+class MetaspApplicationFactory(Protocol):
+    """Callable interface for a generated Metasp application class."""
+
+    def __call__(
+        self,
+        constants: dict[str, str] | None = None,
+        on_model: Callable[[Model], None] | None = None,
+        root_dir: str | None = None,
+    ) -> Application: ...
 
 
 # pylint: disable=too-many-statements
-def make_app(app_name: str) -> Application:
+def make_app(app_name: str) -> MetaspApplicationFactory:
     """
     Create a Metasp application instance for the given application name.
 
@@ -166,12 +184,17 @@ def make_app(app_name: str) -> Application:
 
     base_class = get_app_by_name(app_name)
 
-    class MetaspApp(base_class):
+    class MetaspApp(base_class):  # type: ignore[valid-type,misc]
         """
         Metasp application class that extends the base application class.
         """
 
-        def __init__(self, constants=None, on_model=None, root_dir=None):
+        def __init__(
+            self,
+            constants: dict[str, str] | None = None,
+            on_model: Callable[[Model], None] | None = None,
+            root_dir: str | None = None,
+        ) -> None:
             """
             Create application
 
@@ -184,26 +207,27 @@ def make_app(app_name: str) -> Application:
                     Defaults to None.
             """
             super().__init__(f"Metasp ({base_class})")
-            self.constants = constants or {}
+            self.constants: dict[str, str] = constants or {}
             self.root_dir = root_dir or "."
-            self.metasp_config = {}
+            self.metasp_config: dict[str, Any] = {}
             self.metasp_on_model = on_model
-            self.metasp_config_file = None
+            self.metasp_config_file: str | None = None
             self._log_level = "warning"
-            self.times = {}
+            self.times: dict[str, float] = {}
+            self.meta_system: MetaSystem
             enable_python()
 
         @property
-        def name(self):
+        def name(self) -> str:
             """
             Get the name of the application.
 
             Returns:
                 str: The name of the application.
             """
-            return self.metasp_config.get("name", "metasp")
+            return cast(str, self.metasp_config.get("name", "metasp"))
 
-        def parse_log_level(self, log_level):
+        def parse_log_level(self, log_level: str | None) -> bool:
             """
             Parse log level.
 
@@ -218,7 +242,7 @@ def make_app(app_name: str) -> Application:
 
             return True
 
-        def parse_system_config(self, name, t="str") -> callable:
+        def parse_system_config(self, name: str, t: str = "str") -> Callable[[str], bool]:
             """
             Parse a system configuration option. Helps generalize the setup of command line options.
 
@@ -230,7 +254,7 @@ def make_app(app_name: str) -> Application:
                 callable: A function to parse the configuration option.
             """
 
-            def parse_option(value):
+            def parse_option(value: str) -> bool:
                 """
                 Parse the given configuration option value.
 
@@ -250,7 +274,7 @@ def make_app(app_name: str) -> Application:
 
             return parse_option
 
-        def parse_config(self, config_file):
+        def parse_config(self, config_file: str | None) -> bool:
             """
             Parse configuration file
 
@@ -353,7 +377,7 @@ def make_app(app_name: str) -> Application:
             )
             super().register_options(options)
 
-        def print_model(self, model: Model, printer) -> None:
+        def print_model(self, model: Model, printer: object) -> None:
             """
             Print the model using the system's printing function which is set in the configuration.
 
@@ -371,7 +395,7 @@ def make_app(app_name: str) -> Application:
             else:
                 super().print_model(model, printer)
 
-        def _metasp_on_statistics(self, _: StatisticsMap, accu: StatisticsMap):
+        def _metasp_on_statistics(self, _: StatisticsMap, accu: StatisticsMap) -> None:
             """
             Update the accumulated statistics with Metasp-specific information.
 
@@ -379,7 +403,7 @@ def make_app(app_name: str) -> Application:
                 step (StatisticsMap): The current step's statistics.
                 accu (StatisticsMap): The accumulated statistics to update.
             """
-            accu.update(
+            accu.update(  # type: ignore[no-untyped-call]
                 {
                     "Metasp": {
                         "Times in seconds": self.times,
@@ -387,7 +411,7 @@ def make_app(app_name: str) -> Application:
                 }
             )
 
-        def main(self, control, files):
+        def main(self, control: Control, files: Sequence[str]) -> None:
             """
             Main entry point for the Metasp application.
 
@@ -447,7 +471,18 @@ def make_app(app_name: str) -> Application:
     if parent_on_statistics is None:
         print("Parent class does not have __on_statistics method")
 
-    def _override_on_statistics(self, step: StatisticsMap, accu: StatisticsMap):
+    def _override_on_statistics(
+        self: MetaspApp,
+        step: StatisticsMap,
+        accu: StatisticsMap,
+    ) -> None:
+        """
+        Override the on_statistics method to include Metasp statistics.
+
+        Args:
+            step (StatisticsMap): The current step statistics.
+            accu (StatisticsMap): The accumulated statistics.
+        """
         # pylint: disable=protected-access
         if parent_on_statistics is not None:
             parent_on_statistics(self, step, accu)
@@ -456,4 +491,4 @@ def make_app(app_name: str) -> Application:
     if parent_private_name is not None:
         setattr(MetaspApp, parent_private_name, _override_on_statistics)
 
-    return MetaspApp
+    return cast(MetaspApplicationFactory, MetaspApp)

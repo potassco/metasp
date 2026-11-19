@@ -4,9 +4,10 @@ Test cases for main application functionality.
 
 from unittest import TestCase
 
-from metasp import MetaspProcessor, replace_internal_prefix
+from metasp import MetaspProcessor
 from metasp.grammar import Grammar
 from metasp.system import MetaSystem
+from metasp.utils.visualization import replace_internal_prefix
 
 BOOL_DIC = {"syntax_encoding": ["./examples/bool/syntax.lp"], "semantics_encoding": ["./examples/bool/semantics.lp"]}
 TEL_DIC = {
@@ -34,7 +35,7 @@ class TestUtils(TestCase):
         """
 
         dic = BOOL_DIC
-        const = {}
+        const: dict[str, str] = {}
         prg = "{a}.{b}.:- &and(a,b).\n"  # Gets an error I can't understand
 
         meta_system = MetaSystem.from_dict(dic)
@@ -57,7 +58,7 @@ class TestUtils(TestCase):
         """
 
         dic = TEL_DIC
-        const = {}
+        const: dict[str, str] = {}
 
         meta_system = MetaSystem.from_dict(dic)
         with self.assertRaises(Exception):

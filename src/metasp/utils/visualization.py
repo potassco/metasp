@@ -3,13 +3,13 @@
 import logging
 from importlib.resources import files
 
-from clingo import Control
+from clingo import Control, Symbol
 from clingo.symbol import String
 
 try:
-    from clingraph.clingo_utils import ClingraphContext
-    from clingraph.graphviz import compute_graphs, render
-    from clingraph.orm import Factbase
+    from clingraph.clingo_utils import ClingraphContext  # type: ignore[import-untyped]
+    from clingraph.graphviz import compute_graphs, render  # type: ignore[import-untyped]
+    from clingraph.orm import Factbase  # type: ignore[import-untyped]
 
 except ImportError:
     CLINGRAPH_AVAILABLE = False
@@ -41,10 +41,10 @@ def replace_internal_prefix_html(prg: str) -> str:
     return prg.replace("__", "&amp;")
 
 
-class MetaspContext(ClingraphContext):
+class MetaspContext(ClingraphContext):  # type: ignore[misc]
     """Context for Metasp visualization using Clinguin."""
 
-    def formula_label(self, obj):
+    def formula_label(self, obj: object) -> Symbol:
         """Return the label for a formula object, replacing internal prefixes for HTML display."""
         return String(replace_internal_prefix_html(str(obj)))
 

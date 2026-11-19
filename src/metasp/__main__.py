@@ -2,6 +2,7 @@
 The main entry point for the application.
 """
 
+import argparse
 import logging
 import subprocess
 import sys
@@ -9,14 +10,17 @@ import sys
 import yaml
 from clingo.application import clingo_main
 
-from metasp import MetaspProcessor, replace_internal_prefix
+from metasp import MetaspProcessor
 from metasp.app import make_app
 from metasp.grammar import Grammar
 from metasp.system import MetaSystem
 from metasp.utils.logging_utils import configure_logging
 from metasp.utils.parser import get_parser, load_config, parse_constants
 from metasp.utils.test import run_tests
-from metasp.utils.visualization import visualize_reified_program
+from metasp.utils.visualization import (
+    replace_internal_prefix,
+    visualize_reified_program,
+)
 
 log = logging.getLogger(__name__)
 
@@ -60,9 +64,11 @@ def run(argv: list[str]) -> int:
     # inject defaults
     # Set defaults for each subparser instead of the main parser
     # pylint: disable=protected-access
-    for subparser in parser._subparsers._group_actions:
-        for _, sub in subparser.choices.items():
-            sub.set_defaults(**defaults)
+    if parser._subparsers is not None:
+        for action in parser._subparsers._group_actions:
+            if isinstance(action, argparse._SubParsersAction):
+                for subparser in action.choices.values():
+                    subparser.set_defaults(**defaults)
 
     args = parser.parse_args(argv)
 

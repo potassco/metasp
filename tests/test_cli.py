@@ -12,7 +12,7 @@ class TestCli(TestCase):
     Test command line
     """
 
-    def test_solve(self):
+    def test_solve(self) -> None:
         result = run(
             [
                 "solve",
@@ -28,7 +28,7 @@ class TestCli(TestCase):
 
         self.assertEqual(result, 30)
 
-    def test_transform(self):
+    def test_transform(self) -> None:
         result = run(
             [
                 "transform",
@@ -42,7 +42,7 @@ class TestCli(TestCase):
 
         self.assertEqual(result, 0)
 
-    def test_reify(self):
+    def test_reify(self) -> None:
         result = run(
             [
                 "reify",
@@ -56,7 +56,7 @@ class TestCli(TestCase):
 
         self.assertEqual(result, 0)
 
-    def test_invalid_config(self):
+    def test_invalid_config(self) -> None:
 
         self.assertRaises(
             Exception,
@@ -71,7 +71,7 @@ class TestCli(TestCase):
             ],
         )
 
-    def test_reify_explicit_encodings(self):
+    def test_reify_explicit_encodings(self) -> None:
         result = run(
             [
                 "solve",
@@ -88,7 +88,7 @@ class TestCli(TestCase):
 
         self.assertEqual(result, 10)
 
-    def test_reify_explicit_encodings_missing_semantics(self):
+    def test_reify_explicit_encodings_missing_semantics(self) -> None:
         result = run(
             [
                 "solve",
@@ -103,7 +103,7 @@ class TestCli(TestCase):
 
         self.assertEqual(result, 65)
 
-    def test_help(self):
+    def test_help(self) -> None:
         result = run(
             [
                 "-h",
