@@ -2,10 +2,9 @@ import sys
 
 from clingo import Model, SymbolType
 from clingo.symbol import Function
+from flingo.translator import AUX
 
 from metasp.printing import colored_symbol_str
-
-from flingo.translator import AUX
 
 CSP = "__csp"
 DEF = "__def"
